@@ -12,8 +12,9 @@ const Navbar = () => {
   const navItems = [
     { name: 'About', href: '/' },
     { name: 'Search', href: '/search' },
-    { name: 'Discover', href: '/discover' },
-    { name: 'Concerns', href: '/concerns' },
+    { name: 'Know Your Garden', href: '/discover' },
+    { name: 'Know the Complaints', href: '/concerns' },
+    { name: 'Submit', href: '/submit' },
     { name: 'FAQ', href: '/faq' },
   ];
 
