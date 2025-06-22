@@ -225,7 +225,9 @@ export default function KnowTheComplaintsPage() {
 
         {/* Submit New Complaint Button */}
         <div className="mt-8 text-center">
-          <Button className="bg-green-600 hover:bg-green-700 text-white px-8 py-3">Submit New Complaint</Button>
+          <Button className="bg-green-600 hover:bg-green-700 text-white px-8 py-3">
+          <Link href={`/submit`}>Submit New Complaint</Link>
+            </Button>
         </div>
       </div>
     </div>
