@@ -1,418 +1,353 @@
 "use client"
 
-// import { Header } from "@/components/header"
-import { Button } from "../../components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card"
-import { Input } from "../../components/ui/input"
-import { Label } from "../../components/ui/label"
-import { Textarea } from "../../components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs"
-import { Badge } from "../../components/ui/badge"
-import { PlusCircle, Send, Upload, MapPin, AlertTriangle } from "lucide-react"
-import { useState } from "react"
+import type React from "react"
 
-export default function SubmitPage() {
-  const [selectedTab, setSelectedTab] = useState("complaint")
+import { useState } from "react"
+import { Button } from "@/app/components/ui/button"
+import { Input } from "@/app/components/ui/input"
+import { Label } from "@/app/components/ui/label"
+import { Textarea } from "@/app/components/ui/textarea"
+import { Checkbox } from "@/app/components/ui/checkbox"
+import { Card, CardContent } from "@/app/components/ui/card"
+import { Upload, Clock } from "lucide-react"
+
+export default function TechInsiderForm() {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    universityEmail: "",
+    personalEmail: "",
+    mobileNumber: "",
+    graduationYear: "",
+    university: "",
+    whyInterested: "",
+    additionalInfo: "",
+    confirmAvailability: false,
+    acknowledgeSelection: false,
+  })
+
+  const gardens = [
+    "Garden 1",
+    "Garden 2",
+    "Garden 3",
+    "Garden 4",
+    "Garden 5",
+    "Garden 6",
+  ]
+
+  const handleInputChange = (field: string, value: string | boolean) => {
+    setFormData((prev) => ({ ...prev, [field]: value }))
+  }
 
   return (
-    <div className="min-h-screen bg-green-50">
-      {/* <Header /> */}
-
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-green-800 mb-4">Submit to HearUs!</h1>
-            <p className="text-gray-600">
-              Help improve our community gardens by submitting complaints or registering new gardens.
-            </p>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header with Tech Insider 2025 */}
+      <div className="text-white py-12 px-4" style={{ backgroundColor: "#4A61C0" }}>
+        <div className="max-w-4xl mx-auto text-center">
+          <h1 className="text-4xl md:text-5xl mb-4">Share Your Thoughts</h1>
+          <div className="flex items-center justify-center gap-2 text-blue-100">
+            <Clock className="w-4 h-4" />
+            <span className="text-lg">3 mins estimated time to complete</span>
           </div>
+        </div>
+      </div>
 
-          <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-8">
-              <TabsTrigger value="complaint" className="flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4" />
-                Submit Complaint
-              </TabsTrigger>
-              <TabsTrigger value="garden" className="flex items-center gap-2">
-                <PlusCircle className="w-4 h-4" />
-                Register Garden
-              </TabsTrigger>
-            </TabsList>
+      {/* Form Content */}
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <Card className="shadow-lg">
+          <CardContent className="p-8">
+            {/* Instructions */}
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold mb-4" style={{ color: "#4A61C0" }}>
+                Instructions
+              </h2>
+              <div className="text-gray-700 space-y-4">
+                <p>
+                 We welcome all users to share their thoughts with us, whether it's feedback, a discussion topic, 
+                 or a complaint, through our submission form. Your input helps us improve and build a better community together. 
+                 To submit, simply complete all required fields in the form. Submissions are reviewed regularly, and we may follow up with you if needed.
+                </p>
+               
+              </div>
+            </div>
 
-            <TabsContent value="complaint">
-              <Card className="border-green-200">
-                <CardHeader>
-                  <CardTitle className="text-green-800 flex items-center gap-2">
-                    <AlertTriangle className="w-5 h-5" />
-                    Submit a Complaint
-                  </CardTitle>
-                  <p className="text-gray-600">
-                    Report issues, problems, or concerns about community gardens in your area.
+            {/* Form Fields */}
+            <form className="space-y-8">
+              {/* Section 1 & 2 - Name Fields */}
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="firstName" className="text-sm font-medium text-gray-900">
+                    1. Your Name <span className="text-red-500">*</span>
+                  </Label>
+                  <Input
+                    id="firstName"
+                    value={formData.firstName}
+                    onChange={(e) => handleInputChange("firstName", e.target.value)}
+                    className="border-gray-300 bg-white"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="lastName" className="text-sm font-medium text-gray-900">
+                    2. Post/Report Title <span className="text-red-500">*</span>
+                  </Label>
+                  <Input
+                    id="lastName"
+                    value={formData.lastName}
+                    onChange={(e) => handleInputChange("lastName", e.target.value)}
+                    className="border-gray-300 bg-white"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Section 3 - University Email */}
+              {/* <div className="space-y-2">
+                <Label htmlFor="universityEmail" className="text-sm font-medium text-gray-900">
+                  3. University-registered Email Address <span className="text-red-500">*</span>
+                </Label>
+                <p className="text-sm text-gray-600 mb-2">Eg: @ntu.edu.sg, @nus.edu.sg etc.</p>
+                <Input
+                  id="universityEmail"
+                  type="email"
+                  value={formData.universityEmail}
+                  onChange={(e) => handleInputChange("universityEmail", e.target.value)}
+                  className="border-gray-300 bg-white"
+                  required
+                />
+              </div> */}
+
+              {/* Section 4 - Personal Email */}
+              {/* <div className="space-y-2">
+                <Label htmlFor="personalEmail" className="text-sm font-medium text-gray-900">
+                  4. Personal Email Address <span className="text-red-500">*</span>
+                </Label>
+                <p className="text-sm text-gray-600 mb-2">Eg: @gmail.com, @hotmail.com etc.</p>
+                <Input
+                  id="personalEmail"
+                  type="email"
+                  value={formData.personalEmail}
+                  onChange={(e) => handleInputChange("personalEmail", e.target.value)}
+                  className="border-gray-300 bg-white"
+                  required
+                />
+              </div> */}
+
+              {/* Section 5 - Mobile Number */}
+              <div className="space-y-2">
+                <Label htmlFor="mobileNumber" className="text-sm font-medium text-gray-900">
+                  3. Mobile number <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="mobileNumber"
+                  type="tel"
+                  placeholder="8123 4567"
+                  value={formData.mobileNumber}
+                  onChange={(e) => handleInputChange("mobileNumber", e.target.value)}
+                  className="border-gray-300 bg-white"
+                  required
+                />
+                {/* {!formData.mobileNumber && (
+                  <p className="text-sm text-red-600 flex items-center gap-1">
+                    <span className="w-4 h-4 rounded-full bg-red-600 text-white text-xs flex items-center justify-center">
+                      !
+                    </span>
+                    This field is required
                   </p>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <form className="space-y-6">
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="complaint-title">Complaint Title *</Label>
-                        <Input
-                          id="complaint-title"
-                          placeholder="Brief description of the issue"
-                          className="border-green-200 focus:border-green-500"
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="complaint-category">Category *</Label>
-                        <Select required>
-                          <SelectTrigger className="border-green-200 focus:border-green-500">
-                            <SelectValue placeholder="Select category" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="infrastructure">Infrastructure</SelectItem>
-                            <SelectItem value="pest-control">Pest Control</SelectItem>
-                            <SelectItem value="security">Security</SelectItem>
-                            <SelectItem value="environmental">Environmental</SelectItem>
-                            <SelectItem value="waste-management">Waste Management</SelectItem>
-                            <SelectItem value="maintenance">Maintenance</SelectItem>
-                            <SelectItem value="other">Other</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
+                )} */}
+              </div>
 
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="complaint-garden">Affected Garden *</Label>
-                        <Select required>
-                          <SelectTrigger className="border-green-200 focus:border-green-500">
-                            <SelectValue placeholder="Select garden" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="sunrise">Sunrise Community Garden</SelectItem>
-                            <SelectItem value="heritage">Heritage Herb Garden</SelectItem>
-                            <SelectItem value="rainbow">Rainbow Flower Garden</SelectItem>
-                            <SelectItem value="green-thumb">Green Thumb Collective</SelectItem>
-                            <SelectItem value="butterfly">Butterfly Haven Garden</SelectItem>
-                            <SelectItem value="urban-oasis">Urban Oasis Garden</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="complaint-priority">Priority Level *</Label>
-                        <Select required>
-                          <SelectTrigger className="border-green-200 focus:border-green-500">
-                            <SelectValue placeholder="Select priority" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="low">
-                              <div className="flex items-center gap-2">
-                                <Badge className="bg-green-100 text-green-800">Low</Badge>
-                                <span>Non-urgent issue</span>
-                              </div>
-                            </SelectItem>
-                            <SelectItem value="medium">
-                              <div className="flex items-center gap-2">
-                                <Badge className="bg-yellow-100 text-yellow-800">Medium</Badge>
-                                <span>Moderate concern</span>
-                              </div>
-                            </SelectItem>
-                            <SelectItem value="high">
-                              <div className="flex items-center gap-2">
-                                <Badge className="bg-red-100 text-red-800">High</Badge>
-                                <span>Urgent attention needed</span>
-                              </div>
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
+              {/* Section 6 - Expected Year of Graduation */}
+              <div className="space-y-4">
+                <Label className="text-sm font-medium text-gray-900">
+                  4. Priority Level <span className="text-red-500">*</span>
+                </Label>
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-3">
+                    <Checkbox
+                      id="grad2026"
+                      checked={formData.graduationYear === "2026"}
+                      onCheckedChange={(checked) => checked && handleInputChange("graduationYear", "2026")}
+                      className="data-[state=checked]:border-[#4A61C0]"
+                      style={{ "--tw-ring-color": "#4A61C0" } as React.CSSProperties}
+                    />
+                    <Label htmlFor="grad2026" className="text-sm text-gray-700">
+                      Urgent
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Checkbox
+                      id="grad2027"
+                      checked={formData.graduationYear === "2027"}
+                      onCheckedChange={(checked) => checked && handleInputChange("graduationYear", "2027")}
+                      className="data-[state=checked]:border-[#4A61C0]"
+                      style={{ "--tw-ring-color": "#4A61C0" } as React.CSSProperties}
+                    />
+                    <Label htmlFor="grad2027" className="text-sm text-gray-700">
+                      Moderate 
+                    </Label>
+                  </div>
+                   <div className="flex items-center space-x-3">
+                    <Checkbox
+                      id="grad2028"
+                      checked={formData.graduationYear === "2028"}
+                      onCheckedChange={(checked) => checked && handleInputChange("graduationYear", "2028")}
+                      className="data-[state=checked]:border-[#4A61C0]"
+                      style={{ "--tw-ring-color": "#4A61C0" } as React.CSSProperties}
+                    />
+                    <Label htmlFor="grad2028" className="text-sm text-gray-700">
+                      Low
+                    </Label>
+                  </div>
+                </div>
+              </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="complaint-description">Detailed Description *</Label>
-                      <Textarea
-                        id="complaint-description"
-                        placeholder="Please provide a detailed description of the issue, including when it occurred, affected areas, and any other relevant information..."
-                        className="border-green-200 focus:border-green-500 min-h-[120px]"
-                        required
+              {/* Section 7 - University */}
+              <div className="space-y-4">
+                <Label className="text-sm font-medium text-gray-900">
+                  5. Affected Garden <span className="text-red-500">*</span>
+                </Label>
+                <div className="space-y-3">
+                  {gardens.map((uni) => (
+                    <div key={uni} className="flex items-center space-x-3">
+                      <Checkbox
+                        id={`uni-${uni}`}
+                        checked={formData.university === uni}
+                        onCheckedChange={(checked) => checked && handleInputChange("university", uni)}
+                        className="data-[state=checked]:border-[#4A61C0]"
+                        style={{ "--tw-ring-color": "#4A61C0" } as React.CSSProperties}
                       />
+                      <Label htmlFor={`uni-${uni}`} className="text-sm text-gray-700">
+                        {uni}
+                      </Label>
                     </div>
+                  ))}
+                </div>
+              </div>
 
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="complaint-name">Your Name *</Label>
-                        <Input
-                          id="complaint-name"
-                          placeholder="Full name"
-                          className="border-green-200 focus:border-green-500"
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="complaint-email">Email Address *</Label>
-                        <Input
-                          id="complaint-email"
-                          type="email"
-                          placeholder="your.email@example.com"
-                          className="border-green-200 focus:border-green-500"
-                          required
-                        />
-                      </div>
-                    </div>
+              {/* Section 8 - Resume Upload */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-gray-900">
+                  6. Attach Photos (Optional) <span className="text-red-500">*</span>
+                </Label>
+                {/* <p className="text-sm text-gray-600 mb-2">Please upload your latest resume</p> */}
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors bg-gray-50">
+                  <Upload className="w-6 h-6 text-gray-400 mx-auto mb-2" />
+                  <p className="text-sm text-gray-600 mb-1">📎 or drag and drop here</p>
+                  <p className="text-xs text-gray-500 mb-3">Maximum file size 5 MB</p>
+                  <Button variant="outline" className="text-sm" type="button">
+                    Choose file
+                  </Button>
+                </div>
+              </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="complaint-phone">Phone Number (Optional)</Label>
-                      <Input
-                        id="complaint-phone"
-                        type="tel"
-                        placeholder="+65 9123 4567"
-                        className="border-green-200 focus:border-green-500"
-                      />
-                    </div>
+              {/* Section 9 - Why Interested */}
+              <div className="space-y-2">
+                <Label htmlFor="whyInterested" className="text-sm font-medium text-gray-900">
+                  7. Detailed Description <span className="text-red-500">*</span>
+                </Label>
+                <Textarea
+                  id="whyInterested"
+                  value={formData.whyInterested}
+                  onChange={(e) => handleInputChange("whyInterested", e.target.value)}
+                  className="border-gray-300 bg-white min-h-[120px] resize-none"
+                  required
+                />
+              </div>
 
-                    <div className="space-y-2">
-                      <Label>Attach Photos (Optional)</Label>
-                      <div className="border-2 border-dashed border-green-200 rounded-lg p-6 text-center hover:border-green-300 transition-colors">
-                        <Upload className="w-8 h-8 text-green-500 mx-auto mb-2" />
-                        <p className="text-gray-600 mb-2">Click to upload or drag and drop</p>
-                        <p className="text-sm text-gray-500">PNG, JPG, GIF up to 10MB</p>
-                      </div>
-                    </div>
+              {/* Section 10 - Additional Information */}
+              {/* <div className="space-y-2">
+                <Label htmlFor="additionalInfo" className="text-sm font-medium text-gray-900">
+                  10. If there's any additional information that could be helpful to us when reviewing your application,
+                  please include it below (optional)
+                </Label>
+                <p className="text-sm text-gray-600 mb-2">
+                  Eg: your Github link, any tech communities you're part of, what excites you about tech in the public
+                  sector etc.
+                </p>
+                <Textarea
+                  id="additionalInfo"
+                  value={formData.additionalInfo}
+                  onChange={(e) => handleInputChange("additionalInfo", e.target.value)}
+                  className="border-gray-300 bg-white min-h-[120px] resize-none"
+                />
+              </div> */}
 
-                    <div className="flex gap-4 pt-4">
-                      <Button type="submit" className="bg-green-600 hover:bg-green-700 text-white flex-1">
-                        <Send className="w-4 h-4 mr-2" />
-                        Submit Complaint
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="border-green-600 text-green-600 hover:bg-green-50"
-                      >
-                        Save Draft
-                      </Button>
-                    </div>
-                  </form>
-                </CardContent>
-              </Card>
-            </TabsContent>
+              {/* Confirmation Section */}
+              <div className="border-t pt-8 space-y-4">
+                <h3 className="text-lg font-medium text-gray-900">Confirmation</h3>
+                <div className="space-y-4">
+                  <div className="flex items-start space-x-3">
+                    <Checkbox
+                      id="confirmAvailability"
+                      checked={formData.confirmAvailability}
+                      onCheckedChange={(checked) => handleInputChange("confirmAvailability", checked as boolean)}
+                      className="mt-1 data-[state=checked]:border-[#4A61C0]"
+                      style={{ "--tw-ring-color": "#4A61C0" } as React.CSSProperties}
+                    />
+                    <Label htmlFor="confirmAvailability" className="text-sm text-gray-700 leading-relaxed">
+                      I confirm my availability to attend this full-day event taking place on 15 Aug 2025 (9am to 6pm){" "}
+                      <span className="text-red-500">*</span>
+                    </Label>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <Checkbox
+                      id="acknowledgeSelection"
+                      checked={formData.acknowledgeSelection}
+                      onCheckedChange={(checked) => handleInputChange("acknowledgeSelection", checked as boolean)}
+                      className="mt-1 data-[state=checked]:border-[#4A61C0]"
+                      style={{ "--tw-ring-color": "#4A61C0" } as React.CSSProperties}
+                    />
+                    <Label htmlFor="acknowledgeSelection" className="text-sm text-gray-700 leading-relaxed">
+                      I acknowledge that my submission may be reviewed and followed up on if necessary, 
+                      and that not all submissions will receive a response.{" "}
+                      <span className="text-red-500">*</span>
+                    </Label>
+                  </div>
+                </div>
+              </div>
 
-            <TabsContent value="garden">
-              <Card className="border-green-200">
-                <CardHeader>
-                  <CardTitle className="text-green-800 flex items-center gap-2">
-                    <PlusCircle className="w-5 h-5" />
-                    Register a New Garden
-                  </CardTitle>
-                  <p className="text-gray-600">
-                    Add a new community garden to our platform and help others discover it.
-                  </p>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <form className="space-y-6">
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="garden-name">Garden Name *</Label>
-                        <Input
-                          id="garden-name"
-                          placeholder="e.g., Sunset Community Garden"
-                          className="border-green-200 focus:border-green-500"
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="garden-type">Garden Type *</Label>
-                        <Select required>
-                          <SelectTrigger className="border-green-200 focus:border-green-500">
-                            <SelectValue placeholder="Select garden type" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="vegetables">Organic Vegetables</SelectItem>
-                            <SelectItem value="herbs">Medicinal Herbs</SelectItem>
-                            <SelectItem value="flowers">Native Flowers</SelectItem>
-                            <SelectItem value="mixed">Mixed Cultivation</SelectItem>
-                            <SelectItem value="pollinator">Pollinator Plants</SelectItem>
-                            <SelectItem value="rooftop">Rooftop Garden</SelectItem>
-                            <SelectItem value="community">Community Garden</SelectItem>
-                            <SelectItem value="educational">Educational Garden</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
+              {/* Submit Button */}
+              <div className="pt-6">
+                <Button
+                  type="submit"
+                  className="w-full text-white py-4 text-lg font-medium rounded-lg hover:opacity-90"
+                  style={{ backgroundColor: "#4A61C0" }}
+                >
+                  Submit now
+                </Button>
+              </div>
+            </form>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="garden-address">Garden Address *</Label>
-                      <div className="relative">
-                        <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                        <Input
-                          id="garden-address"
-                          placeholder="Full address including postal code"
-                          className="pl-10 border-green-200 focus:border-green-500"
-                          required
-                        />
-                      </div>
-                    </div>
+            {/* Help Icon */}
+            <div className="fixed bottom-6 right-6">
+              <Button
+                variant="outline"
+                size="icon"
+                className="rounded-full w-10 h-10 bg-white border-gray-300 shadow-lg hover:shadow-xl"
+                type="button"
+              >
+                <span className="text-gray-600 font-medium">?</span>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="garden-district">District *</Label>
-                        <Select required>
-                          <SelectTrigger className="border-green-200 focus:border-green-500">
-                            <SelectValue placeholder="Select district" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="east">East District</SelectItem>
-                            <SelectItem value="west">West District</SelectItem>
-                            <SelectItem value="north">North District</SelectItem>
-                            <SelectItem value="south">South District</SelectItem>
-                            <SelectItem value="central">Central District</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="garden-plots">Number of Plots</Label>
-                        <Input
-                          id="garden-plots"
-                          type="number"
-                          placeholder="e.g., 25"
-                          className="border-green-200 focus:border-green-500"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="garden-description">Garden Description *</Label>
-                      <Textarea
-                        id="garden-description"
-                        placeholder="Describe the garden's purpose, features, activities, and what makes it special..."
-                        className="border-green-200 focus:border-green-500 min-h-[120px]"
-                        required
-                      />
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="coordinator-name">Coordinator Name *</Label>
-                        <Input
-                          id="coordinator-name"
-                          placeholder="Garden coordinator's full name"
-                          className="border-green-200 focus:border-green-500"
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="coordinator-email">Coordinator Email *</Label>
-                        <Input
-                          id="coordinator-email"
-                          type="email"
-                          placeholder="coordinator@example.com"
-                          className="border-green-200 focus:border-green-500"
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="coordinator-phone">Coordinator Phone</Label>
-                        <Input
-                          id="coordinator-phone"
-                          type="tel"
-                          placeholder="+65 9123 4567"
-                          className="border-green-200 focus:border-green-500"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="garden-established">Year Established</Label>
-                        <Input
-                          id="garden-established"
-                          type="number"
-                          placeholder="e.g., 2020"
-                          min="1900"
-                          max="2024"
-                          className="border-green-200 focus:border-green-500"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label>Garden Photos</Label>
-                      <div className="border-2 border-dashed border-green-200 rounded-lg p-6 text-center hover:border-green-300 transition-colors">
-                        <Upload className="w-8 h-8 text-green-500 mx-auto mb-2" />
-                        <p className="text-gray-600 mb-2">Upload photos of your garden</p>
-                        <p className="text-sm text-gray-500">PNG, JPG, GIF up to 10MB each (max 5 photos)</p>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="submitter-name">Your Name *</Label>
-                      <Input
-                        id="submitter-name"
-                        placeholder="Your full name"
-                        className="border-green-200 focus:border-green-500"
-                        required
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="submitter-email">Your Email *</Label>
-                      <Input
-                        id="submitter-email"
-                        type="email"
-                        placeholder="your.email@example.com"
-                        className="border-green-200 focus:border-green-500"
-                        required
-                      />
-                    </div>
-
-                    <div className="flex gap-4 pt-4">
-                      <Button type="submit" className="bg-green-600 hover:bg-green-700 text-white flex-1">
-                        <Send className="w-4 h-4 mr-2" />
-                        Submit Garden Registration
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="border-green-600 text-green-600 hover:bg-green-50"
-                      >
-                        Save Draft
-                      </Button>
-                    </div>
-                  </form>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
-
-          {/* Information Cards */}
-          <div className="grid md:grid-cols-2 gap-6 mt-8">
-            <Card className="border-green-200">
-              <CardHeader>
-                <CardTitle className="text-green-800 text-lg">Submission Guidelines</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm text-gray-600">
-                <p>• Provide accurate and detailed information</p>
-                <p>• Include photos when possible to help with assessment</p>
-                <p>• For urgent issues, also contact the garden coordinator directly</p>
-                <p>• All submissions are reviewed within 2-3 business days</p>
-                <p>• You'll receive email updates on the status of your submission</p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-green-200">
-              <CardHeader>
-                <CardTitle className="text-green-800 text-lg">Need Help?</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm text-gray-600">
-                <p>• Check our FAQ section for common questions</p>
-                <p>• Contact us at support@hearus.org</p>
-                <p>• Call our helpline: +65 6123 4567</p>
-                <p>• Visit our community forum for discussions</p>
-                <p>• Follow us on social media for updates</p>
-              </CardContent>
-            </Card>
-          </div>
+        {/* Footer Links */}
+        <div className="text-center mt-8 space-x-6 text-sm text-gray-600">
+          <a href="#" className="hover:opacity-70 transition-opacity" style={{ color: "#4A61C0" }}>
+            Form Guide
+          </a>
+          <a href="#" className="hover:opacity-70 transition-opacity" style={{ color: "#4A61C0" }}>
+            Privacy
+          </a>
+          <a href="#" className="hover:opacity-70 transition-opacity" style={{ color: "#4A61C0" }}>
+            Terms of use
+          </a>
+          <a href="#" className="hover:opacity-70 transition-opacity" style={{ color: "#4A61C0" }}>
+            Report vulnerability
+          </a>
         </div>
       </div>
     </div>

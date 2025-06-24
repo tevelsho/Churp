@@ -97,8 +97,8 @@ const Navbar = () => {
   const navItems = [
     { name: 'About', href: '/' },
     { name: 'Search', type: 'dropdown', href: '/Search' },
-    { name: 'Discover', href: '/Discover' },
-    { name: 'Concerns', href: '/Concerns' },
+    { name: 'Discover', href: '/discover' },
+    { name: 'Post or Report', href: '/submit' },
   ];
 
   return (
