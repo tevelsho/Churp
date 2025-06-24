@@ -1,7 +1,7 @@
 // import { Header } from "@/components/header"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { Button } from "../../../components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card"
+import { Badge } from "../../../components/ui/badge"
 import { MapPin, Users, Calendar, Leaf, Mail, Phone, Award } from "lucide-react"
 import Link from "next/link"
 

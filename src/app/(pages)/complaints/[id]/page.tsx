@@ -1,8 +1,8 @@
 // import { Header } from "@/components/header"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
+import { Button } from "../../../components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card"
+import { Badge } from "../../../components/ui/badge"
+import { Separator } from "../../../components/ui/separator"
 import { AlertTriangle, Clock, CheckCircle, XCircle, User, Calendar, MapPin, MessageSquare } from "lucide-react"
 import Link from "next/link"
 

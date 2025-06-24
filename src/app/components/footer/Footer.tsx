@@ -13,7 +13,7 @@ const Footer = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <h2 className="text-[#454953] text-2xl font-semibold cursor-pointer hover:underline mb-2">
+            <h2 className="text-[#454953] text-lg font-semibold cursor-pointer hover:underline mb-2">
               HearUs
             </h2>
           </Link>

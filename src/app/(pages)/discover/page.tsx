@@ -1,167 +1,155 @@
-// import { Header } from "@/components/header"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Search, MapPin, Users, Leaf } from "lucide-react"
-import Link from "next/link"
+'use client'
 
-// Mock data for gardens
-const gardens = [
-  {
-    id: 1,
-    name: "Sunrise Community Garden",
-    area: "East District",
-    coordinator: "Sarah Chen",
-    type: "Organic Vegetables",
-    image: "/placeholder.svg?height=200&width=300",
-    plots: 45,
-    established: "2019",
-  },
-  {
-    id: 2,
-    name: "Heritage Herb Garden",
-    area: "Central District",
-    coordinator: "Michael Rodriguez",
-    type: "Medicinal Herbs",
-    image: "/placeholder.svg?height=200&width=300",
-    plots: 32,
-    established: "2020",
-  },
-  {
-    id: 3,
-    name: "Rainbow Flower Garden",
-    area: "West District",
-    coordinator: "Emily Johnson",
-    type: "Native Flowers",
-    image: "/placeholder.svg?height=200&width=300",
-    plots: 28,
-    established: "2021",
-  },
-  {
-    id: 4,
-    name: "Green Thumb Collective",
-    area: "North District",
-    coordinator: "David Kim",
-    type: "Mixed Cultivation",
-    image: "/placeholder.svg?height=200&width=300",
-    plots: 52,
-    established: "2018",
-  },
-  {
-    id: 5,
-    name: "Butterfly Haven Garden",
-    area: "South District",
-    coordinator: "Lisa Thompson",
-    type: "Pollinator Plants",
-    image: "/placeholder.svg?height=200&width=300",
-    plots: 38,
-    established: "2022",
-  },
-  {
-    id: 6,
-    name: "Urban Oasis Garden",
-    area: "Central District",
-    coordinator: "James Wilson",
-    type: "Rooftop Garden",
-    image: "/placeholder.svg?height=200&width=300",
-    plots: 24,
-    established: "2023",
-  },
-]
+import { useState } from 'react';
 
-export default function KnowYourGardenPage() {
+export default function App() {
+  const [activeTab, setActiveTab] = useState('lorem-ipsum-tab-1');
+  const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
+
+  const constituencies = [
+    'Lorem Ipsum Dolor', 'Sit Amet Consectetur', 'Adipiscing Elit Sed', 'Do Eiusmod Tempor',
+    'Incididunt Ut Labore', 'Et Dolore Magna', 'Aliqua Ut Enim', 'Ad Minim Veniam',
+    'Quis Nostrud Exercitation', 'Ullamco Laboris Nisi', 'Ut Aliquip Ex Ea', 'Commodo Consequat Duis',
+    'Aute Irure Dolor', 'In Reprehenderit', 'In Voluptate Velit', 'Esse Cillum Dolore',
+    'Eu Fugiat Nulla', 'Pariatur Excepteur', 'Sint Occaecat Cupidatat', 'Non Proident Sunt',
+    'In Culpa Qui Officia'
+  ];
+
+  const gridItems = Array.from({ length: 15 }, (_, i) => ({
+    id: i,
+    image: `https://placehold.co/300x150/A7C7E7/FFFFFF?text=Lorem+Ipsum+${i + 1}`,
+    name: 'Lorem Ipsum',
+    position: 'Dolor Sit Amet',
+    location: 'Consectetur Adipiscing',
+    pqCount: Math.floor(Math.random() * 500) + 100
+  }));
+
+  const toggleFilterDropdown = () => {
+    setIsFilterDropdownOpen(!isFilterDropdownOpen);
+  };
+
   return (
-    <div className="min-h-screen bg-green-50">
-      {/* <Header /> */}
+    <div className="min-h-screen flex items-start justify-center px-4 sm:px-6 lg:px-8">
+      <div className="max-w-full w-full p-8">
+        <div className="max-w-screen-xl mx-auto mb-8 text-sm text-gray-500">
+          <span>Discover</span>
+          <span className="mx-2">&gt;</span>
+          <span className="font-semibold text-gray-700">Ipsum</span>
+        </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-green-800 mb-4">Know Your Garden</h1>
-          <p className="text-gray-600 mb-6">
-            Discover community gardens in your area and learn about their coordinators, specialties, and activities.
-          </p>
-
-          {/* Search and Filters */}
-          <div className="bg-white rounded-lg p-6 shadow-sm border border-green-200 mb-8">
-            <div className="grid md:grid-cols-4 gap-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                <Input placeholder="Search gardens..." className="pl-10 border-green-200 focus:border-green-500" />
-              </div>
-              <Select>
-                <SelectTrigger className="border-green-200 focus:border-green-500">
-                  <SelectValue placeholder="District" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Districts</SelectItem>
-                  <SelectItem value="east">East District</SelectItem>
-                  <SelectItem value="west">West District</SelectItem>
-                  <SelectItem value="north">North District</SelectItem>
-                  <SelectItem value="south">South District</SelectItem>
-                  <SelectItem value="central">Central District</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select>
-                <SelectTrigger className="border-green-200 focus:border-green-500">
-                  <SelectValue placeholder="Garden Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Types</SelectItem>
-                  <SelectItem value="vegetables">Organic Vegetables</SelectItem>
-                  <SelectItem value="herbs">Medicinal Herbs</SelectItem>
-                  <SelectItem value="flowers">Native Flowers</SelectItem>
-                  <SelectItem value="mixed">Mixed Cultivation</SelectItem>
-                  <SelectItem value="pollinator">Pollinator Plants</SelectItem>
-                  <SelectItem value="rooftop">Rooftop Garden</SelectItem>
-                </SelectContent>
-              </Select>
-              <Button className="bg-green-600 hover:bg-green-700 text-white">
-                <Search className="w-4 h-4 mr-2" />
-                Search
-              </Button>
+        <div className="max-w-screen-xl mx-auto mb-8 flex items-start space-x-4">
+          <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
+            <svg className="w-10 h-10 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd"></path></svg>
+          </div>
+          <div>
+            <div className="flex items-center mb-1">
+              <h2 className="text-2xl font-bold text-gray-800 mr-2">Lorem Ipsum</h2>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                Dolor
+              </span>
             </div>
+            <a href="#" className="text-blue-500 text-sm hover:underline flex items-center mb-2">
+              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-.758l-.208.208A5.002 5.002 0 0110 21.828L5.657 20.343a4 4 0 11-5.657-5.656l1.101-1.102M19.106 5.894l-1.101 1.101m.758.758l.208-.208A5.002 5.002 0 0114 2.172L18.343 3.657a4 4 0 115.657 5.656l-1.101 1.102M13.828 10.172L19.106 5.894"></path></svg>
+              loremipsum.com
+            </a>
+            <p className="text-gray-700 text-sm">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.
+            </p>
           </div>
         </div>
 
-        {/* Gardens Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {gardens.map((garden) => (
-            <Card key={garden.id} className="border-green-200 hover:shadow-lg transition-shadow overflow-hidden">
-              <div className="aspect-video bg-green-100 relative">
-                <img
-                  src={garden.image || "/placeholder.svg"}
-                  alt={garden.name}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute top-2 right-2 bg-green-600 text-white px-2 py-1 rounded text-xs">
-                  {garden.type}
+        <div className="p-4">
+          {activeTab === 'lorem-ipsum-tab-1' && (
+            <div className="max-w-screen-xl mx-auto flex flex-wrap justify- gap-2 mb-8">
+              {constituencies.map((constituency, index) => (
+                <button
+                  key={index}
+                  className="bg-transparent border border-gray-300 hover:bg-gray-100 text-gray-800 font-medium py-2 px-3 rounded-full transition-transform transform hover:scale-105 active:scale-95 text-sm text-center whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+                >
+                  {constituency}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {activeTab === 'lorem-ipsum-tab-2' && (
+            <div className="text-center text-gray-600 text-lg mb-8">
+              <p>Lorem ipsum dolor sit amet.</p>
+            </div>
+          )}
+        </div>
+
+        <div className="flex flex-col md:flex-row justify-between items-start pt-0 max-w-screen-xl mx-auto">
+          <div className="w-full md:w-1/4 lg:w-1/5 pr-0 md:pr-4 mb-6 md:mb-0">
+            <div className="mb-4">
+              <input
+                type="text"
+                placeholder="Lorem ipsum..."
+                className="w-full border border-gray-300 rounded-md py-2 px-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+              />
+            </div>
+            <div className="relative mb-4">
+              <button
+                onClick={toggleFilterDropdown}
+                className="w-full text-left py-2 px-3 border border-gray-300 rounded-md shadow-sm flex justify-between items-center bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+              >
+                Lorem Ipsum
+                <svg className={`fill-current h-4 w-4 transform transition-transform duration-200 ${isFilterDropdownOpen ? 'rotate-180' : ''}`} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 6.05 6.879 4.636 8.293 9.293 12.95z" />
+                </svg>
+              </button>
+              {isFilterDropdownOpen && (
+                <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1 p-3">
+                  <div className="mb-2">
+                    <label className="inline-flex items-center">
+                      <input type="checkbox" className="form-checkbox text-blue-400" />
+                      <span className="ml-2 text-gray-700">Lorem One</span>
+                    </label>
+                  </div>
+                  <div>
+                    <label className="inline-flex items-center">
+                      <input type="checkbox" className="form-checkbox text-blue-400" />
+                      <span className="ml-2 text-gray-700">Lorem Two</span>
+                    </label>
+                  </div>
                 </div>
-              </div>
-              <CardContent className="p-4">
-                <h3 className="font-semibold text-green-800 mb-2">{garden.name}</h3>
-                <div className="space-y-2 text-sm text-gray-600">
-                  <div className="flex items-center">
-                    <MapPin className="w-4 h-4 mr-2 text-green-500" />
-                    {garden.area}
+              )}
+            </div>
+          </div>
+
+          <div className="w-full md:w-3/4 lg:w-4/5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 ml-auto">
+              {gridItems.map((item) => (
+                <div key={item.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+                  <div className="w-full h-32 bg-blue-400 flex items-center justify-center overflow-hidden">
+                    <img
+                      src={item.image}
+                      alt={`Lorem Ipsum ${item.id}`}
+                      className="w-full h-full object-cover"
+                      onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                        const target = e.target as HTMLImageElement;
+                        target.onerror = null;
+                        target.src = "https://placehold.co/300x150/A7C7E7/FFFFFF?text=Image+Error";
+                      }}
+                    />
                   </div>
-                  <div className="flex items-center">
-                    <Users className="w-4 h-4 mr-2 text-green-500" />
-                    Coordinator: {garden.coordinator}
-                  </div>
-                  <div className="flex items-center">
-                    <Leaf className="w-4 h-4 mr-2 text-green-500" />
-                    {garden.plots} plots • Est. {garden.established}
+                  <div className="p-3">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-0.5">{item.name}</h3>
+                    <p className="text-gray-600 text-xs mb-0.5">{item.position}</p>
+                    <p className="text-gray-500 text-xs flex items-center mb-2">
+                      <svg className="w-3 h-3 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.727A8 8 0 0120 10c0-4.418-3.582-8-8-8S4 5.582 4 10c0 2.21.895 4.21 2.343 5.657L12 22l5.657-5.273z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 9a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                      {item.location}
+                    </p>
+                    <p className="text-blue-400 text-sm font-medium">
+                      <span className="font-bold">{item.pqCount}</span> Lorem Ipsum
+                    </p>
                   </div>
                 </div>
-                <Button asChild className="w-full mt-4 bg-green-600 hover:bg-green-700 text-white">
-                  <Link href={`/garden/${garden.id}`}>View Garden Details</Link>
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
