@@ -107,10 +107,10 @@ const Navbar = () => {
         <div className="flex items-center space-x-8 flex-grow">
           <Link href="/" className="flex-shrink-0">
             <Image
-              src="/assets/images/logo/logo.svg"
+              src="/assets/svgs/brand/HearUs.svg"
               alt="HearUs Logo"
-              width={120}
-              height={40}
+              width={48}
+              height={48}
               priority
             />
           </Link>
