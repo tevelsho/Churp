@@ -1,10 +1,6 @@
 'use client';
-import Image from 'next/image';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { IoIosMenu, IoIosSearch } from 'react-icons/io';
 import { useState, useRef, useEffect } from 'react';
-import { IoIosArrowDown } from "react-icons/io";
+import { Search, Menu, ChevronDown } from 'lucide-react'; 
 
 interface SearchDropdownProps {
   onClose: () => void;
@@ -43,13 +39,14 @@ const SearchDropdown = ({ onClose }: SearchDropdownProps) => {
               <ul className="space-y-2">
                 {items.map((item) => (
                   <li key={item.name}>
-                    <Link
+                    {/* Using a standard <a> tag instead of Next.js Link */}
+                    <a
                       href={item.href}
                       className="block text-gray-700 hover:text-[#2a56c5] text-sm transition-colors duration-200 py-1 whitespace-nowrap"
                       onClick={onClose}
                     >
                       {item.name}
-                    </Link>
+                    </a>
                   </li>
                 ))}
               </ul>
@@ -62,10 +59,9 @@ const SearchDropdown = ({ onClose }: SearchDropdownProps) => {
 };
 
 const Navbar = () => {
-  const pathname = usePathname();
+  const [currentPath, setCurrentPath] = useState('/');
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchDropdownOpen, setSearchDropdownOpen] = useState(false);
-  const [searchActive, setSearchActive] = useState(false);
   const searchDropdownRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -81,19 +77,6 @@ const Navbar = () => {
     };
   }, []);
 
-  const handleSearchClick = () => {
-    setSearchActive(prev => !prev);
-    if (!searchActive) {
-      setTimeout(() => searchInputRef.current?.focus(), 0);
-    }
-  };
-
-  const handleSearchBlur = () => {
-    if (!searchInputRef.current?.value) {
-      setSearchActive(false);
-    }
-  };
-
   const navItems = [
     { name: 'About', href: '/' },
     { name: 'Search', type: 'dropdown', href: '/Search' },
@@ -103,20 +86,20 @@ const Navbar = () => {
 
   return (
     <nav className="bg-white shadow- w-full relative z-40">
-      <div className="w-full max-w-screen-2xl mx-auto px-4 py-3 flex items-center">
+      <div className="w-full max-w-screen-2xl mx-auto py-3 flex items-center">
         <div className="flex items-center space-x-8 flex-grow">
-          <Link href="/" className="flex-shrink-0">
-            <Image
-              src="/assets/svgs/brand/HearUs.svg"
+          <a href="/" className="flex-shrink-0" onClick={() => setCurrentPath('/')}>
+            <img
+              src="/HearUs.svg" 
               alt="HearUs Logo"
-              width={48}
-              height={48}
-              priority
+              width={140}
+              height={140}
+              className=""
             />
-          </Link>
+          </a>
           <div className="hidden sm:flex sm:space-x-6">
             {navItems.map((item) => {
-              const isActive = (item.href && pathname === item.href) || (item.name === 'About' && pathname === '/');
+              const isActive = (item.href && currentPath === item.href) || (item.name === 'About' && currentPath === '/');
 
               if (item.type === 'dropdown' && item.name === 'Search') {
                 return (
@@ -134,7 +117,7 @@ const Navbar = () => {
                           : 'text-[#A0A4AD] group-hover:text-[#2a56c5]'
                       }`}
                     >
-                      {item.name} <IoIosArrowDown className={`transition-transform duration-200 ${searchDropdownOpen ? 'rotate-180' : ''}`} />
+                      {item.name} <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${searchDropdownOpen ? 'rotate-180' : ''}`} />
                     </span>
                     <span
                       className="absolute inset-0 rounded-md transition-opacity duration-200 opacity-0 group-hover:opacity-20"
@@ -155,10 +138,11 @@ const Navbar = () => {
 
               if (item.href) {
                 return (
-                  <Link
+                  <a
                     key={item.name}
                     href={item.href}
                     className="relative group px-2 py-1 rounded-md flex-shrink-0"
+                    onClick={() => setCurrentPath(item.href)}
                   >
                     <span
                       className={`text-base font-medium transition-colors duration-200 ${
@@ -173,7 +157,7 @@ const Navbar = () => {
                       className="absolute inset-0 rounded-md transition-opacity duration-200 opacity-0 group-hover:opacity-20"
                       style={{ backgroundColor: '#2a56c5' }}
                     ></span>
-                  </Link>
+                  </a>
                 );
               }
               return null;
@@ -181,39 +165,20 @@ const Navbar = () => {
           </div>
         </div>
 
-        <div className="flex items-center space-x-4">
-          <div className="hidden sm:block">
-            <Link
-              href="/send-concern"
-              className="text-sm font-medium text-black border border-gray-300 px-4 py-2 rounded-full transition-all duration-200 hover:bg-[#2a56c511] hover:border-transparent"
-            >
-              Share Concern
-            </Link>
-          </div>
-
+        <div className="flex items-center">
           <div className="hidden sm:block relative">
             <div
-              className={`flex items-center transition-all duration-300 ease-in-out cursor-pointer py-2 ${
-                searchActive ? 'w-64 px-4' : 'w-10 h-10 justify-center'
-              } hover:bg-[#2a56c511] rounded-full`}
-              onMouseEnter={() => !searchActive && setSearchActive(true)}
-              onMouseLeave={() => !searchInputRef.current?.value && setSearchActive(false)}
-              onClick={handleSearchClick}
+              className="flex items-center w-64 px-4 py-2 border border-[#BFC2C8] rounded-md bg-transparent"
             >
-              <IoIosSearch className={`text-3xl transition-colors duration-200 ${searchActive ? 'text-[#2a56c5]' : 'text-gray-500'}`} />
+              <Search className="w-5 h-5 text-gray-500" /> 
               <input
                 ref={searchInputRef}
                 type="text"
                 placeholder="Search..."
-                className={`ml-2 outline-none bg-transparent text-sm w-full transition-all duration-300 ease-in-out ${
-                  searchActive ? 'block' : 'hidden'
-                }`}
-                onBlur={handleSearchBlur}
+                className="ml-2 outline-none bg-transparent text-sm w-full"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
-                    // Handle search submission here
                     console.log('Search for:', (e.target as HTMLInputElement).value);
-                    setSearchActive(false);
                   }
                 }}
               />
@@ -224,7 +189,7 @@ const Navbar = () => {
             className="sm:hidden text-3xl text-[#2a56c5] ml-4"
             onClick={() => setMenuOpen(!menuOpen)}
           >
-            <IoIosMenu />
+            <Menu className="w-7 h-7" />
           </button>
         </div>
       </div>
@@ -234,15 +199,18 @@ const Navbar = () => {
           {navItems.map((item) => {
             if (item.type === 'dropdown' && item.name === 'Search') {
               return (
-                <Link
+                <a
                   key={item.name}
                   href={item.href || '/search'}
                   className="block relative group px-4 py-2 rounded-md"
-                  onClick={() => setMenuOpen(false)}
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setCurrentPath(item.href || '/search');
+                  }}
                 >
                   <span
                     className={`text-base font-medium transition-colors duration-200 ${
-                      (pathname === '/search' || pathname.startsWith('/search/'))
+                      (currentPath === '/search' || currentPath.startsWith('/search/'))
                         ? 'text-[#2a56c5]'
                         : 'text-[#b0b3bb] group-hover:text-[#2a56c5]'
                     }`}
@@ -252,18 +220,21 @@ const Navbar = () => {
                   <span
                     className="absolute inset-0 bg-[#2a56c5] opacity-0 group-hover:opacity-20 rounded-md transition-opacity duration-200"
                   ></span>
-                </Link>
+                </a>
               );
             }
 
             if (item.href) {
-              const isActive = pathname === item.href || (item.name === 'About' && pathname === '/');
+              const isActive = currentPath === item.href || (item.name === 'About' && currentPath === '/');
               return (
-                <Link
+                <a
                   key={item.name}
                   href={item.href}
                   className="block relative group px-4 py-2 rounded-md"
-                  onClick={() => setMenuOpen(false)}
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setCurrentPath(item.href); 
+                  }}
                 >
                   <span
                     className={`text-base font-medium transition-colors duration-200 ${
@@ -277,7 +248,7 @@ const Navbar = () => {
                   <span
                     className="absolute inset-0 bg-[#2a56c5] opacity-0 group-hover:opacity-20 rounded-md transition-opacity duration-200"
                   ></span>
-                </Link>
+                </a>
               );
             }
             return null;

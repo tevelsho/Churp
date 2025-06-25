@@ -47,7 +47,7 @@ const Footer = () => {
           <div className="flex flex-col items-start mb-6 sm:mb-0">
             <span className="text-[#666C7A] text-sm mb-2">Built by</span>
             <Image
-              src="/assets/images/logo/ogp.png"
+              src="/ogp.png"
               alt="HearUs Logo"
               width={180}
               height={180}

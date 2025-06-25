@@ -1,6 +1,7 @@
-'use client'
+'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('lorem-ipsum-tab-1');
@@ -16,9 +17,9 @@ export default function App() {
   ];
 
   const gridItems = Array.from({ length: 15 }, (_, i) => ({
-    id: i,
+    id: i + 1,
     image: `https://placehold.co/300x150/A7C7E7/FFFFFF?text=Lorem+Ipsum+${i + 1}`,
-    name: 'Lorem Ipsum',
+    name: `Lorem Ipsum ${i + 1}`,
     position: 'Dolor Sit Amet',
     location: 'Consectetur Adipiscing',
     pqCount: Math.floor(Math.random() * 500) + 100
@@ -39,7 +40,9 @@ export default function App() {
 
         <div className="max-w-screen-xl mx-auto mb-8 flex items-start space-x-4">
           <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
-            <svg className="w-10 h-10 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd"></path></svg>
+            <svg className="w-10 h-10 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+            </svg>
           </div>
           <div>
             <div className="flex items-center mb-1">
@@ -49,7 +52,9 @@ export default function App() {
               </span>
             </div>
             <a href="#" className="text-blue-500 text-sm hover:underline flex items-center mb-2">
-              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-.758l-.208.208A5.002 5.002 0 0110 21.828L5.657 20.343a4 4 0 11-5.657-5.656l1.101-1.102M19.106 5.894l-1.101 1.101m.758.758l.208-.208A5.002 5.002 0 0114 2.172L18.343 3.657a4 4 0 115.657 5.656l-1.101 1.102M13.828 10.172L19.106 5.894"></path></svg>
+              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-.758l-.208.208A5.002 5.002 0 0110 21.828L5.657 20.343a4 4 0 11-5.657-5.656l1.101-1.102M19.106 5.894l-1.101 1.101m.758.758l.208-.208A5.002 5.002 0 0114 2.172L18.343 3.657a4 4 0 115.657 5.656l-1.101 1.102M13.828 10.172L19.106 5.894" />
+              </svg>
               loremipsum.com
             </a>
             <p className="text-gray-700 text-sm">
@@ -71,23 +76,15 @@ export default function App() {
               ))}
             </div>
           )}
-
-          {activeTab === 'lorem-ipsum-tab-2' && (
-            <div className="text-center text-gray-600 text-lg mb-8">
-              <p>Lorem ipsum dolor sit amet.</p>
-            </div>
-          )}
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-start pt-0 max-w-screen-xl mx-auto">
           <div className="w-full md:w-1/4 lg:w-1/5 pr-0 md:pr-4 mb-6 md:mb-0">
-            <div className="mb-4">
-              <input
-                type="text"
-                placeholder="Lorem ipsum..."
-                className="w-full border border-gray-300 rounded-md py-2 px-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-              />
-            </div>
+            <input
+              type="text"
+              placeholder="Lorem ipsum..."
+              className="w-full mb-4 border border-gray-300 rounded-md py-2 px-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+            />
             <div className="relative mb-4">
               <button
                 onClick={toggleFilterDropdown}
@@ -100,18 +97,14 @@ export default function App() {
               </button>
               {isFilterDropdownOpen && (
                 <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1 p-3">
-                  <div className="mb-2">
-                    <label className="inline-flex items-center">
-                      <input type="checkbox" className="form-checkbox text-blue-400" />
-                      <span className="ml-2 text-gray-700">Lorem One</span>
-                    </label>
-                  </div>
-                  <div>
-                    <label className="inline-flex items-center">
-                      <input type="checkbox" className="form-checkbox text-blue-400" />
-                      <span className="ml-2 text-gray-700">Lorem Two</span>
-                    </label>
-                  </div>
+                  <label className="inline-flex items-center mb-2">
+                    <input type="checkbox" className="form-checkbox text-blue-400" />
+                    <span className="ml-2 text-gray-700">Lorem One</span>
+                  </label>
+                  <label className="inline-flex items-center">
+                    <input type="checkbox" className="form-checkbox text-blue-400" />
+                    <span className="ml-2 text-gray-700">Lorem Two</span>
+                  </label>
                 </div>
               )}
             </div>
@@ -120,31 +113,36 @@ export default function App() {
           <div className="w-full md:w-3/4 lg:w-4/5">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 ml-auto">
               {gridItems.map((item) => (
-                <div key={item.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-                  <div className="w-full h-32 bg-blue-400 flex items-center justify-center overflow-hidden">
-                    <img
-                      src={item.image}
-                      alt={`Lorem Ipsum ${item.id}`}
-                      className="w-full h-full object-cover"
-                      onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-                        const target = e.target as HTMLImageElement;
-                        target.onerror = null;
-                        target.src = "https://placehold.co/300x150/A7C7E7/FFFFFF?text=Image+Error";
-                      }}
-                    />
+                <Link href={`/Discover/Garden/${item.id}`} key={item.id}>
+                  <div className="cursor-pointer bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                    <div className="w-full h-32 bg-blue-400 flex items-center justify-center overflow-hidden">
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-full h-full object-cover"
+                        onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                          const target = e.target as HTMLImageElement;
+                          target.onerror = null;
+                          target.src = "https://placehold.co/300x150/A7C7E7/FFFFFF?text=Image+Error";
+                        }}
+                      />
+                    </div>
+                    <div className="p-3">
+                      <h3 className="text-lg font-semibold text-gray-800 mb-0.5">{item.name}</h3>
+                      <p className="text-gray-600 text-xs mb-0.5">{item.position}</p>
+                      <p className="text-gray-500 text-xs flex items-center mb-2">
+                        <svg className="w-3 h-3 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.727A8 8 0 0120 10c0-4.418-3.582-8-8-8S4 5.582 4 10c0 2.21.895 4.21 2.343 5.657L12 22l5.657-5.273z"></path>
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 9a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        {item.location}
+                      </p>
+                      <p className="text-blue-400 text-sm font-medium">
+                        <span className="font-bold">{item.pqCount}</span> Lorem Ipsum
+                      </p>
+                    </div>
                   </div>
-                  <div className="p-3">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-0.5">{item.name}</h3>
-                    <p className="text-gray-600 text-xs mb-0.5">{item.position}</p>
-                    <p className="text-gray-500 text-xs flex items-center mb-2">
-                      <svg className="w-3 h-3 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.727A8 8 0 0120 10c0-4.418-3.582-8-8-8S4 5.582 4 10c0 2.21.895 4.21 2.343 5.657L12 22l5.657-5.273z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 9a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                      {item.location}
-                    </p>
-                    <p className="text-blue-400 text-sm font-medium">
-                      <span className="font-bold">{item.pqCount}</span> Lorem Ipsum
-                    </p>
-                  </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
