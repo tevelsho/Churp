@@ -1,39 +1,55 @@
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
+# OS generated file
+# =================
 .DS_Store
+
+# Node and related ecosystem
+# ==========================
+.nodemonignore
+npm-debug.log
+node_modules/
+lib/
+mockgoose/
+
+# MEAN.js app and assets
+# ======================
+dist/
+
+# API keys file
+# ==============
+!.ebextensions/*.config
+*.env
 *.pem
+*.cert
+*spcp-cert.pem
+*formsg-cert.pem
+*formsg-key.pem
+*passphrase*
+*.key
 
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
+# VSCode
+# ==============
+.dccache
 
-# env files (can opt-in for committing if needed)
-.env*
+# Sublime editor
+# ==============
+*.sublime-project
+*.sublime-workspace
 
-# vercel
-.vercel
+# IntelliJ editor
+# ==============
+.idea/
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# General
+# =======
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+*.tmp
+*.bak
+*.swp
+logs/
+build/
+tmp/
