@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Stepper, { Step } from "../Stepper/Stepper"
+import Stepper, { Step } from "./Stepper"
 import { IoIosArrowForward } from "react-icons/io";
 import Link from 'next/link';
 

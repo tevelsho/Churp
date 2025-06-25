@@ -1,6 +1,5 @@
 'use client';
-
-import CardSwap, { Card } from "../Card/Card";
+import CardSwap, { Card } from "./Card";
 
 const HotConcerns = () => {
   return (
