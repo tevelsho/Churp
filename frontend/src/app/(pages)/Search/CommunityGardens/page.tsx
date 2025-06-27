@@ -30,14 +30,8 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex items-start justify-center px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-start justify-center px-16 sm:px-16 lg:px-16">
       <div className="max-w-full w-full p-8">
-        <div className="max-w-screen-xl mx-auto mb-8 text-sm text-gray-500">
-          <span>Discover</span>
-          <span className="mx-2">&gt;</span>
-          <span className="font-semibold text-gray-700">Ipsum</span>
-        </div>
-
         <div className="max-w-screen-xl mx-auto mb-8 flex items-start space-x-4">
           <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
             <svg className="w-10 h-10 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
@@ -113,7 +107,7 @@ export default function App() {
           <div className="w-full md:w-3/4 lg:w-4/5">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 ml-auto">
               {gridItems.map((item) => (
-                <Link href={`/Discover/Garden/${item.id}`} key={item.id}>
+                <Link href={`/Search/CommunityGardens/${item.id}`} key={item.id}>
                   <div className="cursor-pointer bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
                     <div className="w-full h-32 bg-blue-400 flex items-center justify-center overflow-hidden">
                       <img

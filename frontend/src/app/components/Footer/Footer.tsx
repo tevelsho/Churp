@@ -6,7 +6,7 @@ import Link from 'next/link';
 const Footer = () => {
   return (
     <footer className="bg-white py-8 px-4">
-      <div className="w-full max-w-screen-2xl mx-auto">
+      <div className="w-full max-w-screen-2xl mx-auto px-16">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center pb-6 space-y-4 sm:space-y-0">
           <Link
             href="https://www.example.com/telescope"

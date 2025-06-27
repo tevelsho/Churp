@@ -1,12 +1,16 @@
 'use client';
+
 import { useState } from 'react';
+import Breadcrumbs from "../../../../components/Navigation/BreadCrumbs";
 
 export default function Tengah() {
-  const [activeTab, setActiveTab] = useState('redeemsg'); 
+  const [activeTab, setActiveTab] = useState('redeemsg');
 
   return (
     <div className="min-h-screen mt-24">
-      <div className="max-w-screen-2xl mx-auto bg-white rounded-lg">
+      <Breadcrumbs />
+
+      <div className="max-w-screen-2xl mx-auto bg-white rounded-lg px-6 py-10">
         <h1 className="text-4xl font-bold mb-8 text-gray-800">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit.
         </h1>
@@ -51,7 +55,6 @@ export default function Tengah() {
               <a href="#" className="text-lg font-medium mr-2">
                 Lorem ipsum dolor sit amet
               </a>
-              {/* You can use an SVG for the arrow icon here */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
@@ -63,17 +66,11 @@ export default function Tengah() {
                   d="M10.293 15.707a1 1 0 010-1.414L14.586 10l-4.293-4.293a1 1 0 111.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z"
                   clipRule="evenodd"
                 />
-                <path
-                  fillRule="evenodd"
-                  d="M4.293 15.707a1 1 0 010-1.414L8.586 10 4.293 5.707a1 1 0 011.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z"
-                  clipRule="evenodd"
-                />
               </svg>
             </div>
 
             <button className="bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-3 px-8 rounded-lg flex items-center">
               Find out more
-              {/* You can use an SVG for the arrow icon here */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5 ml-2"
@@ -97,7 +94,6 @@ export default function Tengah() {
               amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt
               ut labore et dolore magna aliqua.
             </p>
-            {/* Add more content specific to the customised tab */}
           </div>
         )}
       </div>

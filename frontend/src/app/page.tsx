@@ -1,41 +1,46 @@
 import Hero from "../app/(pages)/Landing/components/Hero";
-import ConcernsEducation from "./(pages)/Landing/components/Flow";
-import Usage from "../app/(pages)/Landing/components/Usage"
-import Response from "./(pages)/Landing/components/SecureResponse";
+import Flow from "./(pages)/Landing/components/Flow";
+import Guide from "./(pages)/Landing/components/Guide"
+import Transparent from "./(pages)/Landing/components/Transparent";
 import OpenSource from "./(pages)/Landing/components/OpenSource";
-import Help from "./(pages)/Landing/components/HelpCentre";
-import GettingStarted from "./(pages)/Landing/components/GettingStarted" 
+import HelpCenter from "./(pages)/Landing/components/HelpCentre";
+import Metrics from "./(pages)/Landing/components/Metrics";
+import GettingStarted from "./(pages)/Landing/components/GettingStarted";
 
 export default function Home() {
   return (
     <>
-      <div className="w-full flex items-center justify-between">
+      <section>
         <Hero />
-      </div>
+      </section>
 
-      <div className="py-24">
-        <ConcernsEducation />
-      </div>
+      <section>
+        <Flow />
+      </section>
 
-      <div className="py-32">
-        <Usage />
-      </div>
+      <section>
+        <Guide />
+      </section>
 
-      <div className="py-32">
-        <Response />
-      </div>
+      <section>
+        <Transparent />
+      </section>
 
-      <div className="py-32">
+      <section>
         <OpenSource />
-      </div>
+      </section>
 
-      <div className="py-32">
-        <Help />
-      </div>
+      <section>
+        <HelpCenter />
+      </section>
 
-      <div className="">
+      <section>
+        <Metrics />
+      </section>
+
+      <section>
         <GettingStarted />
-      </div>
+      </section>
     </>
   );
 }

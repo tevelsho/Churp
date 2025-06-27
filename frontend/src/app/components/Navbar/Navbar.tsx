@@ -8,27 +8,13 @@ interface SearchDropdownProps {
 
 const SearchDropdown = ({ onClose }: SearchDropdownProps) => {
   const dropdownContent = {
-    'Use cases': [
-      { name: 'AI Transformation', href: '/search/ai-transformation' },
-      { name: 'Roadmapping', href: '/search/roadmapping' },
-      { name: 'Agile practices', href: '/search/agile-practices' },
-      { name: 'Prototyping', href: '/search/prototyping' },
-      { name: 'Customer Journey Mapping', href: '/search/customer-journey-mapping' },
-      { name: 'Organizational Design', href: '/search/organizational-design' },
-      { name: 'Goal Management', href: '/search/goal-management' },
-    ],
-    'Teams': [
-      { name: 'Engineering', href: '/search/engineering' },
-      { name: 'Design & UX', href: '/search/design-ux' },
-      { name: 'Product', href: '/search/product' },
-      { name: 'IT', href: '/search/it' },
-      { name: 'Marketing', href: '/search/marketing' },
-      { name: 'Project Management', href: '/search/project-management' },
-    ],
+    'CATEGORIES': [
+      { name: 'Community Gardens', href: '/Search/CommunityGardens' },
+    ]
   };
 
   return (
-    <div className="bg-white shadow-2xl rounded-lg border border-gray-100 transition-all duration-300 ease-in-out transform origin-top opacity-95">
+    <div className="bg-white rounded-lg border border-gray-100 transition-all duration-300 ease-in-out transform origin-top opacity-95">
       <div className="px-6 py-8">
         <div className="grid grid-cols-2 gap-8 w-max">
           {Object.entries(dropdownContent).map(([title, items]) => (
@@ -80,13 +66,12 @@ const Navbar = () => {
   const navItems = [
     { name: 'About', href: '/' },
     { name: 'Search', type: 'dropdown', href: '/Search' },
-    { name: 'Discover', href: '/Discover' },
     { name: 'Post or Report', href: '/Submit' },
   ];
 
   return (
-    <nav className="bg-white shadow- w-full relative z-40">
-      <div className="w-full max-w-screen-2xl mx-auto py-3 flex items-center">
+    <nav className="bg-white w-full relative z-40">
+      <div className="w-full max-w-screen-2xl mx-auto py-3 flex items-center px-16">
         <div className="flex items-center space-x-8 flex-grow">
           <a href="/" className="flex-shrink-0" onClick={() => setCurrentPath('/')}>
             <img
