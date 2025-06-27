@@ -9,10 +9,8 @@ import GettingStarted from "./(pages)/Landing/components/GettingStarted"
 export default function Home() {
   return (
     <>
-      <div className="bg-blue-50/70 w-full flex items-center justify-center">
-        <div className="max-w-screen-2xl mx-auto px-4 w-full flex justify-between">
-          <Hero />
-        </div>
+      <div className="w-full flex items-center justify-between">
+        <Hero />
       </div>
 
       <div className="py-24">
