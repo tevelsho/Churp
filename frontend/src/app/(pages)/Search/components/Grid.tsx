@@ -15,11 +15,11 @@ interface GridItem {
 const gridItems: GridItem[] = [
   {
     id: 1,
-    image: '/garden/tengah/tengah.png',
-    name: 'Tengah',
-    location: 'West Region',
-    description: 'A vibrant garden focused on sustainable crops.',
-    href: '/Search/CommunityGardens/tengah',
+    image: '/placeholder.png',
+    name: 'Group Complain 1',
+    location: 'Community Garden Region',
+    description: 'Why is my garden so small?',
+    href: '/Search/Concern/TestConcern',
   },
 ];
 

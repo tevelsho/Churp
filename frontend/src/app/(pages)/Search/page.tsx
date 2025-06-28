@@ -1,8 +1,8 @@
 'use client';
 import React from 'react';
-import Header from '../components/Header';
-import Filter from '../components/Filter';
-import Grid from '../components/Grid';
+import Header from './components/Header';
+import Filter from './components/Filter';
+import Grid from './components/Grid';
 
 export default function App() {
   return (

@@ -23,7 +23,7 @@ const Breadcrumbs = () => {
   const baseIndex = segments.length - visibleSegments.length;
 
   return (
-    <div className="max-w-screen-xl mx-auto mb-8 text-sm text-gray-500 flex items-center flex-wrap gap-x-2">
+    <div className="max-w-screen-2xl mt-12 mb-20 px-16 mx-auto mb-8 text-sm text-gray-500 flex items-center flex-wrap gap-x-2">
       {visibleSegments.map((segment, i) => {
         const realIndex = baseIndex + i;
         const href = '/' + segments.slice(0, realIndex + 1).join('/');

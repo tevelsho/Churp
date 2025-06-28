@@ -13,7 +13,7 @@ interface FormData {
   whyInterested: string;
   confirmAvailability: boolean;
   acknowledgeSelection: boolean;
-  attachedFile: File | null; // Added for file handling
+  attachedFile: File | null; 
 }
 
 const gardens = ["Garden A", "Garden B", "Garden C", "Garden D"];
@@ -198,8 +198,8 @@ export default function Form() {
                     type="file"
                     ref={fileInputRef}
                     onChange={handleFileChange}
-                    className="hidden" // Hide the actual file input
-                    accept="image/*" // Accept only image files (optional, can be changed)
+                    className="hidden"
+                    accept="image/*" 
                   />
                   <button
                     type="button"
