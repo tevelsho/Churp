@@ -10,7 +10,7 @@ interface SearchDropdownProps {
 
 const SearchDropdown = ({ onClose }: SearchDropdownProps) => {
   const dropdownContent = {
-    'CATEGORIES': [
+    CATEGORIES: [
       { name: 'Community Gardens', href: '/Search/CommunityGardens' },
     ],
   };
@@ -54,7 +54,10 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (searchDropdownRef.current && !searchDropdownRef.current.contains(event.target as Node)) {
+      if (
+        searchDropdownRef.current &&
+        !searchDropdownRef.current.contains(event.target as Node)
+      ) {
         setSearchDropdownOpen(false);
       }
     };
@@ -67,25 +70,27 @@ const Navbar = () => {
   const navItems = [
     { name: 'About', href: '/' },
     { name: 'Search', type: 'dropdown', href: '/Search' },
-    { name: 'Post or Report', href: '/Submit' },
+    { name: 'Concerns', href: '/Concerns' },
+    { name: 'Report', href: '/Report' },
   ];
 
   return (
     <nav className="bg-white w-full relative z-40">
       <div className="w-full max-w-screen-2xl mx-auto py-3 flex items-center px-16">
         <div className="flex items-center space-x-8 flex-grow">
-          <a href="/" className="flex-shrink-0" onClick={() => setCurrentPath('/')}>
-            <img
-              src="/HearUs.svg"
-              alt="HearUs Logo"
-              width={140}
-              height={140}
-            />
+          <a
+            href="/"
+            className="flex-shrink-0"
+            onClick={() => setCurrentPath('/')}
+          >
+            <img src="/HearUs.svg" alt="HearUs Logo" width={140} height={140} />
           </a>
 
           <div className="hidden sm:flex sm:space-x-6">
             {navItems.map((item) => {
-              const isActive = currentPath === item.href || (item.name === 'About' && currentPath === '/');
+              const isActive =
+                currentPath === item.href ||
+                (item.name === 'About' && currentPath === '/');
 
               if (item.type === 'dropdown' && item.name === 'Search') {
                 return (
@@ -98,7 +103,9 @@ const Navbar = () => {
                   >
                     <span
                       className={`text-base font-medium transition-colors duration-200 flex items-center gap-1 ${
-                        searchDropdownOpen ? 'text-[#2a56c5]' : 'text-[#A0A4AD] group-hover:text-[#2a56c5]'
+                        searchDropdownOpen
+                          ? 'text-[#2a56c5]'
+                          : 'text-[#A0A4AD] group-hover:text-[#2a56c5]'
                       }`}
                     >
                       {item.name}
@@ -115,7 +122,9 @@ const Navbar = () => {
 
                     <div
                       className={`absolute top-full left-0 transition-all duration-300 ease-in-out origin-top-left z-50 ${
-                        searchDropdownOpen ? 'visible opacity-100 scale-y-100' : 'invisible opacity-0 scale-y-0'
+                        searchDropdownOpen
+                          ? 'visible opacity-100 scale-y-100'
+                          : 'invisible opacity-0 scale-y-0'
                       }`}
                       style={{ paddingTop: '1.5rem', marginBottom: '-1.5rem' }}
                     >
@@ -135,7 +144,9 @@ const Navbar = () => {
                   >
                     <span
                       className={`text-base font-medium transition-colors duration-200 ${
-                        isActive ? 'text-[#2a56c5]' : 'text-[#A0A4AD] group-hover:text-[#2a56c5]'
+                        isActive
+                          ? 'text-[#2a56c5]'
+                          : 'text-[#A0A4AD] group-hover:text-[#2a56c5]'
                       }`}
                     >
                       {item.name}
@@ -154,21 +165,22 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center">
-          <div className="hidden sm:block relative">
-            <div className="flex items-center w-64 px-4 py-2 border border-[#BFC2C8] rounded-md bg-transparent">
-              <HiMiniMagnifyingGlass className="w-5 h-5 text-gray-500 pointer-events-none" />
-              <input
-                ref={searchInputRef}
-                type="text"
-                placeholder="Search..."
-                className="ml-2 outline-none bg-transparent text-sm w-full"
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    console.log('Search for:', (e.target as HTMLInputElement).value);
-                  }
-                }}
-              />
-            </div>
+          <div className="max-w-xs mx-auto relative">
+            <HiMiniMagnifyingGlass
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none"
+            />
+            <input
+              ref={searchInputRef}
+              type="text"
+              placeholder="Search..."
+              className="w-full border border-gray-300 rounded-md py-2 pl-12 pr-4 text-sm
+                        focus:outline-none focus:ring-[#4A61C0] focus:border-[#4A61C0]"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  console.log('Search for:', (e.target as HTMLInputElement).value);
+                }
+              }}
+            />
           </div>
 
           <button
@@ -183,7 +195,8 @@ const Navbar = () => {
       {menuOpen && (
         <div className="sm:hidden px-4 pt-2 pb-4 space-y-2">
           {navItems.map((item) => {
-            const isActive = currentPath === item.href || (item.name === 'About' && currentPath === '/');
+            const isActive =
+              currentPath === item.href || (item.name === 'About' && currentPath === '/');
             return (
               <a
                 key={item.name}

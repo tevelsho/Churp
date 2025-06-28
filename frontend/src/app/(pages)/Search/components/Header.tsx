@@ -16,7 +16,7 @@ const Header: React.FC = () => {
         <input
           type="text"
           placeholder="Search community gardens, topics, or locations..."
-          className="w-full border border-gray-300 rounded-md py-3 pl-12 pr-4 text-base outline-none bg-transparent"
+          className="w-full border border-gray-300 rounded-md py-3 pl-12 pr-4 text-base focus:outline-none focus:ring-[#4A61C0] focus:border-[#4A61C0]"
         />
       </div>
     </div>

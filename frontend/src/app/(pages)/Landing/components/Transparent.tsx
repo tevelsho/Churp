@@ -8,7 +8,7 @@ const Transparent = () => {
       <div className="flex flex-col lg:flex-row items-center justify-between">
         <div className="lg:w-1/2 lg:pr-12 mb-10 lg:mb-0">
           <h2 className="text-3xl lg:text-4xl font-bold text-[#293044] mb-4 leading-tight">
-            Transpareny
+            Transparency
           </h2>
           <p className="text-base text-[#445072] mb-10 leading-relaxed">
             No more being in the dark, one single source of truth for everyone. We ensure that you
