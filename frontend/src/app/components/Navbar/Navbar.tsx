@@ -1,6 +1,8 @@
 'use client';
-import { useState, useRef, useEffect } from 'react';
-import { Search, Menu, ChevronDown } from 'lucide-react'; 
+
+import React, { useState, useEffect, useRef } from 'react';
+import { Menu, ChevronDown } from 'lucide-react';
+import { HiMiniMagnifyingGlass } from 'react-icons/hi2';
 
 interface SearchDropdownProps {
   onClose: () => void;
@@ -10,7 +12,7 @@ const SearchDropdown = ({ onClose }: SearchDropdownProps) => {
   const dropdownContent = {
     'CATEGORIES': [
       { name: 'Community Gardens', href: '/Search/CommunityGardens' },
-    ]
+    ],
   };
 
   return (
@@ -25,7 +27,6 @@ const SearchDropdown = ({ onClose }: SearchDropdownProps) => {
               <ul className="space-y-2">
                 {items.map((item) => (
                   <li key={item.name}>
-                    {/* Using a standard <a> tag instead of Next.js Link */}
                     <a
                       href={item.href}
                       className="block text-gray-700 hover:text-[#2a56c5] text-sm transition-colors duration-200 py-1 whitespace-nowrap"
@@ -75,16 +76,16 @@ const Navbar = () => {
         <div className="flex items-center space-x-8 flex-grow">
           <a href="/" className="flex-shrink-0" onClick={() => setCurrentPath('/')}>
             <img
-              src="/HearUs.svg" 
+              src="/HearUs.svg"
               alt="HearUs Logo"
               width={140}
               height={140}
-              className=""
             />
           </a>
+
           <div className="hidden sm:flex sm:space-x-6">
             {navItems.map((item) => {
-              const isActive = (item.href && currentPath === item.href) || (item.name === 'About' && currentPath === '/');
+              const isActive = currentPath === item.href || (item.name === 'About' && currentPath === '/');
 
               if (item.type === 'dropdown' && item.name === 'Search') {
                 return (
@@ -97,12 +98,15 @@ const Navbar = () => {
                   >
                     <span
                       className={`text-base font-medium transition-colors duration-200 flex items-center gap-1 ${
-                        searchDropdownOpen
-                          ? 'text-[#2a56c5]'
-                          : 'text-[#A0A4AD] group-hover:text-[#2a56c5]'
+                        searchDropdownOpen ? 'text-[#2a56c5]' : 'text-[#A0A4AD] group-hover:text-[#2a56c5]'
                       }`}
                     >
-                      {item.name} <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${searchDropdownOpen ? 'rotate-180' : ''}`} />
+                      {item.name}
+                      <ChevronDown
+                        className={`w-4 h-4 transition-transform duration-200 ${
+                          searchDropdownOpen ? 'rotate-180' : ''
+                        }`}
+                      />
                     </span>
                     <span
                       className="absolute inset-0 rounded-md transition-opacity duration-200 opacity-0 group-hover:opacity-20"
@@ -110,9 +114,9 @@ const Navbar = () => {
                     ></span>
 
                     <div
-                      className={`absolute top-full left-0 transition-all duration-300 ease-in-out origin-top-left z-50
-                        ${searchDropdownOpen ? 'visible opacity-100 scale-y-100' : 'invisible opacity-0 scale-y-0'}
-                        `}
+                      className={`absolute top-full left-0 transition-all duration-300 ease-in-out origin-top-left z-50 ${
+                        searchDropdownOpen ? 'visible opacity-100 scale-y-100' : 'invisible opacity-0 scale-y-0'
+                      }`}
                       style={{ paddingTop: '1.5rem', marginBottom: '-1.5rem' }}
                     >
                       <SearchDropdown onClose={() => setSearchDropdownOpen(false)} />
@@ -131,9 +135,7 @@ const Navbar = () => {
                   >
                     <span
                       className={`text-base font-medium transition-colors duration-200 ${
-                        isActive
-                          ? 'text-[#2a56c5]'
-                          : 'text-[#A0A4AD] group-hover:text-[#2a56c5]'
+                        isActive ? 'text-[#2a56c5]' : 'text-[#A0A4AD] group-hover:text-[#2a56c5]'
                       }`}
                     >
                       {item.name}
@@ -145,6 +147,7 @@ const Navbar = () => {
                   </a>
                 );
               }
+
               return null;
             })}
           </div>
@@ -152,10 +155,8 @@ const Navbar = () => {
 
         <div className="flex items-center">
           <div className="hidden sm:block relative">
-            <div
-              className="flex items-center w-64 px-4 py-2 border border-[#BFC2C8] rounded-md bg-transparent"
-            >
-              <Search className="w-5 h-5 text-gray-500" /> 
+            <div className="flex items-center w-64 px-4 py-2 border border-[#BFC2C8] rounded-md bg-transparent">
+              <HiMiniMagnifyingGlass className="w-5 h-5 text-gray-500 pointer-events-none" />
               <input
                 ref={searchInputRef}
                 type="text"
@@ -182,61 +183,27 @@ const Navbar = () => {
       {menuOpen && (
         <div className="sm:hidden px-4 pt-2 pb-4 space-y-2">
           {navItems.map((item) => {
-            if (item.type === 'dropdown' && item.name === 'Search') {
-              return (
-                <a
-                  key={item.name}
-                  href={item.href || '/search'}
-                  className="block relative group px-4 py-2 rounded-md"
-                  onClick={() => {
-                    setMenuOpen(false);
-                    setCurrentPath(item.href || '/search');
-                  }}
+            const isActive = currentPath === item.href || (item.name === 'About' && currentPath === '/');
+            return (
+              <a
+                key={item.name}
+                href={item.href}
+                className="block relative group px-4 py-2 rounded-md"
+                onClick={() => {
+                  setMenuOpen(false);
+                  setCurrentPath(item.href);
+                }}
+              >
+                <span
+                  className={`text-base font-medium transition-colors duration-200 ${
+                    isActive ? 'text-[#2a56c5]' : 'text-[#b0b3bb] group-hover:text-[#2a56c5]'
+                  }`}
                 >
-                  <span
-                    className={`text-base font-medium transition-colors duration-200 ${
-                      (currentPath === '/search' || currentPath.startsWith('/search/'))
-                        ? 'text-[#2a56c5]'
-                        : 'text-[#b0b3bb] group-hover:text-[#2a56c5]'
-                    }`}
-                  >
-                    {item.name}
-                  </span>
-                  <span
-                    className="absolute inset-0 bg-[#2a56c5] opacity-0 group-hover:opacity-20 rounded-md transition-opacity duration-200"
-                  ></span>
-                </a>
-              );
-            }
-
-            if (item.href) {
-              const isActive = currentPath === item.href || (item.name === 'About' && currentPath === '/');
-              return (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className="block relative group px-4 py-2 rounded-md"
-                  onClick={() => {
-                    setMenuOpen(false);
-                    setCurrentPath(item.href); 
-                  }}
-                >
-                  <span
-                    className={`text-base font-medium transition-colors duration-200 ${
-                      isActive
-                        ? 'text-[#2a56c5]'
-                        : 'text-[#b0b3bb] group-hover:text-[#2a56c5]'
-                    }`}
-                  >
-                    {item.name}
-                  </span>
-                  <span
-                    className="absolute inset-0 bg-[#2a56c5] opacity-0 group-hover:opacity-20 rounded-md transition-opacity duration-200"
-                  ></span>
-                </a>
-              );
-            }
-            return null;
+                  {item.name}
+                </span>
+                <span className="absolute inset-0 bg-[#2a56c5] opacity-0 group-hover:opacity-20 rounded-md transition-opacity duration-200"></span>
+              </a>
+            );
           })}
         </div>
       )}

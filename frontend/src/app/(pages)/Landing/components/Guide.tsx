@@ -32,7 +32,7 @@ const Guide = () => {
 
   return (
     <div className="w-full bg-[#f8f9fd] py-24">
-      <div className="max-w-screen-2xl mx-auto px-16 lg:px-16 flex flex-col lg:flex-row items-start gap-12">
+      <div className="max-w-screen-2xl mx-auto px-6 lg:px-16 flex flex-col lg:flex-row items-start gap-12">
         <div className="flex-1">
           <h2 className="text-3xl lg:text-4xl font-bold text-[#293044] mb-8">
             How it works
@@ -65,6 +65,7 @@ const Guide = () => {
             className="relative transition-all duration-300 ease-in-out"
             style={{ minHeight: maxHeight > 0 ? maxHeight : 'auto' }}
           >
+            {/* STORAGE MODE */}
             <div
               ref={contentRef1}
               className={`absolute top-0 left-0 w-full transition-opacity duration-300 ${
@@ -79,8 +80,8 @@ const Guide = () => {
 
               <div className="space-y-4">
                 {steps.map((step, index) => (
-                  <div key={index} className="flex items-start">
-                    <div className="w-8 h-8 mr-4 bg-[#4A61C0] text-white rounded-md flex items-center justify-center font-bold text-sm">
+                  <div key={index} className="flex items-center gap-4">
+                    <div className="w-8 h-8 bg-[#4A61C0] text-white rounded-md flex items-center justify-center font-bold text-sm">
                       {index + 1}
                     </div>
                     <p className="text-base text-[#445072] leading-snug">{step}</p>
@@ -89,6 +90,7 @@ const Guide = () => {
               </div>
             </div>
 
+            {/* MULTI-RESPONDENT MODE */}
             <div
               ref={contentRef2}
               className={`absolute top-0 left-0 w-full transition-opacity duration-300 ${
@@ -103,8 +105,8 @@ const Guide = () => {
 
               <div className="space-y-4">
                 {steps.map((step, index) => (
-                  <div key={index} className="flex items-start">
-                    <div className="w-8 h-8 mr-4 bg-[#4A61C0] text-white rounded-md flex items-center justify-center font-bold text-sm">
+                  <div key={index} className="flex items-center gap-4">
+                    <div className="w-8 h-8 bg-[#4A61C0] text-white rounded-md flex items-center justify-center font-bold text-sm">
                       {index + 1}
                     </div>
                     <p className="text-base text-[#445072] leading-snug">{step}</p>

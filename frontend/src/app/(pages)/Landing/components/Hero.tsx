@@ -6,7 +6,7 @@ import { FaArrowRight } from 'react-icons/fa6';
 const Hero = () => {
   return (
     <section className="w-full flex items-center justify-between">
-      <div className="flex w-full bg-[#f8f9fd] py-16">
+      <div className="flex w-full bg-[#f8f9fd] py-16 ">
         <div className="max-w-screen-2xl mx-auto px-16 flex items-center justify-between w-full">
           <div className="flex-1 max-w-xl">
             <h1 className="text-6xl lg:text-7xl font-bold text-[#293044] mb-6">
@@ -27,7 +27,7 @@ const Hero = () => {
             </div>
           </div>
 
-          <div className="flex-1 flex justify-end pr-4 lg:pr-28">
+          <div className="flex-1 flex justify-end">
             <Image
               src="/Stress.svg"
               alt="Concern Illustration"
