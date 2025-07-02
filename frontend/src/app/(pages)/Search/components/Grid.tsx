@@ -16,10 +16,10 @@ const gridItems: GridItem[] = [
   {
     id: 1,
     image: '/placeholder.png',
-    name: 'Group Complain 1',
-    location: 'Community Garden Region',
-    description: 'Why is my garden so small?',
-    href: '/Search/Concern/TestConcern',
+    name: 'Allotment Concerns',
+    location: 'Tengah',
+    description: 'Citizens feel that the current allotment system implemented is unfair.',
+    href: '/Search/Concern/Allotment',
   },
 ];
 
