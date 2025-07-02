@@ -29,8 +29,8 @@ const Hero = () => {
 
           <div className="flex-1 flex justify-end">
             <Image
-              src="/Stress.svg"
-              alt="Concern Illustration"
+              src="/Planting.svg"
+              alt="Planting Illustration"
               width={550}
               height={550}
               priority

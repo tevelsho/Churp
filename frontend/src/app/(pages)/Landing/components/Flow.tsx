@@ -17,7 +17,7 @@ const ConcernsEducation = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           <div className="flex flex-col">
             <div className="flex items-center mb-6">
-              <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mr-4">
+              <div className="w-12 h-12 bg-[#4A61C0] rounded-full flex items-center justify-center mr-4">
                 <BsFillQuestionSquareFill className="text-white text-xl" />
               </div>
             </div>
@@ -32,7 +32,7 @@ const ConcernsEducation = () => {
 
           <div className="flex flex-col">
             <div className="flex items-center mb-6">
-              <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mr-4">
+              <div className="w-12 h-12 bg-[#4A61C0] rounded-full flex items-center justify-center mr-4">
                 <IoIosChatboxes className="text-white text-2xl" />
               </div>
             </div>
@@ -40,14 +40,14 @@ const ConcernsEducation = () => {
             <p className="text-[#454953] mb-4">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
             </p>
-            <a href="#" className="text-blue-500 hover:text-blue-600 font-medium inline-flex items-center gap-1 underline">
+            <a href="#" className="text-[#4A61C0] font-medium inline-flex items-center gap-1 underline">
               Lorem ipsum dolor sit amet <LuExternalLink />
             </a>
           </div>
 
           <div className="flex flex-col">
             <div className="flex items-center mb-6">
-              <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mr-4">
+              <div className="w-12 h-12 bg-[#4A61C0] rounded-full flex items-center justify-center mr-4">
                 <FaSort className="text-white text-lg" />
               </div>
             </div>

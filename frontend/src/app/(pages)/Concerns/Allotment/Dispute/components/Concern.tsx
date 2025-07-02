@@ -62,18 +62,14 @@ function RedditPost({
     setIsSaved(prev => !prev);
   };
 
-  const handlePostClick = () => {
-    window.location.href = `/Search/Concern/TestConcern/Dispute/${id}`;
-  };
-
   return (
-    <div className="rounded-md overflow-hidden mb-6 hover:cursor-pointer" onClick={handlePostClick}>
+    <div className="rounded-md overflow-hidden mb-6">
       <div className="flex items-center border-b border-gray-200">
         <div className="flex items-center space-x-2 flex-grow mb-4">
           {communityIcon && (
             <img src={communityIcon} alt="Community Icon" className="w-5 h-5 rounded-full" />
           )}
-          <span className="text-sm font-semibold text-gray-800">Name</span>
+          <span className="text-sm font-semibold text-gray-800">Alice Chen</span>
           <span className="text-xs text-gray-500">• {postTime}</span>
           {visitStatus && (
             <span className="text-xs text-gray-500 hidden sm:block">• {visitStatus}</span>
@@ -145,10 +141,10 @@ function RedditPost({
 export default function Concerns() {
   const dummyPosts: RedditPostProps[] = [
     {
-      id: 'community-garden-plot-dispute-1', 
+      id: 'community-garden-plot-dispute-1',
       communityIcon: 'https://placehold.co/20x20/4CAF50/fff?text=CG',
       communityName: 'Alice Chen',
-      postTime: '3 hr. ago',
+      postTime: '2 days ago',
       title: 'Ongoing Dispute Over Community Garden Plot Boundaries',
       content: `I'm a long-time member of the Sunshine Community Garden, and lately, there's been a persistent issue with plot boundaries. My plot (C-12) keeps getting encroached upon by my neighbor's plants, despite clear markers. I've tried speaking with them, but the issue continues. It's affecting my harvest and overall enjoyment. Is there a garden committee or a formal dispute resolution process I can follow? This is getting really frustrating.`,
       initialUpvotes: 45,

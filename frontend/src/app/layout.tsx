@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "HearUs!",
+  title: "hearUs",
   description: "A Source of Truth at a Glance.",
 };
 

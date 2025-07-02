@@ -15,19 +15,19 @@ interface ReplyData {
 const dummyReplies: ReplyData[] = [
   {
     id: '1',
-    author: 'AL',
+    author: 'RN (Jamie)',
     postTime: '2 hr ago',
-    content: 'I’ve seen this issue too. We tried a resolution process but it didn’t help much.',
+    content: `Also, just to follow up, we're currently working on a clearer, standardized signage system for all boundary markers to prevent future conflicts like this. We’re also drafting a quick-reference guide for informal conflict resolution steps before it escalates. Thanks again for helping us improve the space for everyone!`,
     indentationLevel: 1,
-    authorIcon: 'https://placehold.co/20x20/6A1B9A/fff?text=AL',
+    authorIcon: 'https://placehold.co/20x20/6A1B9A/fff?text=JA',
   },
   {
     id: '2',
-    author: 'BC',
+    author: 'RN (Alex)',
     postTime: '1 hr ago',
-    content: 'Did you contact the council? They helped us with a similar issue.',
+    content: `Hi! Thanks for raising this! We’ve looked into your concern regarding plot C-12. We've since clarified boundary markers with both parties, and a committee member personally met with your neighbour to realign their plot. The encroaching plants have been trimmed back as of this morning. Let us know if you notice any further issues.`,
     indentationLevel: 2,
-    authorIcon: 'https://placehold.co/20x20/0D47A1/fff?text=BC',
+    authorIcon: 'https://placehold.co/20x20/0D47A1/fff?text=AX',
   },
 ];
 

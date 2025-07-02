@@ -30,6 +30,26 @@ const filterOptions: FilterOption[] = [
             { id: 'toa-payoh', label: 'Toa Payoh' },
         ],
     },
+    {
+        id: 'category',
+        label: 'Type',
+        children: [
+            { id: 'theft', label: 'Theft' },
+            { id: 'allotment', label: 'Allotment' },
+            { id: 'pest-control', label: 'Pest Control' },
+            { id: 'others', label: 'Others' },
+        ],
+    },
+    {
+        id: 'category',
+        label: 'Date',
+        children: [
+            { id: 'last-24h', label: 'Last 24h' },
+            { id: 'last-week', label: 'Last Week' },
+            { id: 'last-year', label: 'Last Year' },
+            { id: 'older', label: 'Older' },
+        ],
+    },
 ];
 
 interface FilterItemProps {
