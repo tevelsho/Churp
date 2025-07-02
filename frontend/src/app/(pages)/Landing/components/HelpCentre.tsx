@@ -9,20 +9,20 @@ import { FaExternalLinkAlt } from 'react-icons/fa';
 
 const faqs = [
   {
-    question: 'Lorem ipsum dolor sit amet?',
-    answer: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque vitae lacus in nisl suscipit tincidunt. Integer ut purus quis massa ultricies cursus. Vivamus in turpis elit.`
+    question: 'What kind of issues can I report?',
+    answer: `You can report anything related to the garden — such as maintenance issues, safety concerns, pest problems, or even new ideas for improvement and beautification.`
   },
   {
-    question: 'Consectetur adipiscing elit?',
-    answer: `Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Morbi tempus, nunc ut bibendum accumsan, nisl quam porttitor metus.`
+    question: 'How long does it usually take to resolve a concern?',
+    answer: `Resolution times vary depending on the issue’s complexity and urgency. You can track progress through status updates on the Community Dashboard.`
   },
   {
-    question: 'Tempor incididunt ut labore et dolore?',
-    answer: `Tempor incididunt ut labore et dolore magna aliqua. Vestibulum et arcu vel lorem dictum malesuada. Sed ut perspiciatis unde omnis iste natus error.`
+    question: 'Can I remain anonymous when submitting a concern?',
+    answer: `Yes, all submissions on the platform are currently anonymous by default. Your personal details are not shared.`
   },
   {
-    question: 'Magna aliqua ut enim ad minim?',
-    answer: `Magna aliqua ut enim ad minim veniam. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.`
+    question: 'Can I suggest improvements or ideas that are not problems?',
+    answer: `Absolutely! The platform welcomes all ideas, suggestions, and positive updates to help improve the garden community.`
   }
 ];
 

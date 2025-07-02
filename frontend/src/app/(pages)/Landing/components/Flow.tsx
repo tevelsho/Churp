@@ -21,13 +21,11 @@ const ConcernsEducation = () => {
                 <BsFillQuestionSquareFill className="text-white text-xl" />
               </div>
             </div>
-            <h3 className="text-xl font-bold text-[#2C2E34] mb-4">Lorem ipsum dolor sit amet?</h3>
+            <h3 className="text-xl font-bold text-[#2C2E34] mb-4">Share Your Concerns</h3>
             <p className="text-[#454953] mb-4">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+              Contribute to your neighbourhood garden by sharing updates, concerns, or ideas. Whether it’s a small issue or a big improvement, your voice matters — just submit a short form under the “Reports” section of our website.
             </p>
-            <p className="text-[#454953]">
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </p>
+         
           </div>
 
           <div className="flex flex-col">
@@ -36,13 +34,13 @@ const ConcernsEducation = () => {
                 <IoIosChatboxes className="text-white text-2xl" />
               </div>
             </div>
-            <h3 className="text-xl font-bold text-[#2C2E34] mb-4">Lorem ipsum dolor sit amet?</h3>
+            <h3 className="text-xl font-bold text-[#2C2E34] mb-4">Community Dashboard for Concerns and Action</h3>
             <p className="text-[#454953] mb-4">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+              View and engage with community-shared concerns, updates, and ideas on the Community Dashboard. Connect with fellow gardeners, find shared experiences, and see how issues are being addressed — with support from your local Residents’ Network and official channels.
             </p>
-            <a href="#" className="text-[#4A61C0] font-medium inline-flex items-center gap-1 underline">
+            {/* <a href="#" className="text-[#4A61C0] font-medium inline-flex items-center gap-1 underline">
               Lorem ipsum dolor sit amet <LuExternalLink />
-            </a>
+            </a> */}
           </div>
 
           <div className="flex flex-col">
@@ -51,13 +49,13 @@ const ConcernsEducation = () => {
                 <FaSort className="text-white text-lg" />
               </div>
             </div>
-            <h3 className="text-xl font-bold text-[#2C2E34] mb-4">Lorem ipsum dolor sit amet?</h3>
-            <p className="text-[#454953] mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit:</p>
-            <div className="space-y-3 text-[#454953]">
+            <h3 className="text-xl font-bold text-[#2C2E34] mb-4">Stay Updated and Follow Up</h3>
+            <p className="text-[#454953] mb-4">Stay informed with status updates from official channels — see whether your concern is being reviewed, worked on, or resolved. You can also follow up directly to keep the conversation going and ensure meaningful action.</p>
+            {/* <div className="space-y-3 text-[#454953]">
               <p><span className="font-medium">1.</span> Lorem ipsum dolor sit amet.</p>
               <p><span className="font-medium">2.</span> Lorem ipsum dolor sit amet.</p>
               <p><span className="font-medium">3.</span> Lorem ipsum dolor sit amet.</p>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

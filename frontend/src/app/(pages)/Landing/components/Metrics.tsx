@@ -4,20 +4,20 @@ import React from 'react';
 
 const stats = [
   {
-    value: '1,025,009',
-    label: 'FORMS LAUNCHED',
+    value: '100',
+    label: 'REPORTS SUBMITTED',
   },
   {
-    value: '244,185,221',
-    label: 'SUBMISSIONS RECEIVED',
+    value: '75',
+    label: 'CONCERNS REVIEWED AND ADDRESSED',
   },
   {
-    value: '209,925',
-    label: 'PUBLIC OFFICERS ONBOARD',
+    value: '50',
+    label: 'RESIDENTS NETWORK MEMBERS ONBOARD',
   },
   {
-    value: '164',
-    label: 'GOVERNMENT AGENCIES',
+    value: '20',
+    label: 'SUPPORTING COMMUNITY AND GOVERNMENT AGENCIES',
   },
 ];
 
@@ -26,7 +26,7 @@ const Metrics = () => {
     <section className="w-full py-32 px-16">
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center ">
         <h2 className="text-3xl lg:text-4xl font-bold text-[#293044] mb-16">
-          Used by some people
+          Used by Community / Allotment Gardeners
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
