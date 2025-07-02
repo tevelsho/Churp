@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import Header from './components/Header';
-import Breadcrumbs from '../../../../components/Navigation/BreadCrumbs';
+import Breadcrumbs from '../../../components/Navigation/BreadCrumbs';
 import Concerns from "./components/Concerns";
 import SideBar from "./components/SideBar";
 

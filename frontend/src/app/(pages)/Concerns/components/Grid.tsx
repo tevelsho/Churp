@@ -19,7 +19,7 @@ const gridItems: GridItem[] = [
     name: 'Allotment Concerns',
     location: 'Tengah',
     description: 'Citizens feel that the current allotment system implemented is unfair.',
-    href: '/Search/Concern/Allotment',
+    href: 'Concerns/Allotment',
   },
 ];
 

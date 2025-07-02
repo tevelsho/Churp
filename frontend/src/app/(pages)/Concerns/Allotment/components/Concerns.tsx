@@ -63,7 +63,7 @@ function RedditPost({
   };
 
   const handlePostClick = () => {
-    window.location.href = `/Search/Concern/Allotment/Dispute/${id}`;
+    window.location.href = `/Concerns/Allotment/Dispute/${id}`;
   };
 
   return (
