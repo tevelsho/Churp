@@ -8,7 +8,7 @@ const Header: React.FC = () => {
     <div className="text-center py-20">
       <h1 className="text-4xl font-bold text-[#293044] mb-4">Explore Community Gardens</h1>
       <h2 className="text-sm text-[#445072] mb-8">
-        Discover and explore public questions submitted in community gardens across the island
+        Discover and explore public concerns submitted in community gardens across the island!
       </h2>
 
       <div className="max-w-2xl mx-auto relative">

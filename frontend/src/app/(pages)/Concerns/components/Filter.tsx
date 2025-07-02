@@ -20,6 +20,16 @@ const filterOptions: FilterOption[] = [
             { id: 'category-clothing', label: 'Central' },
         ],
     },
+    {
+        id: 'category',
+        label: 'Garden',
+        children: [
+            { id: 'tengah', label: 'Tengah' },
+            { id: 'jurong-east', label: 'Jurong East' },
+            { id: 'bukit-batok', label: 'Bukit Batok' },
+            { id: 'toa-payoh', label: 'Toa Payoh' },
+        ],
+    },
 ];
 
 interface FilterItemProps {

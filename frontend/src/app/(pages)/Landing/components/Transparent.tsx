@@ -11,7 +11,7 @@ const Transparent = () => {
             Transparency
           </h2>
           <p className="text-base text-[#445072] mb-10 leading-relaxed">
-            No more being in the dark, one single source of truth for everyone. We ensure that you
+            No more being in the dark — one single source of truth for everyone.<br/>We ensure that you see what’s raised, what’s being done, and who’s responsible. Everyone’s kept in the loop, always.
           </p>
           <Link
             href="#"
