@@ -55,7 +55,7 @@ const Guide = () => {
               }`}
               onClick={() => setActiveTab('storage')}
             >
-              Community / Allotment Gardener
+              Gardener
             </button>
             <button
               className={`py-3 ml-6 text-base font-semibold transition-colors duration-200 ${
@@ -81,15 +81,14 @@ const Guide = () => {
               }`}
             >
               <p className="text-base text-[#445072] mb-6 leading-relaxed max-w-3xl">
-               Community and allotment gardeners can share updates, concerns, or ideas about their neighbourhood garden through a simple form on the website. 
-               They can also view and interact with others’ posts on the Community Dashboard, 
-               stay informed about how issues are being handled, and connect with fellow gardeners—all with support from local Residents’ Networks and official channels.
+               Community and allotment gardeners can submit concerns, updates, or ideas about their garden through a simple form. They can also view others’ posts, track issue progress, and connect with fellow gardeners on the Community Dashboard—with support from Residents’ Networks and official channels.
               </p>
 
               <div className="space-y-4">
                 {steps.map((step, index) => (
                   <div key={index} className="flex items-center gap-4">
-                    <div className="w-8 h-8 bg-[#4A61C0] text-white rounded-md flex items-center justify-center font-bold text-sm">
+                    {/* Added flex-shrink-0 here */}
+                    <div className="w-8 h-8 bg-[#4A61C0] text-white rounded-md flex items-center justify-center font-bold text-sm flex-shrink-0">
                       {index + 1}
                     </div>
                     <p className="text-base text-[#445072] leading-snug">{step}</p>
@@ -106,14 +105,15 @@ const Guide = () => {
               }`}
             >
               <p className="text-base text-[#445072] mb-6 leading-relaxed max-w-3xl">
-               The Residents’ Network reviews and responds to community concerns, 
+               The Residents’ Network reviews and responds to community concerns,
                provides status updates on issues, and supports follow-ups to ensure proper resolution and meaningful action.
               </p>
 
               <div className="space-y-4">
                 {steps2.map((step, index) => (
                   <div key={index} className="flex items-center gap-4">
-                    <div className="w-8 h-8 bg-[#4A61C0] text-white rounded-md flex items-center justify-center font-bold text-sm">
+                    {/* Added flex-shrink-0 here */}
+                    <div className="w-8 h-8 bg-[#4A61C0] text-white rounded-md flex items-center justify-center font-bold text-sm flex-shrink-0">
                       {index + 1}
                     </div>
                     <p className="text-base text-[#445072] leading-snug">{step}</p>

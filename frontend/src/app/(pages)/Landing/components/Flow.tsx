@@ -1,61 +1,55 @@
 'use client';
 
-import { BsFillQuestionSquareFill } from "react-icons/bs";
-import { IoIosChatboxes } from "react-icons/io";
-import { FaSort } from "react-icons/fa";
-import { LuExternalLink } from "react-icons/lu";
+import { IoMdShare } from "react-icons/io";
+import { MdSpaceDashboard, MdUpdate } from "react-icons/md"; 
 
 const ConcernsEducation = () => {
   return (
     <section>
       <div className="max-w-screen-2xl mx-auto w-full px-16 py-24">
         <div className="mb-12">
-          <p className="text-[#454953] mb-2">Not sure how to share your concerns?</p>
+          <p className="text-[#454953] mb-2">Not sure of the flow?</p>
           <h2 className="text-4xl font-bold text-[#2C2E34]">Here are the key steps</h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+          {/* Share Your Concerns */}
           <div className="flex flex-col">
             <div className="flex items-center mb-6">
               <div className="w-12 h-12 bg-[#4A61C0] rounded-full flex items-center justify-center mr-4">
-                <BsFillQuestionSquareFill className="text-white text-xl" />
+                <IoMdShare className="text-white text-xl" />
               </div>
             </div>
             <h3 className="text-xl font-bold text-[#2C2E34] mb-4">Share Your Concerns</h3>
             <p className="text-[#454953] mb-4">
-              Contribute to your neighbourhood garden by sharing updates, concerns, or ideas. Whether it’s a small issue or a big improvement, your voice matters — just submit a short form under the “Reports” section of our website.
+              Submit updates, concerns, or ideas about your garden via a simple form in the “Reports” section. Your input helps improve the neighbourhood.
             </p>
-         
           </div>
 
+          {/* Community Dashboard */}
           <div className="flex flex-col">
             <div className="flex items-center mb-6">
               <div className="w-12 h-12 bg-[#4A61C0] rounded-full flex items-center justify-center mr-4">
-                <IoIosChatboxes className="text-white text-2xl" />
+                <MdSpaceDashboard className="text-white text-2xl" /> 
               </div>
             </div>
-            <h3 className="text-xl font-bold text-[#2C2E34] mb-4">Community Dashboard for Concerns and Action</h3>
+            <h3 className="text-xl font-bold text-[#2C2E34] mb-4">Community Dashboard</h3>
             <p className="text-[#454953] mb-4">
-              View and engage with community-shared concerns, updates, and ideas on the Community Dashboard. Connect with fellow gardeners, find shared experiences, and see how issues are being addressed — with support from your local Residents’ Network and official channels.
+              View and interact with community-shared concerns and updates. Connect with other gardeners and see how issues are being addressed with official support.
             </p>
-            {/* <a href="#" className="text-[#4A61C0] font-medium inline-flex items-center gap-1 underline">
-              Lorem ipsum dolor sit amet <LuExternalLink />
-            </a> */}
           </div>
 
+          {/* Stay Updated and Follow Up */}
           <div className="flex flex-col">
             <div className="flex items-center mb-6">
               <div className="w-12 h-12 bg-[#4A61C0] rounded-full flex items-center justify-center mr-4">
-                <FaSort className="text-white text-lg" />
+                <MdUpdate className="text-white text-2xl" />
               </div>
             </div>
             <h3 className="text-xl font-bold text-[#2C2E34] mb-4">Stay Updated and Follow Up</h3>
-            <p className="text-[#454953] mb-4">Stay informed with status updates from official channels — see whether your concern is being reviewed, worked on, or resolved. You can also follow up directly to keep the conversation going and ensure meaningful action.</p>
-            {/* <div className="space-y-3 text-[#454953]">
-              <p><span className="font-medium">1.</span> Lorem ipsum dolor sit amet.</p>
-              <p><span className="font-medium">2.</span> Lorem ipsum dolor sit amet.</p>
-              <p><span className="font-medium">3.</span> Lorem ipsum dolor sit amet.</p>
-            </div> */}
+            <p className="text-[#454953] mb-4">
+              Get status updates on your concerns (reviewed, in progress, resolved). Follow up directly to ensure meaningful action and resolution.
+            </p>
           </div>
         </div>
       </div>

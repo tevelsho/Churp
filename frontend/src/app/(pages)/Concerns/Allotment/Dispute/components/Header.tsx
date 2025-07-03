@@ -9,7 +9,7 @@ const Header: React.FC = () => {
     <div className="max-w-screen-2xl mx-auto px-16 mb-12 flex items-start justify-between">
       <div className="flex flex-col items-start flex-1">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Some Complain
+          Ongoing Dispute Over Community Garden Plot Boundaries
         </h1>
         <p className="text-gray-600 text-sm flex items-center">
           Required {currentDate}

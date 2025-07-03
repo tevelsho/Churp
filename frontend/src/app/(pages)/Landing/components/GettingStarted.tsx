@@ -17,7 +17,7 @@ const GettingStarted = () => {
       </div>
 
       <h2 className="text-white text-4xl font-bold mb-8">
-        Start sending your concerns now.
+        Start sending your garden concerns now.
       </h2>
 
       <Link href="/start" target="_blank" rel="noopener noreferrer">
