@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TbArrowBigUp, TbArrowBigUpFilled, TbArrowBigDown, TbArrowBigDownFilled } from 'react-icons/tb';
 import { FaRegComments, FaShare, FaRegBookmark, FaBookmark } from 'react-icons/fa6';
 
@@ -7,7 +7,6 @@ interface RedditPostProps {
   communityIcon: string;
   communityName: string;
   postTime: string;
-  visitStatus?: string;
   title: string;
   content: string;
   initialUpvotes: number;
@@ -20,7 +19,7 @@ function RedditPost({
   communityIcon,
   communityName,
   postTime,
-  visitStatus,
+  
   title,
   content,
   initialUpvotes,
@@ -73,11 +72,11 @@ function RedditPost({
           {communityIcon && (
             <img src={communityIcon} alt="Community Icon" className="w-5 h-5 rounded-full" />
           )}
-          <span className="text-sm font-semibold text-gray-800">Name</span>
+          <span className="text-sm font-semibold text-gray-800">{communityName}</span>
           <span className="text-xs text-gray-500">• {postTime}</span>
-          {visitStatus && (
+          {/* {visitStatus && (
             <span className="text-xs text-gray-500 hidden sm:block">• {visitStatus}</span>
-          )}
+          )} */}
         </div>
         <div className="flex items-center space-x-2">
           <button className="px-2 py-1 rounded-md bg-gray-100 hover:bg-gray-200 transition-colors duration-200 text-lg">
@@ -148,30 +147,61 @@ function RedditPost({
 }
 
 export default function Concerns() {
-  const dummyPosts: RedditPostProps[] = [
-    {
-      id: 'Some Complain', 
-      communityIcon: 'https://placehold.co/20x20/4CAF50/fff?text=CG',
-      communityName: 'User',
-      postTime: '3 hr. ago',
-      title: 'Ongoing Dispute Over Community Garden Plot Boundaries',
-      content: `I'm a long-time member of the Sunshine Community Garden, and lately, there's been a persistent issue with plot boundaries. My plot (C-12) keeps getting encroached upon by my neighbor's plants, despite clear markers. I've tried speaking with them, but the issue continues. It's affecting my harvest and overall enjoyment. Is there a garden committee or a formal dispute resolution process I can follow? This is getting really frustrating.`,
-      initialUpvotes: 45,
-      comments: 18,
-      initialSaved: false,
-    },
-  ];
+  // const dummyPosts: RedditPostProps[] = [
+  //   {
+  //     id: 'Some Complain', 
+  //     communityIcon: 'https://placehold.co/20x20/4CAF50/fff?text=CG',
+  //     communityName: 'User',
+  //     postTime: '3 hr. ago',
+  //     title: 'Ongoing Dispute Over Community Garden Plot Boundaries',
+  //     content: `I'm a long-time member of the Sunshine Community Garden, and lately, there's been a persistent issue with plot boundaries. My plot (C-12) keeps getting encroached upon by my neighbor's plants, despite clear markers. I've tried speaking with them, but the issue continues. It's affecting my harvest and overall enjoyment. Is there a garden committee or a formal dispute resolution process I can follow? This is getting really frustrating.`,
+  //     initialUpvotes: 45,
+  //     comments: 18,
+  //     initialSaved: false,
+  //   },
+  // ];
+    const [posts, setPosts] = useState<RedditPostProps[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/backend/concerns')
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          // Map Supabase data to RedditPostProps
+          const mapped = data.map((post: any) => ({
+            communityIcon: post.community_icon,
+            communityName: post.community_name,
+            postTime: new Date(post.created_at).toLocaleString(),
+            title: post.title,
+            content: post.content,
+            initialUpvotes: post.upvotes ?? 0,
+            comments: post.comments_count ?? 0,
+            initialSaved: post.saved ?? false,
+            id: post.id,
+          }));
+          setPosts(mapped);
+        } else {
+          console.error('Invalid data:', data);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Fetch error:', err);
+        setLoading(false);
+      });
+  }, []);
 
   return (
     <div className="w-full font-inter">
-      {dummyPosts.map((post, index) => (
+      {posts.map((post, index) => (
         <RedditPost
           key={index}
           id={post.id}
           communityIcon={post.communityIcon}
           communityName={post.communityName}
           postTime={post.postTime}
-          visitStatus={post.visitStatus}
+          // visitStatus={post.visitStatus}
           title={post.title}
           content={post.content}
           initialUpvotes={post.initialUpvotes}

@@ -70,9 +70,56 @@ export default function Form() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Form data submitted:", formData);
+const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+      const dataToSubmit = new FormData();
+      dataToSubmit.append('name', formData.name);
+      dataToSubmit.append('mobileNumber', formData.mobileNumber);
+      dataToSubmit.append('concernTitle', formData.concernTitle);
+      dataToSubmit.append('description', formData.description);
+      
+      // Since it's a single string now, you just append it directly.
+      // dataToSubmit.append('affectedGarden', formData.affectedGarden);
+      
+      //not too sure affected garden should be multiple values
+      formData.affectedGarden.forEach(garden => {
+        dataToSubmit.append('affectedGarden', garden);
+      });
+
+      if (formData.attachedFile) {
+        dataToSubmit.append('photos', formData.attachedFile);
+      }
+    
+    // The rest of your submit logic remains the same
+    try {
+        const response = await fetch('/backend/concerns', {
+            method: 'POST',
+            body: dataToSubmit,
+        });
+        const result = await response.json();
+        if (!response.ok) {
+            console.error("Server Error:", result.message); 
+            throw new Error(result.message || 'Something went wrong');
+        }
+        console.log("Submission successful:", result);
+        alert("Concern submitted successfully!");
+        setFormData({
+            name: '',
+            mobileNumber: '',
+            concernTitle: '',
+            affectedGarden: [], // Reset to empty string
+            description: '',
+            confirmFollowUp: false,
+            acknowledgeResponsePolicy: false,
+            attachedFile: null,
+        });
+        if(fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+    } catch (err: any) {
+        console.error("Submission Failed:", err);
+        alert(`Submission Failed: ${err.message}`);
+    }
   };
 
   return (
