@@ -16,11 +16,19 @@ const gridItems: GridItem[] = [
   {
     id: 1,
     image: '/placeholder.png',
-    name: 'Allotment Concerns',
+    name: 'Allotment Concerns (Tengah)',
     location: 'Tengah',
     description: 'Citizens feel that the current allotment system implemented is unfair.',
-    href: 'Concerns/Allotment',
+    href: 'Concerns/Tengah',
   },
+  {
+    id: 2,
+    image: '/placeholder.png',
+    name: 'Allotment Concerns (Jurong East)',
+    location: 'Jurong East',
+    description: 'Citizens feel that the current allotment system implemented is unfair.',
+    href: 'Concerns/Jurong%20East',
+  }
 ];
 
 const Grid: React.FC = () => {
