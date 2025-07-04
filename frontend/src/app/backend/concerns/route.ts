@@ -1,9 +1,11 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { supabase } from './lib/supabaseClient';
 
 
 //GET
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const allotmentName = searchParams.get('allotmentName');
   const { data, error } = await supabase
     .from('post')
     .select(`
@@ -15,6 +17,7 @@ export async function GET(request: Request) {
       content,
       upvotes
     `)
+    .eq('community_name', allotmentName)
     .order('created_at', { ascending: false });
 
   if (error) {

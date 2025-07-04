@@ -16,7 +16,7 @@
     comments: number;
     initialSaved: boolean;
     id: string;
-    allotmentName: string;
+    allotmentName?: string;
   }
 
   function RedditPost({
@@ -164,13 +164,15 @@
     //     initialSaved: false,
     //   },
     // ];
-      const [posts, setPosts] = useState<RedditPostProps[]>([]);
-    const [loading, setLoading] = useState(true);
+  
+    console.log(allotmentName)
+
+    const [posts, setPosts] = useState<RedditPostProps[]>([]);
     // for now we can leave it like this, but this code here can just reference a function in backend. 
     // just need to create a server action .ts file
     // can refer to this https://github.com/diwosuwanto/cloudflare-r2-with-nextjs-upload-download-delete/tree/main/src
     useEffect(() => {
-      fetch('/bidackend/concerns')
+      fetch(`/backend/concerns?allotmentName=${allotmentName}`)
         .then((res) => res.json())
         .then((data) => {
           if (Array.isArray(data)) {
@@ -190,11 +192,9 @@
           } else {
             console.error('Invalid data:', data);
           }
-          setLoading(false);
         })
         .catch((err) => {
           console.error('Fetch error:', err);
-          setLoading(false);
         });
     }, []);
 
