@@ -15,7 +15,7 @@ interface FormData {
   attachedFile: File | null;
 }
 
-const gardens = ["Tengah", "Jurong East", "Bukit Batok", "Toa Payoh"];
+const gardens = ["Plantation Acres", "Tengah Community Club", "Garden Vale", "Plantation Grove"];
 
 export default function Form() {
   const [formData, setFormData] = useState<FormData>({

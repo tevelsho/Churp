@@ -8,7 +8,7 @@ import Concerns from "./components/Concerns";
 import SideBar from "../components/SideBar"
 
 // used temporarily until backend is linked
-const validAllotments = ['Toa%20Payoh', 'Tengah', 'Jurong%20East','Bukit%20Batok'];
+const validAllotments = ['Plantation%20Acres', 'Tengah%20Community%20Club', 'Garden%20Vale','Plantation%20Grove'];
 
 export default function TestConcern() {
   const { allotment_name } = useParams() as { allotment_name: string };
