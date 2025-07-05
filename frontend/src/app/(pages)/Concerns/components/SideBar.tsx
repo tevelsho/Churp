@@ -19,12 +19,12 @@ const SideBar: React.FC = () => {
   ];
 
   const generateSlug = (text: string) => {
-    return `/concerns/${encodeURIComponent(text.toLowerCase().replace(/\s/g, '-'))}`;
+    return `/Concerns/${encodeURIComponent(text.toLowerCase().replace(/\s/g, '-'))}`;
   };
 
   return (
-    <div className="sticky top-20">
-      <div className="bg-white rounded-md p-4 mb-6">
+    <div className="">
+      <div className="bg-white rounded-md mb-6">
         <h3 className="font-bold text-base mb-4 text-black text-left uppercase">Trending Concerns</h3>
         <ul className="space-y-2">
           {trendingConcerns.map((concern, index) => (

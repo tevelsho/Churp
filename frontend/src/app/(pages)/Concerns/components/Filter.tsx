@@ -10,18 +10,18 @@ interface FilterOption {
 
 const filterOptions: FilterOption[] = [
     {
-        id: 'category',
+        id: 'region',
         label: 'Region',
         children: [
-            { id: 'category-electronics', label: 'North' },
-            { id: 'category-clothing', label: 'North-East' },
-            { id: 'category-home', label: 'East' },
-            { id: 'category-electronics', label: 'West' },
-            { id: 'category-clothing', label: 'Central' },
+            { id: 'region-north', label: 'North' },
+            { id: 'region-northeast', label: 'North-East' },
+            { id: 'region-east', label: 'East' },
+            { id: 'region-west', label: 'West' },
+            { id: 'region-central', label: 'Central' },
         ],
     },
     {
-        id: 'category',
+        id: 'garden',
         label: 'Garden',
         children: [
             { id: 'tengah', label: 'Tengah' },
@@ -31,7 +31,7 @@ const filterOptions: FilterOption[] = [
         ],
     },
     {
-        id: 'category',
+        id: 'type',
         label: 'Type',
         children: [
             { id: 'theft', label: 'Theft' },
@@ -41,7 +41,7 @@ const filterOptions: FilterOption[] = [
         ],
     },
     {
-        id: 'category',
+        id: 'date',
         label: 'Date',
         children: [
             { id: 'last-24h', label: 'Last 24h' },
@@ -51,6 +51,7 @@ const filterOptions: FilterOption[] = [
         ],
     },
 ];
+
 
 interface FilterItemProps {
     item: FilterOption;

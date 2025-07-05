@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
-import { TbArrowBigUp, TbArrowBigUpFilled, TbArrowBigDown, TbArrowBigDownFilled } from 'react-icons/tb';
-import { FaRegComments, FaShare, FaRegBookmark, FaBookmark } from 'react-icons/fa6';
+import { IoMdThumbsUp, IoMdThumbsDown } from 'react-icons/io';
+import { FaCommentAlt, FaShareAlt, FaBookmark } from 'react-icons/fa';
 
 interface RedditPostProps {
   communityIcon: string;
@@ -20,119 +20,104 @@ function RedditPost({
   communityIcon,
   communityName,
   postTime,
-  visitStatus,
-  title,
   content,
   initialUpvotes,
   comments,
   initialSaved,
-  id,
 }: RedditPostProps) {
-  const [currentUpvotes, setCurrentUpvotes] = useState(initialUpvotes);
+  const [upvotes, setUpvotes] = useState(initialUpvotes);
+  const [downvotes, setDownvotes] = useState(0);
   const [isSaved, setIsSaved] = useState(initialSaved);
-  const [upvoteStatus, setUpvoteStatus] = useState<'upvoted' | 'downvoted' | null>(null);
+  const [upvoted, setUpvoted] = useState(false);
+  const [downvoted, setDownvoted] = useState(false);
 
-  const handleUpvote = () => {
-    if (upvoteStatus === 'upvoted') {
-      setCurrentUpvotes(prev => prev - 1);
-      setUpvoteStatus(null);
-    } else if (upvoteStatus === 'downvoted') {
-      setCurrentUpvotes(prev => prev + 2);
-      setUpvoteStatus('upvoted');
+  const handleUpvote = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (upvoted) {
+      setUpvotes(prev => prev - 1);
+      setUpvoted(false);
     } else {
-      setCurrentUpvotes(prev => prev + 1);
-      setUpvoteStatus('upvoted');
+      setUpvotes(prev => prev + 1);
+      setUpvoted(true);
+      if (downvoted) {
+        setDownvotes(prev => prev - 1);
+        setDownvoted(false);
+      }
     }
   };
 
-  const handleDownvote = () => {
-    if (upvoteStatus === 'downvoted') {
-      setCurrentUpvotes(prev => prev + 1);
-      setUpvoteStatus(null);
-    } else if (upvoteStatus === 'upvoted') {
-      setCurrentUpvotes(prev => prev - 2);
-      setUpvoteStatus('downvoted');
+  const handleDownvote = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (downvoted) {
+      setDownvotes(prev => prev - 1);
+      setDownvoted(false);
     } else {
-      setCurrentUpvotes(prev => prev - 1);
-      setUpvoteStatus('downvoted');
+      setDownvotes(prev => prev + 1);
+      setDownvoted(true);
+      if (upvoted) {
+        setUpvotes(prev => prev - 1);
+        setUpvoted(false);
+      }
     }
   };
 
-  const handleSaveToggle = () => {
+  const handleSaveToggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setIsSaved(prev => !prev);
   };
 
   return (
-    <div className="rounded-md overflow-hidden mb-6">
-      <div className="flex items-center border-b border-gray-200">
-        <div className="flex items-center space-x-2 flex-grow mb-4">
-          {communityIcon && (
-            <img src={communityIcon} alt="Community Icon" className="w-5 h-5 rounded-full" />
-          )}
-          <span className="text-sm font-semibold text-gray-800">Alice Chen</span>
-          <span className="text-xs text-gray-500">• {postTime}</span>
-          {visitStatus && (
-            <span className="text-xs text-gray-500 hidden sm:block">• {visitStatus}</span>
-          )}
+    <div className="relative">
+      <div className="rounded-lg overflow-hidden mb-6">
+        <div className="max-w-screen-xl flex items-center relative">
+          <div className="flex items-center mb-4 space-x-2 flex-grow">
+            {communityIcon && (
+              <img src={communityIcon} alt="Community Icon" className="w-4 h-4 rounded-full" />
+            )}
+            <span className="text-sm font-semibold text-gray-800">{communityName}</span>
+            <span className="text-xs text-gray-500">• {postTime}</span>
+          </div>
         </div>
-      </div>
 
-      <div className="">
-        <h2 className="text-lg sm:text-xl font-bold text-gray-900 leading-tight mt-4 mb-4">
-          {title}
-        </h2>
-      </div>
+        <div className="pb-3 sm:pb-4 text-gray-700 text-sm leading-relaxed">
+          <p>{content}</p>
+        </div>
 
-      <div className="text-gray-700 text-sm leading-relaxed">
-        <p>{content}</p>
-      </div>
-
-      <div className="flex items-center mt-4 space-x-2 sm:space-x-4">
-        <div className="flex items-center bg-gray-100 rounded-full px-2 py-1 space-x-1">
+        <div className="flex items-center space-x-3 ">
           <button
             onClick={handleUpvote}
-            className="p-1 rounded-full hover:bg-gray-200 transition-colors duration-200"
+            className="flex items-center space-x-2 px-3 py-1 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200 transition-colors duration-200"
           >
-            {upvoteStatus === 'upvoted' ? (
-              <TbArrowBigUpFilled className="h-4 w-4 text-gray-500" />
-            ) : (
-              <TbArrowBigUp className="h-4 w-4 text-gray-500" />
-            )}
+            <IoMdThumbsUp className={`h-4 w-4 ${upvoted ? 'text-[#4A61C0]' : 'text-gray-400'}`} />
+            <span className="text-sm font-semibold text-gray-800">{upvotes}</span>
           </button>
-          <span className="text-sm font-semibold text-gray-800">{currentUpvotes}</span>
+
           <button
             onClick={handleDownvote}
-            className="p-1 rounded-full hover:bg-gray-200 transition-colors duration-200"
+            className="flex items-center space-x-2 px-3 py-1 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200 transition-colors duration-200"
           >
-            {upvoteStatus === 'downvoted' ? (
-              <TbArrowBigDownFilled className="h-4 w-4 text-gray-500" />
-            ) : (
-              <TbArrowBigDown className="h-4 w-4 text-gray-500" />
-            )}
+            <IoMdThumbsDown className={`h-4 w-4 ${downvoted ? 'text-[#4A61C0]' : 'text-gray-400'}`} />
+            <span className="text-sm font-semibold text-gray-800">{downvotes}</span>
+          </button>
+
+          <button className="flex items-center space-x-2 text-gray-700 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200 transition-colors duration-200">
+            <FaCommentAlt className="h-4 w-4 text-gray-400" />
+            <span className="text-sm font-semibold">{comments}</span>
+          </button>
+
+          <button
+            onClick={handleSaveToggle}
+            className="flex items-center space-x-2 text-gray-700 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200 transition-colors duration-200"
+          >
+            <FaBookmark className={`h-4 w-4 ${isSaved ? 'text-[#4A61C0]' : 'text-gray-400'}`} />
+            <span className="text-sm font-semibold">Save</span>
+          </button>
+
+          <button className="flex items-center space-x-2 text-gray-700 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200 transition-colors duration-200">
+            <FaShareAlt className="h-4 w-4 text-gray-400" />
+            <span className="text-sm font-semibold">Share</span>
           </button>
         </div>
-
-        <button className="flex items-center space-x-1 text-gray-700 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200 transition-colors duration-200">
-          <FaRegComments className="h-4 w-4" />
-          <span className="text-sm font-semibold">{comments}</span>
-        </button>
-
-        <button
-          onClick={handleSaveToggle}
-          className="flex items-center space-x-1 text-gray-700 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200 transition-colors duration-200"
-        >
-          {isSaved ? (
-            <FaBookmark className="h-4 w-4" />
-          ) : (
-            <FaRegBookmark className="h-4 w-4" />
-          )}
-          <span className="text-sm font-semibold">Save</span>
-        </button>
-
-        <button className="flex items-center space-x-1 text-gray-700 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200 transition-colors duration-200">
-          <FaShare className="h-4 w-4" />
-          <span className="text-sm font-semibold">Share</span>
-        </button>
       </div>
     </div>
   );
