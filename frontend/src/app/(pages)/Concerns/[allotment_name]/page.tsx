@@ -5,7 +5,6 @@ import { useParams, notFound } from 'next/navigation';
 import Header from './components/Header';
 import Breadcrumbs from '../../../components/Navigation/BreadCrumbs';
 import Concerns from "./components/Concerns";
-import SideBar from "../components/SideBar";
 
 // used temporarily until backend is linked
 const validAllotments = ['Toa%20Payoh', 'Tengah', 'Jurong%20East','Bukit%20Batok'];

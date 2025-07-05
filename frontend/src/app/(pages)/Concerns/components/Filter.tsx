@@ -9,48 +9,57 @@ interface FilterOption {
 }
 
 const filterOptions: FilterOption[] = [
-    {
-        id: 'region',
-        label: 'Region',
+  {
+    id: 'region',
+    label: 'Region',
+    children: [
+      { id: 'region-north', label: 'North' },
+      { id: 'region-northeast', label: 'North-East' },
+      { id: 'region-east', label: 'East' },
+      { id: 'region-west', label: 'West' },
+      { id: 'region-central', label: 'Central' },
+    ],
+  },
+  {
+    id: 'garden',
+    label: 'Garden',
+    children: [
+      {
+        id: 'tengah',
+        label: 'Tengah',
         children: [
-            { id: 'region-north', label: 'North' },
-            { id: 'region-northeast', label: 'North-East' },
-            { id: 'region-east', label: 'East' },
-            { id: 'region-west', label: 'West' },
-            { id: 'region-central', label: 'Central' },
+          { id: 'tengah-1', label: 'Zone A' },
+          { id: 'tengah-2', label: 'Zone B' },
         ],
-    },
-    {
-        id: 'garden',
-        label: 'Garden',
+      },
+      {
+        id: 'jurong-east',
+        label: 'Jurong East',
         children: [
-            { id: 'tengah', label: 'Tengah' },
-            { id: 'jurong-east', label: 'Jurong East' },
-            { id: 'bukit-batok', label: 'Bukit Batok' },
-            { id: 'toa-payoh', label: 'Toa Payoh' },
+          { id: 'jurong-east-1', label: 'Zone A' },
+          { id: 'jurong-east-2', label: 'Zone B' },
         ],
-    },
-    {
-        id: 'type',
-        label: 'Type',
+      },
+      {
+        id: 'bukit-batok',
+        label: 'Bukit Batok',
         children: [
-            { id: 'theft', label: 'Theft' },
-            { id: 'allotment', label: 'Allotment' },
-            { id: 'pest-control', label: 'Pest Control' },
-            { id: 'others', label: 'Others' },
+          { id: 'bukit-batok-1', label: 'Zone A' },
+          { id: 'bukit-batok-2', label: 'Zone B' },
         ],
-    },
-    {
-        id: 'date',
-        label: 'Date',
+      },
+      {
+        id: 'toa-payoh',
+        label: 'Toa Payoh',
         children: [
-            { id: 'last-24h', label: 'Last 24h' },
-            { id: 'last-week', label: 'Last Week' },
-            { id: 'last-year', label: 'Last Year' },
-            { id: 'older', label: 'Older' },
+          { id: 'toa-payoh-1', label: 'Zone A' },
+          { id: 'toa-payoh-2', label: 'Zone B' },
         ],
-    },
+      },
+    ],
+  },
 ];
+
 
 
 interface FilterItemProps {
@@ -63,7 +72,7 @@ interface FilterItemProps {
 const FilterItem: React.FC<FilterItemProps> = ({ item, checkedFilters, onCheckboxChange, depth = 0 }) => {
     const [isExpanded, setIsExpanded] = useState(false);
     const hasChildren: boolean = !!(item.children && item.children.length > 0);
-    const paddingLeft = `${depth * 1.5}rem`;
+    const paddingLeft = `${depth * 1}rem`;
 
     return (
         <div className="flex flex-col text-left" style={{ paddingLeft }}>

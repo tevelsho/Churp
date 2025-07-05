@@ -19,8 +19,8 @@ const Header: React.FC = () => {
   const dateLabel = 'Required';
   const concernInfo = 'Community Garden Maintenance';
   const badges = [
-    { icon: '👀', bgColor: '#C7D2FE' },
-    { icon: '🌳', bgColor: '#C8E6C9' }, 
+    { icon: '👀', bgColor: '#4A61C0' },
+    { icon: '🌳', bgColor: '#2E6C3A' }, 
   ];
 
 
@@ -49,7 +49,7 @@ const Header: React.FC = () => {
           {badges.map((badge, i) => (
             <div
               key={i}
-              className="px-2 py-1 rounded-lg text-md text-white select-none"
+              className="px-2 py-1 opacity-70 rounded-lg text-md text-white select-none"
               style={{ backgroundColor: badge.bgColor }}
             >
               {badge.icon}

@@ -2,7 +2,7 @@
 import React from 'react';
 import Header from './components/Header';
 import Filter from './components/Filter';
-import Grid from './components/ConcernGrid';
+import Grid from './components/GardenGrid';
 
 export default function App() {
   return (
