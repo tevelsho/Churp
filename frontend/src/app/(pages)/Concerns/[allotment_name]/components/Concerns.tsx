@@ -213,15 +213,35 @@ function RedditPost({
   );
 }
 
+
+
 export default function Concerns({ allotmentName }: ConcernsProps) {
   const [posts, setPosts] = useState<RedditPostProps[]>([]);
 
   useEffect(() => {
-    fetch(`/backend/concerns?allotmentName=${allotmentName}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data)) {
-          const mapped = data.map((post: any) => ({
+  fetch(`/backend/concerns?allotmentName=${allotmentName}`)
+    .then((res) => res.json())
+    .then((data) => {
+      if (Array.isArray(data)) {
+        const mapped = data.map((post: any) => {
+          // Default fallback 
+          let cleanedUrl = '';
+
+          //decoding the image_url from supabase to load image on frontend
+          try {
+            if (post.image_url) {
+              const decoded = decodeURIComponent(post.image_url);
+              const parsed = JSON.parse(decoded);
+              if (Array.isArray(parsed) && typeof parsed[0] === 'string') {
+                cleanedUrl = parsed[0];
+              }
+            }
+          } catch (e) {
+            console.warn('Invalid image_url:', post.image_url);
+          }
+
+          //mapping from supabase to each post
+          return {
             communityIcon: post.community_icon,
             communityName: post.community_name,
             postTime: new Date(post.created_at).toLocaleString(),
@@ -231,12 +251,15 @@ export default function Concerns({ allotmentName }: ConcernsProps) {
             comments: post.comments_count ?? 0,
             initialSaved: post.saved ?? false,
             id: post.id,
-            imageUrl: post.image_url || '/pest.jpg',
-          }));
-          setPosts(mapped);
-        }
-      });
-  }, [allotmentName]);
+            imageUrl: cleanedUrl,
+          };
+        });
+
+        setPosts(mapped);
+      }
+    });
+}, [allotmentName]);
+
 
   return (
     <div className="w-full font-inter">

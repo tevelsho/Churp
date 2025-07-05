@@ -15,7 +15,8 @@ export async function GET(request: NextRequest) {
       created_at,
       title,
       content,
-      upvotes
+      upvotes,
+      image_url
     `)
     .eq('community_name', allotmentName)
     .order('created_at', { ascending: false });
