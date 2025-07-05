@@ -1,3 +1,5 @@
+'use client';
+
 import { IoIosArrowForward } from "react-icons/io";
 import { IoFilterCircle } from "react-icons/io5";
 import React, { useState } from 'react';
