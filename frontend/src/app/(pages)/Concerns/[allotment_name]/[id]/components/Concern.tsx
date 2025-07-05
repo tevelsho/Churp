@@ -1,7 +1,8 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { IoMdThumbsUp, IoMdThumbsDown } from 'react-icons/io';
 import { FaCommentAlt, FaShareAlt, FaBookmark } from 'react-icons/fa';
+import { useParams } from 'next/navigation';
 
 interface RedditPostProps {
   communityIcon: string;
@@ -14,6 +15,7 @@ interface RedditPostProps {
   comments: number;
   initialSaved: boolean;
   id: string;
+  imageUrl?: string;
 }
 
 function RedditPost({
@@ -24,6 +26,7 @@ function RedditPost({
   initialUpvotes,
   comments,
   initialSaved,
+  imageUrl
 }: RedditPostProps) {
   const [upvotes, setUpvotes] = useState(initialUpvotes);
   const [downvotes, setDownvotes] = useState(0);
@@ -78,6 +81,16 @@ function RedditPost({
             <span className="text-xs text-gray-500">• {postTime}</span>
           </div>
         </div>
+         {imageUrl && (
+            <div className="py-2">
+              <img
+                src={imageUrl}
+                alt="Post Image"
+                className="w-full h-144 object-cover rounded-lg"
+                onError={(e) => { e.currentTarget.src = 'https://placehold.co/600x400/cccccc/333333?text=Image+Not+Found'; }}
+              />
+            </div>
+          )}
 
         <div className="pb-3 sm:pb-4 text-gray-700 text-sm leading-relaxed">
           <p>{content}</p>
@@ -124,37 +137,83 @@ function RedditPost({
 }
 
 export default function Concerns() {
-  const dummyPosts: RedditPostProps[] = [
-    {
-      id: 'community-garden-plot-dispute-1',
-      communityIcon: 'https://placehold.co/20x20/4CAF50/fff?text=CG',
-      communityName: 'Alice Chen',
-      postTime: '2 days ago',
-      title: 'Ongoing Dispute Over Community Garden Plot Boundaries',
-      content: `I'm a long-time member of the Sunshine Community Garden, and lately, there's been a persistent issue with plot boundaries. My plot (C-12) keeps getting encroached upon by my neighbor's plants, despite clear markers. I've tried speaking with them, but the issue continues. It's affecting my harvest and overall enjoyment. Is there a garden committee or a formal dispute resolution process I can follow? This is getting really frustrating.`,
-      initialUpvotes: 45,
-      comments: 18,
-      initialSaved: false,
-    },
-  ];
+  const params = useParams();
+  const { allotment_name, id } = params as { allotment_name: string; id: string };
+  const [newPost, setPost] = useState<RedditPostProps | null>(null);
+
+  useEffect(() => {
+  
+
+  fetch(`/backend/concern?allotmentName=${decodeURIComponent(allotment_name)}&id=${id}`)
+    .then((res) => res.json())
+    .then((post) => {
+      if (post) {
+        let cleanedUrl = '';
+
+        try {
+          if (post.image_url) {
+            const decoded = decodeURIComponent(post.image_url);
+            const parsed = JSON.parse(decoded);
+            if (Array.isArray(parsed) && typeof parsed[0] === 'string') {
+              cleanedUrl = parsed[0];
+            }
+          }
+        } catch (e) {
+          console.warn('Invalid image_url:', post.image_url);
+        }
+
+        const mappedPost = {
+          communityIcon: post.community_icon,
+          communityName: post.community_name,
+          postTime: new Date(post.created_at).toLocaleString(),
+          title: post.title,
+          content: post.content,
+          initialUpvotes: post.upvotes ?? 0,
+          comments: post.comments_count ?? 0,
+          initialSaved: post.saved ?? false,
+          id: post.id,
+          imageUrl: cleanedUrl,
+        };
+
+        setPost(mappedPost);
+      }
+    })
+    .catch((err) => {
+      console.error('Error fetching post:', err);
+    });
+}, [allotment_name, id]);
+
+  // const dummyPosts: RedditPostProps[] = [
+    // {
+    //   id: 'community-garden-plot-dispute-1',
+    //   communityIcon: 'https://placehold.co/20x20/4CAF50/fff?text=CG',
+    //   communityName: 'Alice Chen',
+    //   postTime: '2 days ago',
+    //   title: 'Ongoing Dispute Over Community Garden Plot Boundaries',
+    //   content: `I'm a long-time member of the Sunshine Community Garden, and lately, there's been a persistent issue with plot boundaries. My plot (C-12) keeps getting encroached upon by my neighbor's plants, despite clear markers. I've tried speaking with them, but the issue continues. It's affecting my harvest and overall enjoyment. Is there a garden committee or a formal dispute resolution process I can follow? This is getting really frustrating.`,
+    //   initialUpvotes: 45,
+    //   comments: 18,
+    //   initialSaved: false,
+    // },
+  // ];
 
   return (
     <div className="w-full font-inter">
-      {dummyPosts.map((post, index) => (
-        <RedditPost
-          key={index}
-          id={post.id}
-          communityIcon={post.communityIcon}
-          communityName={post.communityName}
-          postTime={post.postTime}
-          visitStatus={post.visitStatus}
-          title={post.title}
-          content={post.content}
-          initialUpvotes={post.initialUpvotes}
-          comments={post.comments}
-          initialSaved={post.initialSaved}
-        />
-      ))}
-    </div>
+    {newPost && (
+      <RedditPost
+        id={newPost.id}
+        communityIcon={newPost.communityIcon}
+        communityName={newPost.communityName}
+        postTime={newPost.postTime}
+        visitStatus={newPost.visitStatus}
+        title={newPost.title}
+        content={newPost.content}
+        initialUpvotes={newPost.initialUpvotes}
+        comments={newPost.comments}
+        initialSaved={newPost.initialSaved}
+        imageUrl={newPost.imageUrl}
+      />
+    )}
+  </div>
   );
 }

@@ -1,10 +1,14 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
 
 const Header: React.FC = () => {
   const [currentDate, setCurrentDate] = useState('');
-
+  const params = useParams();
+  const { allotment_name, id } = params as { allotment_name: string; id: string };
+  const [title, setPostTitle] = useState<string>('');
   useEffect(() => {
+
     setCurrentDate(
       new Date().toLocaleDateString('en-US', {
         year: 'numeric',
@@ -12,9 +16,20 @@ const Header: React.FC = () => {
         day: 'numeric',
       })
     );
+
+  fetch(`/backend/concern?allotmentName=${decodeURIComponent(allotment_name)}&id=${id}`)
+  .then((res) => res.json())
+  .then((post) => {
+    if (post?.title) {
+      setPostTitle(post.title);
+    }
+  })
+  .catch((err) => {
+    console.error('Error fetching title:', err);
+  });
+
   }, []);
 
-  const title = 'Ongoing Dispute Over Community Garden Plot Boundaries';
   const status = 'Solved';
   const dateLabel = 'Required';
   const concernInfo = 'Community Garden Maintenance';

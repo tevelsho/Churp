@@ -1,11 +1,13 @@
 import { NextResponse, NextRequest } from 'next/server';
-import { supabase } from './lib/supabaseClient';
+import { supabase } from '../lib/supabaseClient';
 
 
 //GET
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const allotmentName = searchParams.get('allotmentName');
+  console.log("reached backend of concerns")
+
   const { data, error } = await supabase
     .from('post')
     .select(`
