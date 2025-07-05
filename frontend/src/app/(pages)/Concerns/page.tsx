@@ -3,6 +3,7 @@ import React from 'react';
 import Header from './components/Header';
 import Filter from './components/Filter';
 import Grid from './components/GardenGrid';
+import SideBar from "./components/SideBar"
 
 export default function App() {
   return (
@@ -17,6 +18,9 @@ export default function App() {
         </div>
         <div className="w-full md:w-3/4 lg:w-4/5">
           <Grid />
+        </div>
+        <div className="w-[200px]">
+          <SideBar />
         </div>
       </div>
     </div>
