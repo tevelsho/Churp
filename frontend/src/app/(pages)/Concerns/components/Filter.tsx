@@ -10,52 +10,11 @@ interface FilterOption {
 
 const filterOptions: FilterOption[] = [
   {
-    id: 'region',
-    label: 'Region',
+    id: 'block',
+    label: 'Block',
     children: [
-      { id: 'region-north', label: 'North' },
-      { id: 'region-northeast', label: 'North-East' },
-      { id: 'region-east', label: 'East' },
-      { id: 'region-west', label: 'West' },
-      { id: 'region-central', label: 'Central' },
-    ],
-  },
-  {
-    id: 'garden',
-    label: 'Garden',
-    children: [
-      {
-        id: 'tengah',
-        label: 'Tengah',
-        children: [
-          { id: 'tengah-1', label: 'Zone A' },
-          { id: 'tengah-2', label: 'Zone B' },
-        ],
-      },
-      {
-        id: 'jurong-east',
-        label: 'Jurong East',
-        children: [
-          { id: 'jurong-east-1', label: 'Zone A' },
-          { id: 'jurong-east-2', label: 'Zone B' },
-        ],
-      },
-      {
-        id: 'bukit-batok',
-        label: 'Bukit Batok',
-        children: [
-          { id: 'bukit-batok-1', label: 'Zone A' },
-          { id: 'bukit-batok-2', label: 'Zone B' },
-        ],
-      },
-      {
-        id: 'toa-payoh',
-        label: 'Toa Payoh',
-        children: [
-          { id: 'toa-payoh-1', label: 'Zone A' },
-          { id: 'toa-payoh-2', label: 'Zone B' },
-        ],
-      },
+      { id: '120a', label: '120A' },
+      { id: '224', label: '224' },
     ],
   },
 ];
