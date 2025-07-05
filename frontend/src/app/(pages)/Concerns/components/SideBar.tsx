@@ -23,15 +23,15 @@ const SideBar: React.FC = () => {
   };
 
   return (
-    <div className="">
+    <div className="sticky">
       <div className="bg-white rounded-md mb-6">
-        <h3 className="font-bold text-base mb-4 text-black text-left uppercase">Trending Concerns</h3>
+        <h3 className="font-bold text-base mb-4 text-[#293044] text-left uppercase">Trending Concerns</h3>
         <ul className="space-y-2">
           {trendingConcerns.map((concern, index) => (
             <li key={index}>
               <a
                 href={generateSlug(concern)}
-                className="block text-gray-700 text-sm text-left py-1 px-2 rounded-md hover:bg-gray-100 cursor-pointer transition-colors duration-200"
+                className="block text-[#293044] text-sm text-left py-1 px-2 rounded-md hover:bg-gray-100 cursor-pointer transition-colors duration-200"
               >
                 {index + 1}. {concern}
               </a>
@@ -40,8 +40,8 @@ const SideBar: React.FC = () => {
         </ul>
       </div>
 
-      <div className="bg-white rounded-md p-4">
-        <h3 className="font-bold text-base mb-4 text-black text-left uppercase">Popular Topics</h3>
+      <div className="bg-white rounded-md">
+        <h3 className="font-bold text-[#293044] mb-4text-[#293044] text-left uppercase mb-4">Popular Topics</h3>
         <ul className="space-y-2">
           {popularTopics.map((topic, index) => (
             <li key={index}>

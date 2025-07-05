@@ -12,7 +12,7 @@ const Hero = () => {
             <h1 className="text-4xl lg:text-6xl font-bold text-[#293044] mb-6">
               Got something to say about your garden? 
             </h1>
-            <p className="text-lg text-[#445072] mb-8 leading-relaxed">
+            <p className="text-lgtext-[#293044]] mb-8 leading-relaxed">
               Messy plots? Broken tools? No water again?<br/>See what others face — or voice yours.
             </p>
 
