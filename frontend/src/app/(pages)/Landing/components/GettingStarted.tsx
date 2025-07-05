@@ -20,7 +20,7 @@ const GettingStarted = () => {
         Start sending your garden concerns now.
       </h2>
 
-      <Link href="/start" target="_blank" rel="noopener noreferrer">
+      <Link href="/Report" target="_blank" rel="noopener noreferrer">
         <button className="bg-[#4A61C0] border-[#4A61C0] hover:bg-[#3b4e9a] text-white font-medium py-3 px-6 rounded-sm transition-colors duration-200">
           Get started
         </button>
