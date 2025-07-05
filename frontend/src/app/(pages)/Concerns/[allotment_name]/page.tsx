@@ -24,10 +24,10 @@ if (!validAllotments.includes(allotment_name as string)) {
         <Breadcrumbs />
         <Header />
         <div className="flex gap-12">
-          <div className="flex-grow">
+          <div className="flex-grow ml-16">
             <Concerns allotmentName={allotment_name}/>
           </div>
-                    <div className="w-[800px]">
+          <div className="w-[800px]">
             <SideBar />
           </div>
         </div>

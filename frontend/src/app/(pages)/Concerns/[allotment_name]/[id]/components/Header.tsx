@@ -25,7 +25,7 @@ const Header: React.FC = () => {
 
 
   return (
-    <div className="max-w-screen-2xl mx-auto px-16 mb-12 flex flex-col gap-y-3">
+    <div className="mb-12 flex flex-col gap-y-3">
       <div className="flex items-start justify-between">
         <div className="flex flex-col items-start flex-1">
           <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-x-4 whitespace-nowrap overflow-hidden text-ellipsis">
