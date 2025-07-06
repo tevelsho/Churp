@@ -29,6 +29,7 @@ export default function Form() {
     attachedFile: null,
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const toggleArrayItem = (arr: string[], item: string): string[] => {
@@ -71,7 +72,8 @@ export default function Form() {
   };
 
 const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+      event.preventDefault();
+      setIsSubmitting(true); 
       const dataToSubmit = new FormData();
       dataToSubmit.append('name', formData.name);
       dataToSubmit.append('mobileNumber', formData.mobileNumber);
@@ -119,6 +121,8 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     } catch (err: any) {
         console.error("Submission Failed:", err);
         alert(`Submission Failed: ${err.message}`);
+    } finally {
+      setIsSubmitting(false); 
     }
   };
 
@@ -297,10 +301,11 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
               {/* Submit Button */}
               <div className="pt-6">
                 <button
+                  disabled={isSubmitting}
                   type="submit"
                   className="w-full text-white py-4 text-lg font-medium rounded-lg hover:opacity-90 transition-opacity bg-[#4A61C0] hover:bg-[#3b4e9a]"
                 >
-                  Submit now
+                  {isSubmitting ? "Submitting..." : "Submit now"} 
                 </button>
               </div>
 
