@@ -20,7 +20,9 @@ const Navbar = () => {
 
   return (
     <nav className="bg-white w-full relative z-40">
-      <div className="w-full max-w-screen-2xl mx-auto py-3 flex items-center px-16">
+
+      {/* 🖥️ DESKTOP VIEW (Original Code Unaffected) */}
+      <div className="hidden sm:flex w-full max-w-screen-2xl mx-auto py-3 items-center px-16">
         <div className="flex items-center space-x-8 flex-grow">
           <a
             href="/"
@@ -78,9 +80,36 @@ const Navbar = () => {
               }}
             />
           </div>
+        </div>
+      </div>
 
+      {/* 📱 MOBILE VIEW: Standalone rendering for screen < 640px */}
+      <div className="sm:hidden w-full py-3 px-4 flex items-center justify-between">
+        {/* 📱 MOBILE: Logo */}
+        <a href="/" onClick={() => setCurrentPath('/')}>
+          <img src="/HearUs.svg" alt="HearUs Logo" width={80} height={80} />
+        </a>
+
+        {/* 📱 MOBILE: Search + Hamburger */}
+        <div className="flex items-center gap-2">
+          <div className="w-[120px] relative">
+            <HiMiniMagnifyingGlass className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
+            <input
+              ref={searchInputRef}
+              type="text"
+              placeholder="Search..."
+              className="w-full border border-gray-300 rounded-md py-2 pl-12 pr-4 text-sm focus:outline-none focus:ring-[#4A61C0] focus:border-[#4A61C0]"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  console.log('Search for:', (e.target as HTMLInputElement).value);
+                }
+              }}
+            />
+          </div>
+
+          {/* 📱 MOBILE: Hamburger toggle */}
           <button
-            className="sm:hidden text-3xl text-[#2a56c5] ml-4"
+            className="text-3xl text-[#2a56c5]"
             onClick={() => setMenuOpen(!menuOpen)}
           >
             <Menu className="w-7 h-7" />
@@ -88,6 +117,7 @@ const Navbar = () => {
         </div>
       </div>
 
+      {/* 📱 MOBILE: Dropdown menu when hamburger is toggled */}
       {menuOpen && (
         <div className="sm:hidden px-4 pt-2 pb-4 space-y-2">
           {navItems.map((item) => {
