@@ -29,7 +29,7 @@ const Navbar = () => {
             className="flex-shrink-0"
             onClick={() => setCurrentPath('/')}
           >
-            <img src="/HearUs.svg" alt="HearUs Logo" width={128} height={128} />
+            <img src="/churp_w_text.svg" alt="HearUs Logo" width={96} height={96} />
           </a>
 
           <div className="hidden sm:flex sm:space-x-6">

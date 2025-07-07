@@ -5,9 +5,9 @@ const GettingStarted = () => {
   return (
     <div className="w-full bg-[#293044] py-24 flex flex-col items-center justify-center text-center">
       <div className="mb-8">
-        <div className="w-24 h-24 relative mx-auto">
+        <div className="w-32 h-32 relative mx-auto">
           <Image
-            src="/Logo.svg" 
+            src="/churp.svg" 
             alt="Logo"
             fill
             style={{ objectFit: "contain" }}
