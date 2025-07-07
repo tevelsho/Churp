@@ -252,7 +252,7 @@ export default function Concerns({ allotmentName }: ConcernsProps) {
             postTime: post.publishedat,
             title: post.title,
             content: post.content,
-            initialUpvotes: post.like ?? 0,
+            initialUpvotes: post.likes ?? 0,
             comments: post.comments_count ?? 0,
             initialSaved: post.saved ?? false,
             id: post.id,

@@ -5,27 +5,28 @@ import { FaCommentAlt, FaShareAlt, FaBookmark } from 'react-icons/fa';
 import { useParams } from 'next/navigation';
 
 interface RedditPostProps {
-  communityIcon: string;
-  communityName: string;
+  randomUserName: string;
   postTime: string;
-  visitStatus?: string;
   title: string;
   content: string;
   initialUpvotes: number;
   comments: number;
   initialSaved: boolean;
   id: string;
+  allotmentName?: string;
   imageUrl?: string;
 }
 
 function RedditPost({
-  communityIcon,
-  communityName,
+  randomUserName,
   postTime,
+  title,
   content,
   initialUpvotes,
   comments,
   initialSaved,
+  id,
+  allotmentName,
   imageUrl
 }: RedditPostProps) {
   const [upvotes, setUpvotes] = useState(initialUpvotes);
@@ -74,10 +75,10 @@ function RedditPost({
       <div className="rounded-lg overflow-hidden mb-6">
         <div className="max-w-screen-xl flex items-center relative">
           <div className="flex items-center mb-4 space-x-2 flex-grow">
-            {communityIcon && (
+            {/* {communityIcon && (
               <img src={communityIcon} alt="Community Icon" className="w-4 h-4 rounded-full" />
-            )}
-            <span className="text-sm font-semibold text-gray-800">{communityName}</span>
+            )} */}
+            <span className="text-sm font-semibold text-gray-800">{randomUserName}</span>
             <span className="text-xs text-gray-500">• {postTime}</span>
           </div>
         </div>
@@ -140,10 +141,15 @@ export default function Concerns() {
   const params = useParams();
   const { allotment_name, id } = params as { allotment_name: string; id: string };
   const [newPost, setPost] = useState<RedditPostProps | null>(null);
+  const adjectives = ['cool', 'brave', 'witty', 'fast', 'silent'];
+  const nouns = ['panda', 'eagle', 'tiger', 'otter', 'fox'];
+  const randomAdj = adjectives[Math.floor(Math.random() * adjectives.length)];
+  const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
+  const randomNum = Math.floor(1000 + Math.random() * 9000); // 4-digit number
+  const anonymousUsername = `${randomAdj}-${randomNoun}-${randomNum}`
+
 
   useEffect(() => {
-  
-
   fetch(`/backend/concern?allotmentName=${decodeURIComponent(allotment_name)}&id=${id}`)
     .then((res) => res.json())
     .then((post) => {
@@ -151,24 +157,23 @@ export default function Concerns() {
         let cleanedUrl = '';
 
         try {
-          if (post.image_url) {
-            const decoded = decodeURIComponent(post.image_url);
+          if (post.imageurl) {
+            const decoded = decodeURIComponent(post.imageurl);
             const parsed = JSON.parse(decoded);
             if (Array.isArray(parsed) && typeof parsed[0] === 'string') {
               cleanedUrl = parsed[0];
             }
           }
         } catch (e) {
-          console.warn('Invalid image_url:', post.image_url);
+          console.warn('Invalid image_url:', post.imageurl);
         }
 
         const mappedPost = {
-          communityIcon: post.community_icon,
-          communityName: post.community_name,
-          postTime: new Date(post.created_at).toLocaleString(),
+          randomUserName: "",
+          postTime: post.publishedat,
           title: post.title,
           content: post.content,
-          initialUpvotes: post.upvotes ?? 0,
+          initialUpvotes: post.likes ?? 0,
           comments: post.comments_count ?? 0,
           initialSaved: post.saved ?? false,
           id: post.id,
@@ -202,10 +207,8 @@ export default function Concerns() {
     {newPost && (
       <RedditPost
         id={newPost.id}
-        communityIcon={newPost.communityIcon}
-        communityName={newPost.communityName}
+        randomUserName={anonymousUsername}
         postTime={newPost.postTime}
-        visitStatus={newPost.visitStatus}
         title={newPost.title}
         content={newPost.content}
         initialUpvotes={newPost.initialUpvotes}

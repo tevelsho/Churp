@@ -18,18 +18,23 @@ export async function GET(request: NextRequest) {
   }
 
   const { data, error } = await supabase
-    .from('post')
+    .from('submission')
     .select(`
       id,
-      community_icon,
-      community_name,
-      created_at,
       title,
       content,
-      upvotes,
-      image_url
+      imageurl,
+      status,
+      publishedat,
+      location,
+      tags,
+      likes,
+      dislikes,
+      ack_status,
+      flagged,
+      category
     `)
-    .eq('community_name', allotmentName)
+    .eq('location', allotmentName)
     .eq('id', id)
     .single(); // Expect only one post
 
