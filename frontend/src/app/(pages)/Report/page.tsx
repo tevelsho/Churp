@@ -214,10 +214,25 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                 </div>
               </div>
 
+              {/* Description */}
+              <div className="space-y-2">
+                <label htmlFor="description" className="block text-sm font-medium text-[#445072]">
+                  5. Description <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  id="description"
+                  value={formData.description}
+                  onChange={(e) => handleInputChange("description", e.target.value)}
+                  rows={5}
+                  className="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#4A61C0] focus:border-[#4A61C0] bg-white resize-none"
+                  required
+                ></textarea>
+              </div>
+
               {/* Attached Photos */}
               <div className="space-y-2">
                 <label className="block text-sm font-medium text-[#445072]">
-                  5. Attached Photos (Optional)
+                  6. Attached Photos (Optional)
                 </label>
                 <div className="border border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors bg-gray-50">
                   <MdOutlineFileUpload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
@@ -246,21 +261,6 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                     </p>
                   )}
                 </div>
-              </div>
-
-              {/* Description */}
-              <div className="space-y-2">
-                <label htmlFor="description" className="block text-sm font-medium text-[#445072]">
-                  6. Description <span className="text-red-500">*</span>
-                </label>
-                <textarea
-                  id="description"
-                  value={formData.description}
-                  onChange={(e) => handleInputChange("description", e.target.value)}
-                  rows={5}
-                  className="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#4A61C0] focus:border-[#4A61C0] bg-white resize-none"
-                  required
-                ></textarea>
               </div>
 
               {/* Confirmation Checkboxes */}

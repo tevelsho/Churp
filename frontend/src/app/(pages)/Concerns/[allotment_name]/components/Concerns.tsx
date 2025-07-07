@@ -8,8 +8,7 @@ interface ConcernsProps {
 }
 
 interface RedditPostProps {
-  communityIcon: string;
-  communityName: string;
+  randomUserName: string;
   postTime: string;
   title: string;
   content: string;
@@ -22,8 +21,7 @@ interface RedditPostProps {
 }
 
 function RedditPost({
-  communityIcon,
-  communityName,
+  randomUserName,
   postTime,
   title,
   content,
@@ -131,10 +129,10 @@ function RedditPost({
       <div className="rounded-lg overflow-hidden border border-gray-200 mb-6 hover:cursor-pointer" onClick={handlePostClick}>
         <div className="max-w-screen-xl flex items-center pl-4 p-2 border-b border-gray-200 relative">
           <div className="flex items-center space-x-2 flex-grow">
-            {communityIcon && (
+            {/* {communityIcon && (
               <img src={communityIcon} alt="Community Icon" className="w-5 h-5 rounded-full" />
-            )}
-            <span className="text-sm font-semibold text-gray-800">{communityName}</span>
+            )} */}
+            <span className="text-sm font-semibold text-gray-800">{randomUserName}</span>
             <span className="text-xs text-gray-500">• {postTime}</span>
           </div>
           <div className="flex space-x-2">
@@ -217,6 +215,13 @@ function RedditPost({
 
 export default function Concerns({ allotmentName }: ConcernsProps) {
   const [posts, setPosts] = useState<RedditPostProps[]>([]);
+  const adjectives = ['cool', 'brave', 'witty', 'fast', 'silent'];
+  const nouns = ['panda', 'eagle', 'tiger', 'otter', 'fox'];
+
+  const randomAdj = adjectives[Math.floor(Math.random() * adjectives.length)];
+  const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
+  const randomNum = Math.floor(1000 + Math.random() * 9000); // 4-digit number
+  const anonymousUsername = `${randomAdj}-${randomNoun}-${randomNum}`
 
   useEffect(() => {
   fetch(`/backend/concerns?allotmentName=${allotmentName}`)
@@ -226,28 +231,28 @@ export default function Concerns({ allotmentName }: ConcernsProps) {
         const mapped = data.map((post: any) => {
           // Default fallback 
           let cleanedUrl = '';
+          
 
           //decoding the image_url from supabase to load image on frontend
           try {
-            if (post.image_url) {
-              const decoded = decodeURIComponent(post.image_url);
+            if (post.imageurl) {
+              const decoded = decodeURIComponent(post.imageurl);
               const parsed = JSON.parse(decoded);
               if (Array.isArray(parsed) && typeof parsed[0] === 'string') {
                 cleanedUrl = parsed[0];
               }
             }
           } catch (e) {
-            console.warn('Invalid image_url:', post.image_url);
+            console.warn('Invalid image_url:', post.imageurl);
           }
 
           //mapping from supabase to each post
           return {
-            communityIcon: post.community_icon,
-            communityName: post.community_name,
-            postTime: new Date(post.created_at).toLocaleString(),
+            randomUserName: "",
+            postTime: post.publishedat,
             title: post.title,
             content: post.content,
-            initialUpvotes: post.upvotes ?? 0,
+            initialUpvotes: post.like ?? 0,
             comments: post.comments_count ?? 0,
             initialSaved: post.saved ?? false,
             id: post.id,
@@ -267,8 +272,7 @@ export default function Concerns({ allotmentName }: ConcernsProps) {
         <RedditPost
           key={index}
           id={post.id}
-          communityIcon={post.communityIcon}
-          communityName={post.communityName}
+          randomUserName={anonymousUsername}
           postTime={post.postTime}
           title={post.title}
           content={post.content}

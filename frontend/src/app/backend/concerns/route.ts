@@ -9,19 +9,26 @@ export async function GET(request: NextRequest) {
   console.log("reached backend of concerns")
 
   const { data, error } = await supabase
-    .from('post')
+    .from('submission')
     .select(`
       id,
-      community_icon,
-      community_name,
-      created_at,
       title,
       content,
-      upvotes,
-      image_url
+      imageurl,
+      status,
+      publishedat,
+      location,
+      tags,
+      likes,
+      dislikes,
+      ack_status,
+      flagged,
+      category
     `)
-    .eq('community_name', allotmentName)
-    .order('created_at', { ascending: false });
+    .eq('location', allotmentName)
+    .order('publishedat', { ascending: false });
+  
+  console.log(data)
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -36,11 +43,11 @@ export async function POST(request: Request) {
     const formData = await request.formData();
     const name = formData.get('name') as string;
     const mobile = formData.get('mobileNumber') as string;
-    const concern = formData.get('concernTitle') as string;
+    const title = formData.get('concernTitle') as string;
     const garden = formData.get('affectedGarden') as string;
     const description = formData.get('description') as string;
 
-    if (!concern || !garden || !description) {
+    if (!title || !garden || !description) {
       return NextResponse.json(
         { message: 'Missing required fields' },
         { status: 400 }
@@ -78,11 +85,10 @@ export async function POST(request: Request) {
 
     // Create user (or reuse logic to find existing user)
     const { data: newUser, error: insertError } = await supabase
-      .from('app_user')
+      .from('user')
       .insert({
         username: name,
-        display_name: name,
-        mobile_number: mobile,
+        mobilenumber: mobile,
       })
       .select()
       .single();
@@ -94,14 +100,13 @@ export async function POST(request: Request) {
 
     // Insert post
     const { data: post, error: postError } = await supabase
-      .from('post')
+      .from('submission')
       .insert({
-        author_id: newUser.id,
-        title: concern,
-        community_icon: "https://placehold.co/20x20/4CAF50/fff?text=CG",
-        community_name: garden,
+        user_id: newUser.id,
+        title: title,
         content: description,
-        image_url: imageUrls.length > 0 ? imageUrls : null,
+        imageurl: imageUrls.length > 0 ? imageUrls : null,
+        location: garden
       })
       .select()
       .single();
