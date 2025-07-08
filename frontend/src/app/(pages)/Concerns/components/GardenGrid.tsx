@@ -32,7 +32,7 @@ const gridItems: GridItem[] = [
   },
   {
     id: 3,
-    image: '/GardeningBro.svg',
+    image: '/Gardening.svg',
     name: 'Garden Vale',
     location: 'Blk 226',
     concernsCount: 10,
@@ -40,7 +40,7 @@ const gridItems: GridItem[] = [
   },
   {
     id: 4,
-    image: '/Seeding.svg',
+    image: '/Blooming.svg',
     name: 'Plantation Acres',
     location: 'Blk 111A',
     concernsCount: 8,
