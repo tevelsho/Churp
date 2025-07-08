@@ -65,7 +65,7 @@ function ReplyCard({
 
   const sendOTP = async () => {
     setMessage('');
-    console.log(submission_id)
+    // console.log(submission_id)
     // Step 1: Fetch mobilenumber using submissionId
     const { data, error } = await supabase
     .from('submission')
@@ -79,7 +79,7 @@ function ReplyCard({
       return;
     }
     phone = `+65${phone}`;
-    console.log(phone)
+    // console.log(phone)
     setPhone(phone)
 
     // Step 2: Send OTP
