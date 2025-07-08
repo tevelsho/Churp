@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "hearUs",
+  title: "Churp",
   description: "A Source of Truth at a Glance.",
 };
 
