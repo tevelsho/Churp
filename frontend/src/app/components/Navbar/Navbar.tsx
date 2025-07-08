@@ -87,7 +87,7 @@ const Navbar = () => {
       <div className="sm:hidden w-full py-3 px-4 flex items-center justify-between">
         {/* 📱 MOBILE: Logo */}
         <a href="/" onClick={() => setCurrentPath('/')}>
-          <img src="/HearUs.svg" alt="HearUs Logo" width={80} height={80} />
+          <img src="/churp_w_text.svg" alt="HearUs Logo" width={80} height={80} />
         </a>
 
         {/* 📱 MOBILE: Search + Hamburger */}

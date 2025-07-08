@@ -14,7 +14,7 @@ const Footer = () => {
             rel="noopener noreferrer"
           >
             <h2 className="text-[#454953] text-lg font-semibold cursor-pointer hover:underline mb-2">
-              HearUs
+              Churp
             </h2>
           </Link>
 
@@ -54,7 +54,7 @@ const Footer = () => {
             />
           </div>
           <p className="text-[#BEBEBE] text-xs">
-            &copy; 2025 HearUs
+            &copy; 2025 Churp
           </p>
         </div>
       </div>
