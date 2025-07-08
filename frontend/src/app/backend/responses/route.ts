@@ -5,8 +5,8 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get('id');
 
-  console.log("reached to backend responses")
-  console.log(id)
+  // console.log("reached to backend responses")
+  // console.log(id)
 
   if (!id) {
     return NextResponse.json(
