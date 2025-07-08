@@ -2,19 +2,19 @@ import React from 'react';
 
 const SideBar: React.FC = () => {
   const trendingConcerns = [
-    'Community Garden Access',
-    'Local Park Renovation',
-    'Public Transportation Issues',
-    'Waste Management Improvement',
-    'Street Lighting Deficiency',
+    'Pests are out of control!',
+    'Why do some people get to grow more crops than others?',
+    'Why does he get a bigger plot?',
+    'Someone stole my crops!',
+    'Unfriendly Gardener in the community garden',
   ];
 
   const popularTopics = [
-    'Urban Development',
-    'Environmental Protection',
-    'Infrastructure',
-    'Social Equity',
-    'Public Safety',
+    'Urban Farming Initiatives',
+    'Sustainable Gardening Practices',
+    'Community Engagement in Green Spaces',
+    'HDB Rooftop Gardens',
+    'NParks Community Garden Grants',
   ];
 
   const generateSlug = (text: string) => {

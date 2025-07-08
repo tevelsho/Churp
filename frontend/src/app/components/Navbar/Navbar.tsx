@@ -14,8 +14,8 @@ const Navbar = () => {
   }, []);
 
   const navItems = [
-    { name: 'Concerns', href: '/Concerns' },
-    { name: 'Report', href: '/Report' },
+    { name: 'Community Dashboard', href: '/Concerns' },
+    { name: 'Report a Concern', href: '/Report' },
   ];
 
   return (
