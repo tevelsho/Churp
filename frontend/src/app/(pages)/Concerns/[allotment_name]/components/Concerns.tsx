@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { IoMdThumbsUp, IoMdThumbsDown } from 'react-icons/io';
 import { FaCommentAlt, FaShareAlt, FaBookmark } from 'react-icons/fa';
+import { usePathname } from 'next/navigation';
 
 interface ConcernsProps {
   allotmentName: string;
@@ -40,6 +41,18 @@ function RedditPost({
   // Separate states for each hover box
   const [showEyeHoverBox, setShowEyeHoverBox] = useState(false);
   const [showTreeHoverBox, setShowTreeHoverBox] = useState(false);
+  const pathname = usePathname();
+  const origin = typeof window !== 'undefined' && window.location.origin;
+  const fullUrl = origin + pathname  + "/" + id
+  const [copied, setCopied] = useState(false);
+  
+  const handleCopy = () => {
+      navigator.clipboard.writeText(fullUrl);
+      setCopied(true);
+  
+      // Reset back to "Share" after 2 seconds
+      setTimeout(() => setCopied(false), 2000);
+    };
 
   const handleUpvote = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -201,9 +214,9 @@ function RedditPost({
             <span className="text-sm font-semibold">Save</span>
           </button> */}
 
-          <button className="flex items-center space-x-2 text-gray-700 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200 transition-colors duration-200">
+          <button className="flex items-center space-x-2 text-gray-700 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200 transition-colors duration-200" onClick={handleCopy}>
             <FaShareAlt className="h-4 w-4 text-gray-400" />
-            <span className="text-sm font-semibold">Share</span>
+            <span className="text-sm font-semibold">{copied ? 'Copied!' : 'Share'}</span>
           </button>
         </div>
       </div>

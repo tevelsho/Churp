@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { IoMdThumbsUp, IoMdThumbsDown } from 'react-icons/io';
 import { FaCommentAlt, FaShareAlt, FaBookmark } from 'react-icons/fa';
-import { useParams } from 'next/navigation';
+import { usePathname, useParams } from 'next/navigation';
 
 interface RedditPostProps {
   randomUserName: string;
@@ -34,6 +34,19 @@ function RedditPost({
   const [isSaved, setIsSaved] = useState(initialSaved);
   const [upvoted, setUpvoted] = useState(false);
   const [downvoted, setDownvoted] = useState(false);
+  const pathname = usePathname();
+  const origin = typeof window !== 'undefined' && window.location.origin;
+  const fullUrl = origin + pathname 
+  const [copied, setCopied] = useState(false);
+
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(fullUrl);
+    setCopied(true);
+
+    // Reset back to "Share" after 2 seconds
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const handleUpvote = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -65,10 +78,10 @@ function RedditPost({
     }
   };
 
-  const handleSaveToggle = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsSaved(prev => !prev);
-  };
+  // const handleSaveToggle = (e: React.MouseEvent) => {
+  //   e.stopPropagation();
+  //   setIsSaved(prev => !prev);
+  // };
 
   return (
     <div className="relative">
@@ -119,17 +132,18 @@ function RedditPost({
             <span className="text-sm font-semibold">{comments}</span>
           </button>
 
-          <button
+          {/* <button
             onClick={handleSaveToggle}
             className="flex items-center space-x-2 text-gray-700 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200 transition-colors duration-200"
           >
             <FaBookmark className={`h-4 w-4 ${isSaved ? 'text-[#4A61C0]' : 'text-gray-400'}`} />
             <span className="text-sm font-semibold">Save</span>
-          </button>
+          </button> */}
 
-          <button className="flex items-center space-x-2 text-gray-700 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200 transition-colors duration-200">
+          <button className="flex items-center space-x-2 text-gray-700 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200 transition-colors duration-200" 
+          onClick={handleCopy}>
             <FaShareAlt className="h-4 w-4 text-gray-400" />
-            <span className="text-sm font-semibold">Share</span>
+            <span className="text-sm font-semibold"> {copied ? 'Copied!' : 'Share'}</span>
           </button>
         </div>
       </div>
