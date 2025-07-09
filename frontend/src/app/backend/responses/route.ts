@@ -32,7 +32,8 @@ export async function GET(request: NextRequest) {
       username
     )
   `)
-  .eq('submission_id', id);
+  .eq('submission_id', id)
+  .order('created_at', { ascending: false });
     
 
   if (error) {
@@ -40,4 +41,45 @@ export async function GET(request: NextRequest) {
   }
 
   return NextResponse.json(data);
+}
+
+
+//POST
+export async function POST(request: NextRequest) {
+  const body = await request.json();
+  const { submission_id, admin_id, replyText } = body;
+
+  if (!submission_id || !admin_id || !replyText) {
+    return NextResponse.json(
+      { error: 'Missing required fields: submission_id, admin_id, or replyText' },
+      { status: 400 }
+    );
+  }
+
+ const { data, error } = await supabase
+  .from('response')
+  .insert(
+    [
+      {
+        submission_id: submission_id,
+        admin_id: admin_id,
+        message: replyText,
+        image_urls: [],                     // default empty array for _text
+        created_at: new Date().toISOString(), // just to be safe
+        likes: 0,
+        dislikes: 0,
+        ack_status: 'unread',              // assuming it's text
+        flagged: '{}',                     // default empty stringified array for _text
+      }
+    ],
+
+  )
+  .single();
+  console.log(data)
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json(data, { status: 201 });
 }

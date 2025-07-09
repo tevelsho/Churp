@@ -1,8 +1,10 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { IoMdThumbsUp, IoMdThumbsDown } from 'react-icons/io';
-import { FaCommentAlt, FaShareAlt, FaBookmark } from 'react-icons/fa';
+import { FaCommentAlt, FaShareAlt } from 'react-icons/fa';
+import { IoReload } from "react-icons/io5";
 import { usePathname, useParams } from 'next/navigation';
+import { supabase } from '../../../../../backend/lib/supabaseClient';
 
 interface RedditPostProps {
   randomUserName: string;
@@ -15,6 +17,7 @@ interface RedditPostProps {
   id: string;
   allotmentName?: string;
   imageUrl?: string;
+  onButtonClick?: () => void; 
 }
 
 function RedditPost({
@@ -27,7 +30,8 @@ function RedditPost({
   initialSaved,
   id,
   allotmentName,
-  imageUrl
+  imageUrl,
+  onButtonClick
 }: RedditPostProps) {
   const [upvotes, setUpvotes] = useState(initialUpvotes);
   const [downvotes, setDownvotes] = useState(0);
@@ -38,6 +42,186 @@ function RedditPost({
   const origin = typeof window !== 'undefined' && window.location.origin;
   const fullUrl = origin + pathname 
   const [copied, setCopied] = useState(false);
+
+   //comment box
+  const [showReplyBox, setShowReplyBox] = useState(false); 
+  const [replyText, setReplyText] = useState(''); 
+
+  //twilio
+  const [phone, setPhone] = useState('');
+  const [code, setCode] = useState('');
+  const [step, setStep] = useState<'phone' | 'code'>('phone');
+  const [message, setMessage] = useState('');
+
+  //button change
+  const [button, changeButton] = useState<'form' | 'code'>('form');
+
+   type SubmissionWithUser = {
+    id: number;
+    user: {
+      mobilenumber: string;
+    };
+  };
+
+   const sendOTP = async () => {
+      setMessage('');
+      // console.log(submission_id)
+      // Step 1: Fetch mobilenumber using submissionId
+      const { data, error } = await supabase
+      .from('submission')
+      .select(`id, user (mobilenumber)`)
+      .eq('id', id)
+      .single<SubmissionWithUser>(); 
+      let phone = data?.user?.mobilenumber?.replace(/\D/g, ''); // remove all non-digit characters
+  
+      if (!phone || phone.length !== 8) {
+        setMessage('Invalid Singapore mobile number.');
+        return;
+      }
+      phone = `+65${phone}`;
+      // console.log(phone)
+      setPhone(phone)
+  
+      // Step 2: Send OTP
+      try {
+        const res = await fetch('/api/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone }),
+        });
+  
+        const responseData = await res.json().catch(() => ({})); // handle no JSON
+  
+        if (res.ok) {
+          setStep('code');
+          changeButton('code');
+          setMessage('OTP sent!');
+        } else {
+          setMessage(responseData.message || 'Failed to send OTP');
+        }
+      } catch (err) {
+        setMessage('Network error. Please try again.');
+      }
+    };
+  
+  
+    const verifyOTP = async () => {
+      setMessage('');
+      try {
+        const res = await fetch('/api/verify-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone, code }),
+        });
+  
+        const data = await res.json().catch(() => ({}));
+  
+        if (res.ok && data.verified) {
+          setMessage('Phone verified successfully!');
+          console.log("We have reached here as phone number has been verified")
+          console.log(replyText)
+          const { data, error } = await supabase
+          .from('submission')
+          .select('user_id')
+          .eq('id', id)
+          .single();
+  
+          console.log("supabase_response",data?.user_id)
+          console.log('submission_id', id); 
+          console.log('replyText', replyText); 
+          postReply(data?.user_id)
+  
+        } else {
+          setMessage(data.message || 'Verification failed.');
+        }
+      } catch (error) {
+        setMessage('Network error. Please try again.');
+      }
+    };
+  
+  const postReply = async (user_id: string) => {
+  const res = await fetch('/backend/responses', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      submission_id: id,       // replace with actual submission_id
+      admin_id: user_id,            // replace with actual admin_id
+      replyText: replyText, // replace with user input
+    }),
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    console.error('Error posting reply:', data.error);
+  } else {
+    console.log('Reply posted successfully:', data);
+    
+   
+  }
+};
+
+//for testing
+const verifyAndPostReply = async () => {
+  setMessage('');
+
+  try {
+    // Step 2: Get user_id from Supabase
+    const { data: userData, error } = await supabase
+      .from('submission')
+      .select('user_id')
+      .eq('id', id)
+      .single();
+
+    if (error || !userData?.user_id) {
+      console.error('Error fetching user_id:', error?.message);
+      setMessage('Failed to get user info.');
+      return;
+    }
+
+    console.log('submission_id', id);
+    console.log('replyText', replyText);
+
+    // Step 3: Post the reply
+    const postRes = await fetch('/backend/responses', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        submission_id: id,
+        admin_id: userData.user_id,
+        replyText: replyText,
+      }),
+    });
+
+    const postResult = await postRes.json();
+
+    if (!postRes.ok) {
+      console.error('Error posting reply:', postResult.error);
+      setMessage('Failed to post reply.');
+      return;
+    }
+
+    console.log('Reply posted successfully:', postResult);
+    setMessage('Reply submitted successfully!');
+    setReplyText('');
+    setCode('');
+    setStep('phone');
+    changeButton('form');
+    if (onButtonClick) onButtonClick();
+    
+    
+    // optional: refresh replies list if you use a counter
+
+  } catch (err) {
+    console.error(err);
+    setMessage('Network error. Please try again.');
+  }
+};
+
 
 
   const handleCopy = () => {
@@ -137,13 +321,56 @@ function RedditPost({
             <FaShareAlt className="h-4 w-4 text-gray-600" />
             <span className="text-sm font-semibold"> {copied ? 'Copied!' : 'Share'}</span>
           </button>
+            <button
+              onClick={() => setShowReplyBox(prev => !prev)}
+              className="flex items-center space-x-2 text-white bg-[#4A61C0] rounded-md px-4 py-2 hover:bg-[#3b4e9a]"
+            >
+              <span className="text-sm font-semibold">Reply</span>
+            </button>
         </div>
+          {showReplyBox && (
+                    <div className="pl-1 mt-4" style={{ marginLeft: '28px' }}>
+                      <textarea
+                        rows={3}
+                        className="w-full p-2 border text-sm border-gray-300 rounded-md focus:outline-none focus:ring-[#4A61C0] focus:border-[#4A61C0]"
+                        placeholder="Write your reply here..."
+                        value={replyText}
+                        onChange={(e) => setReplyText(e.target.value)}
+                      />
+                      <div className="flex items-center space-x-2 mt-3 max-w-screen-xs">
+                        <input
+                          type="text"
+                          placeholder="Enter OTP"
+                          className="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#4A61C0] focus:border-[#4A61C0] text-sm max-w-[120px]"
+                          value={code}
+                          onChange={(e) => setCode(e.target.value)}
+                        />
+                        <button
+                            className="bg-[#4A61C0] text-white text-sm px-4 py-2 rounded-md hover:bg-[#3b4e9a]"
+                            onClick={button === 'form' ? sendOTP : verifyOTP}
+                          >
+                            {button === 'form' ? 'Get OTP' : 'Verify OTP'}
+                          </button>
+                        <button
+                          className="p-2 rounded-full bg-gray-100 hover:bg-gray-200"
+                        >
+                          <IoReload className="text-[#4A61C0] h-4 w-4" />
+                        </button>
+                          <button
+                            className="bg-[#4A61C0] text-white text-sm px-4 py-2 rounded-md hover:bg-[#3b4e9a]"
+                            onClick={verifyAndPostReply}
+                          >
+                            By Pass button temporarily
+                          </button>
+                      </div>
+                    </div>
+                  )}
       </div>
     </div>
   );
 }
 
-export default function Concerns() {
+export default function Concerns({ onButtonClick }: { onButtonClick: () => void }) {
   const params = useParams();
   const { allotment_name, id } = params as { allotment_name: string; id: string };
   const [newPost, setPost] = useState<RedditPostProps | null>(null);
@@ -184,6 +411,7 @@ export default function Concerns() {
           initialSaved: post.saved ?? false,
           id: post.id,
           imageUrl: cleanedUrl,
+          
         };
 
         setPost(mappedPost);
@@ -221,6 +449,7 @@ export default function Concerns() {
         comments={newPost.comments}
         initialSaved={newPost.initialSaved}
         imageUrl={newPost.imageUrl}
+        onButtonClick={onButtonClick} 
       />
     )}
   </div>

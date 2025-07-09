@@ -1,4 +1,5 @@
-import React from 'react';
+'use client';
+import React, { useState}  from 'react';
 import Header from './components/Header';
 import Breadcrumbs from '../../../../components/Navigation/BreadCrumbs';
 import Concerns from "./components/Concern"
@@ -6,6 +7,11 @@ import SideBar from "../../components/SideBar"
 import ReplyBox from './components/Reply'; 
 
 export default function TestConcern() {
+  const [refreshReplyBox, setRefreshReplyBox] = useState(false);
+
+  const handleTriggerReplyBoxUpdate = () => {
+    setRefreshReplyBox(prev => !prev); // toggles trigger
+  };
 
   
   return (
@@ -15,9 +21,9 @@ export default function TestConcern() {
         <div className="flex gap-12">
           <div className="w-full md:w-3/4 lg:w-4/5 pl-16">
             <Header />
-            <Concerns />
+            <Concerns onButtonClick={handleTriggerReplyBoxUpdate}/>
             <div className="mt-8">
-              <ReplyBox />
+              <ReplyBox trigger={refreshReplyBox}/>
             </div>
           </div>
           <div className="w-full md:w-1/4 lg:w-1/5">

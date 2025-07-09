@@ -207,15 +207,15 @@ function ReplyCard({
               <span className="text-sm font-semibold">{copied ? 'Copied!' : 'Share'}</span>
             </button>
 
-            <button
+            {/* <button
               onClick={() => setShowReplyBox(prev => !prev)}
               className="flex items-center space-x-2 text-white bg-[#4A61C0] rounded-md px-4 py-2 hover:bg-[#3b4e9a]"
             >
               <span className="text-sm font-semibold">Reply</span>
-            </button>
+            </button> */}
           </div>
 
-          {showReplyBox && (
+          {/* {showReplyBox && (
             <div className="pl-1 mt-4" style={{ marginLeft: '28px' }}>
               <textarea
                 rows={3}
@@ -245,14 +245,14 @@ function ReplyCard({
                 </button>
               </div>
             </div>
-          )}
+          )} */}
         </>
       )}
     </div>
   );
 }
 
-export default function Reply() {
+export default function Reply({ trigger }: { trigger: boolean }) {
   const params = useParams();
   const { id } = params as { id: string };
   const [responses, setResponse] = useState<ReplyData[]>([]);
@@ -293,7 +293,7 @@ export default function Reply() {
           setResponse(mapped);
         }
       });
-  }, []);
+  }, [trigger]);
 
   return (
     <div className="mt-6">
