@@ -17,7 +17,7 @@ interface RedditPostProps {
   id: string;
   allotmentName?: string;
   imageUrl?: string;
-  onButtonClick?: () => void; 
+  onButtonClick?: () => void;
 }
 
 function RedditPost({
@@ -40,195 +40,155 @@ function RedditPost({
   const [downvoted, setDownvoted] = useState(false);
   const pathname = usePathname();
   const origin = typeof window !== 'undefined' && window.location.origin;
-  const fullUrl = origin + pathname 
+  const fullUrl = origin + pathname;
   const [copied, setCopied] = useState(false);
+  const [showReplyBox, setShowReplyBox] = useState(false);
+  const [replyText, setReplyText] = useState('');
 
-   //comment box
-  const [showReplyBox, setShowReplyBox] = useState(false); 
-  const [replyText, setReplyText] = useState(''); 
-
-  //twilio
   const [phone, setPhone] = useState('');
   const [code, setCode] = useState('');
   const [step, setStep] = useState<'phone' | 'code'>('phone');
   const [message, setMessage] = useState('');
-
-  //button change
   const [button, changeButton] = useState<'form' | 'code'>('form');
 
-   type SubmissionWithUser = {
+  type SubmissionWithUser = {
     id: number;
     user: {
       mobilenumber: string;
     };
   };
 
-   const sendOTP = async () => {
-      setMessage('');
-      // console.log(submission_id)
-      // Step 1: Fetch mobilenumber using submissionId
-      const { data, error } = await supabase
+  const sendOTP = async () => {
+    setMessage('');
+    const { data, error } = await supabase
       .from('submission')
       .select(`id, user (mobilenumber)`)
       .eq('id', id)
-      .single<SubmissionWithUser>(); 
-      let phone = data?.user?.mobilenumber?.replace(/\D/g, ''); // remove all non-digit characters
-  
-      if (!phone || phone.length !== 8) {
-        setMessage('Invalid Singapore mobile number.');
-        return;
+      .single<SubmissionWithUser>();
+
+    let phone = data?.user?.mobilenumber?.replace(/\D/g, '');
+
+    if (!phone || phone.length !== 8) {
+      setMessage('Invalid Singapore mobile number.');
+      return;
+    }
+    phone = `+65${phone}`;
+    setPhone(phone);
+
+    try {
+      const res = await fetch('/api/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone }),
+      });
+
+      const responseData = await res.json().catch(() => ({}));
+
+      if (res.ok) {
+        setStep('code');
+        changeButton('code');
+        setMessage('OTP sent!');
+      } else {
+        setMessage(responseData.message || 'Failed to send OTP');
       }
-      phone = `+65${phone}`;
-      // console.log(phone)
-      setPhone(phone)
-  
-      // Step 2: Send OTP
-      try {
-        const res = await fetch('/api/send-otp', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ phone }),
-        });
-  
-        const responseData = await res.json().catch(() => ({})); // handle no JSON
-  
-        if (res.ok) {
-          setStep('code');
-          changeButton('code');
-          setMessage('OTP sent!');
-        } else {
-          setMessage(responseData.message || 'Failed to send OTP');
-        }
-      } catch (err) {
-        setMessage('Network error. Please try again.');
-      }
-    };
-  
-  
-    const verifyOTP = async () => {
-      setMessage('');
-      try {
-        const res = await fetch('/api/verify-otp', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ phone, code }),
-        });
-  
-        const data = await res.json().catch(() => ({}));
-  
-        if (res.ok && data.verified) {
-          setMessage('Phone verified successfully!');
-          console.log("We have reached here as phone number has been verified")
-          console.log(replyText)
-          const { data, error } = await supabase
+    } catch (err) {
+      setMessage('Network error. Please try again.');
+    }
+  };
+
+  const verifyOTP = async () => {
+    setMessage('');
+    try {
+      const res = await fetch('/api/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone, code }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (res.ok && data.verified) {
+        setMessage('Phone verified successfully!');
+        const { data: userData } = await supabase
           .from('submission')
           .select('user_id')
           .eq('id', id)
           .single();
-  
-          console.log("supabase_response",data?.user_id)
-          console.log('submission_id', id); 
-          console.log('replyText', replyText); 
-          postReply(data?.user_id)
-  
-        } else {
-          setMessage(data.message || 'Verification failed.');
-        }
-      } catch (error) {
-        setMessage('Network error. Please try again.');
+        postReply(userData?.user_id);
+      } else {
+        setMessage(data.message || 'Verification failed.');
       }
-    };
-  
-  const postReply = async (user_id: string) => {
-  const res = await fetch('/backend/responses', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      submission_id: id,       // replace with actual submission_id
-      admin_id: user_id,            // replace with actual admin_id
-      replyText: replyText, // replace with user input
-    }),
-  });
-
-  const data = await res.json();
-
-  if (!res.ok) {
-    console.error('Error posting reply:', data.error);
-  } else {
-    console.log('Reply posted successfully:', data);
-    
-   
-  }
-};
-
-//for testing
-const verifyAndPostReply = async () => {
-  setMessage('');
-
-  try {
-    // Step 2: Get user_id from Supabase
-    const { data: userData, error } = await supabase
-      .from('submission')
-      .select('user_id')
-      .eq('id', id)
-      .single();
-
-    if (error || !userData?.user_id) {
-      console.error('Error fetching user_id:', error?.message);
-      setMessage('Failed to get user info.');
-      return;
+    } catch (error) {
+      setMessage('Network error. Please try again.');
     }
+  };
 
-    console.log('submission_id', id);
-    console.log('replyText', replyText);
-
-    // Step 3: Post the reply
-    const postRes = await fetch('/backend/responses', {
+  const postReply = async (user_id: string) => {
+    const res = await fetch('/backend/responses', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         submission_id: id,
-        admin_id: userData.user_id,
+        admin_id: user_id,
         replyText: replyText,
       }),
     });
 
-    const postResult = await postRes.json();
+    const data = await res.json();
 
-    if (!postRes.ok) {
-      console.error('Error posting reply:', postResult.error);
-      setMessage('Failed to post reply.');
-      return;
+    if (!res.ok) {
+      console.error('Error posting reply:', data.error);
+    } else {
+      console.log('Reply posted successfully:', data);
     }
+  };
 
-    console.log('Reply posted successfully:', postResult);
-    setMessage('Reply submitted successfully!');
-    setReplyText('');
-    setCode('');
-    setStep('phone');
-    changeButton('form');
-    if (onButtonClick) onButtonClick();
-    
-    
-    // optional: refresh replies list if you use a counter
+  const verifyAndPostReply = async () => {
+    setMessage('');
+    try {
+      const { data: userData, error } = await supabase
+        .from('submission')
+        .select('user_id')
+        .eq('id', id)
+        .single();
 
-  } catch (err) {
-    console.error(err);
-    setMessage('Network error. Please try again.');
-  }
-};
+      if (error || !userData?.user_id) {
+        setMessage('Failed to get user info.');
+        return;
+      }
 
+      const postRes = await fetch('/backend/responses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          submission_id: id,
+          admin_id: userData.user_id,
+          replyText: replyText,
+        }),
+      });
 
+      const postResult = await postRes.json();
+
+      if (!postRes.ok) {
+        setMessage('Failed to post reply.');
+        return;
+      }
+
+      setMessage('Reply submitted successfully!');
+      setReplyText('');
+      setCode('');
+      setStep('phone');
+      changeButton('form');
+      if (onButtonClick) onButtonClick();
+
+    } catch (err) {
+      setMessage('Network error. Please try again.');
+    }
+  };
 
   const handleCopy = () => {
     navigator.clipboard.writeText(fullUrl);
     setCopied(true);
-
-    // Reset back to "Share" after 2 seconds
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -262,109 +222,93 @@ const verifyAndPostReply = async () => {
     }
   };
 
-  // const handleSaveToggle = (e: React.MouseEvent) => {
-  //   e.stopPropagation();
-  //   setIsSaved(prev => !prev);
-  // };
-
   return (
     <div className="relative">
       <div className="rounded-lg overflow-hidden mb-6">
         <div className="max-w-screen-xl flex items-center relative">
           <div className="flex items-center mb-4 space-x-2 flex-grow">
-            {/* {communityIcon && (
-              <img src={communityIcon} alt="Community Icon" className="w-4 h-4 rounded-full" />
-            )} */}
             <span className="text-sm font-semibold text-gray-800">{randomUserName}</span>
             <span className="text-xs text-gray-500">• {postTime}</span>
           </div>
         </div>
-         {imageUrl && (
-            <div className="py-2">
-              <img
-                src={imageUrl}
-                alt="Post Image"
-                className="w-full h-144 object-cover rounded-lg"
-                onError={(e) => { e.currentTarget.src = 'https://placehold.co/600x400/cccccc/333333?text=Image+Not+Found'; }}
-              />
-            </div>
-          )}
+
+        {imageUrl && (
+          <div className="py-2">
+            <img
+              src={imageUrl}
+              alt="Post Image"
+              className="w-full h-144 object-cover rounded-lg"
+              onError={(e) => { e.currentTarget.src = 'https://placehold.co/600x400/cccccc/333333?text=Image+Not+Found'; }}
+            />
+          </div>
+        )}
 
         <div className="pb-3 sm:pb-4 text-gray-700 text-sm leading-relaxed">
           <p>{content}</p>
         </div>
 
-        <div className="flex items-center space-x-3 ">
-          <button
-            onClick={handleUpvote}
-            className="flex items-center space-x-2 px-3 py-1 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200 transition-colors duration-200"
-          >
+        <div className="flex items-center space-x-3 flex-wrap md:flex-nowrap">
+          <button onClick={handleUpvote} className="flex items-center space-x-2 px-4 py-2 bg-gray-100 rounded-full hover:bg-gray-200">
             <IoMdThumbsUp className={`h-4 w-4 ${upvoted ? 'text-[#4A61C0]' : 'text-gray-600'}`} />
             <span className="text-sm font-semibold text-gray-800">{upvotes}</span>
           </button>
 
-          <button
-            onClick={handleDownvote}
-            className="flex items-center space-x-2 px-3 py-1 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200 transition-colors duration-200"
-          >
+          <button onClick={handleDownvote} className="flex items-center space-x-2 px-4 py-2 bg-gray-100 rounded-full hover:bg-gray-200">
             <IoMdThumbsDown className={`h-4 w-4 ${downvoted ? 'text-[#4A61C0]' : 'text-gray-600'}`} />
             <span className="text-sm font-semibold text-gray-800">{downvotes}</span>
           </button>
 
-          <button className="flex items-center space-x-2 text-gray-700 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200 transition-colors duration-200">
+          <button className="flex items-center space-x-2 text-gray-700 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200">
             <FaCommentAlt className="h-4 w-4 text-gray-600" />
             <span className="text-sm font-semibold">{comments}</span>
           </button>
 
-          <button className="flex items-center space-x-2 text-gray-700 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200 transition-colors duration-200" 
-          onClick={handleCopy}>
+          <button onClick={handleCopy} className="flex items-center space-x-2 text-gray-700 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200">
             <FaShareAlt className="h-4 w-4 text-gray-600" />
-            <span className="text-sm font-semibold"> {copied ? 'Copied!' : 'Share'}</span>
+            <span className="text-sm font-semibold">{copied ? 'Copied!' : 'Share'}</span>
           </button>
-            <button
-              onClick={() => setShowReplyBox(prev => !prev)}
-              className="flex items-center space-x-2 text-white bg-[#4A61C0] rounded-md px-4 py-2 hover:bg-[#3b4e9a]"
-            >
-              <span className="text-sm font-semibold">Reply</span>
-            </button>
+
+          <button
+            onClick={() => setShowReplyBox(prev => !prev)}
+            className="flex items-center space-x-2 text-white bg-[#4A61C0] rounded-md px-4 py-2 hover:bg-[#3b4e9a] mt-2 md:mt-0"
+          >
+            <span className="text-sm font-semibold">Reply</span>
+          </button>
         </div>
-          {showReplyBox && (
-                    <div className="pl-1 mt-4" style={{ marginLeft: '28px' }}>
-                      <textarea
-                        rows={3}
-                        className="w-full p-2 border text-sm border-gray-300 rounded-md focus:outline-none focus:ring-[#4A61C0] focus:border-[#4A61C0]"
-                        placeholder="Write your reply here..."
-                        value={replyText}
-                        onChange={(e) => setReplyText(e.target.value)}
-                      />
-                      <div className="flex items-center space-x-2 mt-3 max-w-screen-xs">
-                        <input
-                          type="text"
-                          placeholder="Enter OTP"
-                          className="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#4A61C0] focus:border-[#4A61C0] text-sm max-w-[120px]"
-                          value={code}
-                          onChange={(e) => setCode(e.target.value)}
-                        />
-                        <button
-                            className="bg-[#4A61C0] text-white text-sm px-4 py-2 rounded-md hover:bg-[#3b4e9a]"
-                            onClick={button === 'form' ? sendOTP : verifyOTP}
-                          >
-                            {button === 'form' ? 'Get OTP' : 'Verify OTP'}
-                          </button>
-                        <button
-                          className="p-2 rounded-full bg-gray-100 hover:bg-gray-200"
-                        >
-                          <IoReload className="text-[#4A61C0] h-4 w-4" />
-                        </button>
-                          <button
-                            className="bg-[#4A61C0] text-white text-sm px-4 py-2 rounded-md hover:bg-[#3b4e9a]"
-                            onClick={verifyAndPostReply}
-                          >
-                            By Pass button temporarily
-                          </button>
-                      </div>
-                    </div>
-                  )}
+
+        {showReplyBox && (
+          <div className="pl-1 mt-4 md:pl-1 px-2">
+            <textarea
+              rows={3}
+              className="w-full p-2 border text-sm border-gray-300 rounded-md focus:outline-none focus:ring-[#4A61C0] focus:border-[#4A61C0]"
+              placeholder="Write your reply here..."
+              value={replyText}
+              onChange={(e) => setReplyText(e.target.value)}
+            />
+            <div className="flex items-center space-x-2 mt-3 flex-wrap md:flex-nowrap">
+              <input
+                type="text"
+                placeholder="Enter OTP"
+                className="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#4A61C0] focus:border-[#4A61C0] text-sm max-w-[120px]"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+              />
+              <button
+                className="bg-[#4A61C0] text-white text-sm px-4 py-2 rounded-md hover:bg-[#3b4e9a]"
+              >
+                {button === 'form' ? 'Get OTP' : 'Verify OTP'}
+              </button>
+              <button className="p-2 rounded-full bg-gray-100 hover:bg-gray-200">
+                <IoReload className="text-[#4A61C0] h-4 w-4" />
+              </button>
+              <button
+                className="bg-[#4A61C0] text-white text-sm px-4 py-2 rounded-md hover:bg-[#3b4e9a]"
+              >
+                By Pass button temporarily
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -378,80 +322,63 @@ export default function Concerns({ onButtonClick }: { onButtonClick: () => void 
   const nouns = ['panda', 'eagle', 'tiger', 'otter', 'fox'];
   const randomAdj = adjectives[Math.floor(Math.random() * adjectives.length)];
   const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
-  const randomNum = Math.floor(1000 + Math.random() * 9000); // 4-digit number
-  const anonymousUsername = `${randomAdj}-${randomNoun}-${randomNum}`
-
+  const randomNum = Math.floor(1000 + Math.random() * 9000);
+  const anonymousUsername = `${randomAdj}-${randomNoun}-${randomNum}`;
 
   useEffect(() => {
-  fetch(`/backend/concern?allotmentName=${decodeURIComponent(allotment_name)}&id=${id}`)
-    .then((res) => res.json())
-    .then((post) => {
-      if (post) {
-        let cleanedUrl = '';
-
-        try {
-          if (post.imageurl) {
-            const decoded = decodeURIComponent(post.imageurl);
-            const parsed = JSON.parse(decoded);
-            if (Array.isArray(parsed) && typeof parsed[0] === 'string') {
-              cleanedUrl = parsed[0];
+    fetch(`/backend/concern?allotmentName=${decodeURIComponent(allotment_name)}&id=${id}`)
+      .then((res) => res.json())
+      .then((post) => {
+        if (post) {
+          let cleanedUrl = '';
+          try {
+            if (post.imageurl) {
+              const decoded = decodeURIComponent(post.imageurl);
+              const parsed = JSON.parse(decoded);
+              if (Array.isArray(parsed) && typeof parsed[0] === 'string') {
+                cleanedUrl = parsed[0];
+              }
             }
+          } catch (e) {
+            console.warn('Invalid image_url:', post.imageurl);
           }
-        } catch (e) {
-          console.warn('Invalid image_url:', post.imageurl);
+
+          const mappedPost = {
+            randomUserName: "",
+            postTime: post.publishedat,
+            title: post.title,
+            content: post.content,
+            initialUpvotes: post.likes ?? 0,
+            comments: post.comments_count ?? 0,
+            initialSaved: post.saved ?? false,
+            id: post.id,
+            imageUrl: cleanedUrl,
+          };
+
+          setPost(mappedPost);
         }
-
-        const mappedPost = {
-          randomUserName: "",
-          postTime: post.publishedat,
-          title: post.title,
-          content: post.content,
-          initialUpvotes: post.likes ?? 0,
-          comments: post.comments_count ?? 0,
-          initialSaved: post.saved ?? false,
-          id: post.id,
-          imageUrl: cleanedUrl,
-          
-        };
-
-        setPost(mappedPost);
-      }
-    })
-    .catch((err) => {
-      console.error('Error fetching post:', err);
-    });
-}, [allotment_name, id]);
-
-  // const dummyPosts: RedditPostProps[] = [
-    // {
-    //   id: 'community-garden-plot-dispute-1',
-    //   communityIcon: 'https://placehold.co/20x20/4CAF50/fff?text=CG',
-    //   communityName: 'Alice Chen',
-    //   postTime: '2 days ago',
-    //   title: 'Ongoing Dispute Over Community Garden Plot Boundaries',
-    //   content: `I'm a long-time member of the Sunshine Community Garden, and lately, there's been a persistent issue with plot boundaries. My plot (C-12) keeps getting encroached upon by my neighbor's plants, despite clear markers. I've tried speaking with them, but the issue continues. It's affecting my harvest and overall enjoyment. Is there a garden committee or a formal dispute resolution process I can follow? This is getting really frustrating.`,
-    //   initialUpvotes: 45,
-    //   comments: 18,
-    //   initialSaved: false,
-    // },
-  // ];
+      })
+      .catch((err) => {
+        console.error('Error fetching post:', err);
+      });
+  }, [allotment_name, id]);
 
   return (
     <div className="w-full font-inter">
-    {newPost && (
-      <RedditPost
-        id={newPost.id}
-        randomUserName={anonymousUsername}
-        postTime={newPost.postTime}
-        title={newPost.title}
-        content={newPost.content}
-        initialUpvotes={newPost.initialUpvotes}
-        comments={newPost.comments}
-        initialSaved={newPost.initialSaved}
-        imageUrl={newPost.imageUrl}
-        onButtonClick={onButtonClick} 
-      />
-    )}
-  </div>
+      {newPost && (
+        <RedditPost
+          id={newPost.id}
+          randomUserName={anonymousUsername}
+          postTime={newPost.postTime}
+          title={newPost.title}
+          content={newPost.content}
+          initialUpvotes={newPost.initialUpvotes}
+          comments={newPost.comments}
+          initialSaved={newPost.initialSaved}
+          imageUrl={newPost.imageUrl}
+          onButtonClick={onButtonClick}
+        />
+      )}
+    </div>
   );
 }
