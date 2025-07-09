@@ -6,7 +6,7 @@ import { supabase } from '../lib/supabaseClient';
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const allotmentName = searchParams.get('allotmentName');
-  console.log("reached backend of concerns")
+  // console.log("reached backend of concerns")
 
   const { data, error } = await supabase
     .from('submission')
@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
     .eq('location', allotmentName)
     .order('publishedat', { ascending: false });
   
-  console.log(data)
+  // console.log(data)
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

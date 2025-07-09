@@ -4,10 +4,12 @@ import { IoMdThumbsUp, IoMdThumbsDown } from 'react-icons/io';
 import { FaShareAlt } from 'react-icons/fa';
 import { usePathname, useParams } from 'next/navigation';
 import { IoReload } from "react-icons/io5";
+import { supabase } from '../../../../../backend/lib/supabaseClient';
 
 interface ReplyData {
   authorIcon: string,
   id: string;
+  submission_id: string;
   admin_id: string;
   postTime: string;
   content: string;
@@ -21,6 +23,7 @@ interface ReplyData {
 function ReplyCard({
   authorIcon,
   id,
+  submission_id,
   admin_id,
   postTime,
   content,
@@ -38,10 +41,90 @@ function ReplyCard({
   const [showReplyBox, setShowReplyBox] = useState(false); 
   const [replyText, setReplyText] = useState(''); 
 
+
+  //Share button
   const pathname = usePathname();
   const origin = typeof window !== 'undefined' && window.location.origin;
   const fullUrl = origin + pathname;
   const [copied, setCopied] = useState(false);
+
+  //twilio
+  const [phone, setPhone] = useState('');
+  const [code, setCode] = useState('');
+  const [step, setStep] = useState<'phone' | 'code'>('phone');
+  const [message, setMessage] = useState('');
+  type SubmissionWithUser = {
+    id: number;
+    user: {
+      mobilenumber: string;
+    };
+  };
+
+  //button change
+  const [button, changeButton] = useState<'form' | 'code'>('form');
+
+  const sendOTP = async () => {
+    setMessage('');
+    // console.log(submission_id)
+    // Step 1: Fetch mobilenumber using submissionId
+    const { data, error } = await supabase
+    .from('submission')
+    .select(`id, user (mobilenumber)`)
+    .eq('id', submission_id)
+    .single<SubmissionWithUser>(); 
+    let phone = data?.user?.mobilenumber?.replace(/\D/g, ''); // remove all non-digit characters
+
+    if (!phone || phone.length !== 8) {
+      setMessage('Invalid Singapore mobile number.');
+      return;
+    }
+    phone = `+65${phone}`;
+    // console.log(phone)
+    setPhone(phone)
+
+    // Step 2: Send OTP
+    try {
+      const res = await fetch('/api/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone }),
+      });
+
+      const responseData = await res.json().catch(() => ({})); // handle no JSON
+
+      if (res.ok) {
+        setStep('code');
+        changeButton('code');
+        setMessage('OTP sent!');
+      } else {
+        setMessage(responseData.message || 'Failed to send OTP');
+      }
+    } catch (err) {
+      setMessage('Network error. Please try again.');
+    }
+  };
+
+
+  const verifyOTP = async () => {
+    setMessage('');
+    try {
+      const res = await fetch('/api/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone, code }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (res.ok && data.verified) {
+        setMessage('Phone verified successfully!');
+      } else {
+        setMessage(data.message || 'Verification failed.');
+      }
+    } catch (error) {
+      setMessage('Network error. Please try again.');
+    }
+  };
 
   const handleCopy = () => {
     navigator.clipboard.writeText(fullUrl);
@@ -146,12 +229,15 @@ function ReplyCard({
                   type="text"
                   placeholder="Enter OTP"
                   className="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#4A61C0] focus:border-[#4A61C0] text-sm max-w-[120px]"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
                 />
                 <button
-                  className="bg-[#4A61C0] text-white text-sm px-4 py-2 rounded-md hover:bg-[#3b4e9a]"
-                >
-                  Get OTP
-                </button>
+                    className="bg-[#4A61C0] text-white text-sm px-4 py-2 rounded-md hover:bg-[#3b4e9a]"
+                    onClick={button === 'form' ? sendOTP : verifyOTP}
+                  >
+                    {button === 'form' ? 'Get OTP' : 'Verify OTP'}
+                  </button>
                 <button
                   className="p-2 rounded-full bg-gray-100 hover:bg-gray-200"
                 >
@@ -193,6 +279,7 @@ export default function Reply() {
             return {
               authorIcon: "https://placehold.co/20x20/808080/fff?text=U",
               id: response.id,
+              submission_id: response.submission_id,
               admin_id: response.user?.username,
               postTime: response.created_at,
               content: response.message,

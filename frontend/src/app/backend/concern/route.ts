@@ -6,9 +6,9 @@ export async function GET(request: NextRequest) {
   const allotmentName = searchParams.get('allotmentName');
   const id = searchParams.get('id');
 
-  console.log("reached to backend concern")
-  console.log(allotmentName)
-  console.log(id)
+  // console.log("reached to backend concern")
+  // console.log(allotmentName)
+  // console.log(id)
 
   if (!allotmentName || !id) {
     return NextResponse.json(
