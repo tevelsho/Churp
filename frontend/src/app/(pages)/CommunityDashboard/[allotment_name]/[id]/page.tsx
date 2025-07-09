@@ -9,7 +9,7 @@ export default function TestConcern() {
 
   
   return (
-    <div className="min-h-screen w-full flex flex-col items-center justify-start bg-white">
+    <div className="min-h-screen w-full flex flex-col items-center justify-start bg-white mb-24">
       <div className="w-full max-w-screen-2xl">
         <Breadcrumbs />
         <div className="flex gap-12">

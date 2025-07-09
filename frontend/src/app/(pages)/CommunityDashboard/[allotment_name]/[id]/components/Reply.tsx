@@ -104,7 +104,7 @@ function ReplyCard({
               onClick={handleUpvote}
               className="flex items-center space-x-2 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200"
             >
-              <IoMdThumbsUp className={`h-4 w-4 ${upvoted ? 'text-[#4A61C0]' : 'text-gray-400'}`} />
+              <IoMdThumbsUp className={`h-4 w-4 ${upvoted ? 'text-[#4A61C0]' : 'text-gray-600'}`} />
               <span className="text-sm font-semibold text-gray-800">{upvotes}</span>
             </button>
 
@@ -112,7 +112,7 @@ function ReplyCard({
               onClick={handleDownvote}
               className="flex items-center space-x-2 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200"
             >
-              <IoMdThumbsDown className={`h-4 w-4 ${downvoted ? 'text-[#4A61C0]' : 'text-gray-400'}`} />
+              <IoMdThumbsDown className={`h-4 w-4 ${downvoted ? 'text-[#4A61C0]' : 'text-gray-600'}`} />
               <span className="text-sm font-semibold text-gray-800">{downvotes}</span>
             </button>
 
@@ -120,7 +120,7 @@ function ReplyCard({
               onClick={handleCopy}
               className="flex items-center space-x-2 text-gray-700 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200"
             >
-              <FaShareAlt className="h-4 w-4 text-gray-400" />
+              <FaShareAlt className="h-4 w-4 text-gray-600" />
               <span className="text-sm font-semibold">{copied ? 'Copied!' : 'Share'}</span>
             </button>
 

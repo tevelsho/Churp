@@ -90,37 +90,37 @@ function RedditPost({
   };
 
   const handlePostClick = () => {
-    window.location.href = `/Concerns/${allotmentName}/${id}`;
+    window.location.href = `/CommunityDashboard/${allotmentName}/${id}`;
   };
 
   return (
     <div className="relative">
       {showEyeHoverBox && (
-        <div className="absolute -top-28 left-1/2 -translate-x-1/2 z-50 transition-all duration-300">
-          <div className="bg-[#4A61C0]/70 px-3 py-2 rounded-xl shadow-lg text-sm text-white"> 
-            <p className="font-bold mb-1">Viewed by:</p>
-            <div className="flex flex-col space-y-1">
-              <div className="flex items-center space-x-2 w-40">
-                <span className="px-2 py-1 rounded-md bg-[#4A61C0] text-lg">👦🏻</span>
-                <span className="text-white font-semibold">Alex</span>
-              </div>
-              <div className="flex items-center space-x-2 w-40">
-                <span className="px-2 py-1 rounded-md bg-[#4A61C0] text-lg">👧🏽</span>
-                <span className="text-white font-semibold">Maria</span>
-              </div>
-              <div className="flex items-center space-x-2 w-40">
-                <span className="px-2 py-1 rounded-md bg-[#4A61C0] text-lg">👨🏿</span>
-                <span className="text-white font-semibold">David</span>
-              </div>
+      <div className="absolute -top-42 right-13 z-50 transition-all duration-300">
+        <div className="bg-[#4A61C0]/70 px-3 py-2 rounded-xl shadow-lg text-sm text-white">
+          <p className="font-bold mb-1">Viewed by Residential Network</p>
+          <div className="flex flex-col space-y-1">
+            <div className="flex items-center space-x-2 w-40">
+              <span className="px-2 py-1 rounded-md bg-[#4A61C0] text-lg">👦🏻</span>
+              <span className="text-white font-semibold">Alex</span>
+            </div>
+            <div className="flex items-center space-x-2 w-40">
+              <span className="px-2 py-1 rounded-md bg-[#4A61C0] text-lg">👧🏽</span>
+              <span className="text-white font-semibold">Maria</span>
+            </div>
+            <div className="flex items-center space-x-2 w-40">
+              <span className="px-2 py-1 rounded-md bg-[#4A61C0] text-lg">👨🏿</span>
+              <span className="text-white font-semibold">David</span>
             </div>
           </div>
         </div>
-      )}
+      </div>
+    )}
 
       {showTreeHoverBox && (
-        <div className="absolute -top-28 left-1/2 -translate-x-1/2 z-50 transition-all duration-300">
+        <div className="absolute -top-42 right-3 z-50 transition-all duration-300">
           <div className="bg-[#2E6C3A]/70 px-3 py-2 rounded-xl shadow-lg text-sm text-white"> 
-            <p className="font-bold mb-1">Viewed by:</p>
+            <p className="font-bold mb-1">Viewed by NParks Team</p>
             <div className="flex flex-col space-y-1">
               <div className="flex items-center space-x-2 w-40">
                 <span className="px-2 py-1 rounded-md bg-[#2E6C3A] text-lg">👨🏼‍🦰</span>
@@ -189,7 +189,7 @@ function RedditPost({
             onClick={handleUpvote}
             className="flex items-center space-x-2 px-3 py-1 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200 transition-colors duration-200"
           >
-            <IoMdThumbsUp className={`h-4 w-4 ${upvoted ? 'text-[#4A61C0]' : 'text-gray-400'}`} />
+            <IoMdThumbsUp className={`h-4 w-4 ${upvoted ? 'text-[#4A61C0]' : 'text-gray-600'}`} />
             <span className="text-sm font-semibold text-gray-800">{upvotes}</span>
           </button>
 
@@ -197,12 +197,12 @@ function RedditPost({
             onClick={handleDownvote}
             className="flex items-center space-x-2 px-3 py-1 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200 transition-colors duration-200"
           >
-            <IoMdThumbsDown className={`h-4 w-4 ${downvoted ? 'text-[#4A61C0]' : 'text-gray-400'}`} />
+            <IoMdThumbsDown className={`h-4 w-4 ${downvoted ? 'text-[#4A61C0]' : 'text-gray-600'}`} />
             <span className="text-sm font-semibold text-gray-800">{downvotes}</span>
           </button>
 
           <button className="flex items-center space-x-2 text-gray-700 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200 transition-colors duration-200">
-            <FaCommentAlt className="h-4 w-4 text-gray-400" />
+            <FaCommentAlt className="h-4 w-4 text-gray-600" />
             <span className="text-sm font-semibold">{comments}</span>
           </button>
 
@@ -210,12 +210,12 @@ function RedditPost({
             onClick={handleSaveToggle}
             className="flex items-center space-x-2 text-gray-700 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200 transition-colors duration-200"
           >
-            <FaBookmark className={`h-4 w-4 ${isSaved ? 'text-[#4A61C0]' : 'text-gray-400'}`} />
+            <FaBookmark className={`h-4 w-4 ${isSaved ? 'text-[#4A61C0]' : 'text-gray-600'}`} />
             <span className="text-sm font-semibold">Save</span>
           </button> */}
 
           <button className="flex items-center space-x-2 text-gray-700 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200 transition-colors duration-200" onClick={handleCopy}>
-            <FaShareAlt className="h-4 w-4 text-gray-400" />
+            <FaShareAlt className="h-4 w-4 text-gray-600" />
             <span className="text-sm font-semibold">{copied ? 'Copied!' : 'Share'}</span>
           </button>
         </div>

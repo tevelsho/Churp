@@ -6,7 +6,7 @@ import { HiMiniMagnifyingGlass } from 'react-icons/hi2';
 const Header: React.FC = () => {
   return (
     <div className="text-center py-20">
-      <h1 className="text-4xl font-bold text-[#293044] mb-4">Explore Community Gardens</h1>
+      <h1 className="text-4xl font-bold text-[#293044] mb-4">Explore Community Gardens 🌴</h1>
       <h2 className="text-sm text-[#445072] mb-8">
         Discover and explore public concerns submitted in community gardens across the island!
       </h2>

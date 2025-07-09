@@ -20,7 +20,7 @@ const gridItems: GridItem[] = [
     name: 'Plantation Grove',
     location: 'Blk 120A',
     concernsCount: 10,
-    href: 'Concerns/Plantation%20Grove',
+    href: 'CommunityDashboard/Plantation Grove',
   },
   {
     id: 2,
@@ -28,7 +28,7 @@ const gridItems: GridItem[] = [
     name: 'Tengah Community Club',
     location: 'Blk 119C',
     concernsCount: 8,
-    href: 'Concerns/Tengah%20Community%20Club',
+    href: 'CommunityDashboard/Tengah%20Community Club',
   },
   {
     id: 3,
@@ -36,7 +36,7 @@ const gridItems: GridItem[] = [
     name: 'Garden Vale',
     location: 'Blk 226',
     concernsCount: 10,
-    href: 'Concerns/Garden%20Vale',
+    href: 'CommunityDashboard/Garden Vale',
   },
   {
     id: 4,
@@ -44,7 +44,7 @@ const gridItems: GridItem[] = [
     name: 'Plantation Acres',
     location: 'Blk 111A',
     concernsCount: 8,
-    href: 'Concerns/Plantation%20Acres',
+    href: 'CommunityDashboard/Plantation Acres',
   }
 ];
 

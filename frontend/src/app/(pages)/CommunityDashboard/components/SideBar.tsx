@@ -18,11 +18,11 @@ const SideBar: React.FC = () => {
   ];
 
   const generateSlug = (text: string) => {
-    return `/Concerns/${encodeURIComponent(text.toLowerCase().replace(/\s/g, '-'))}`;
+    return `/CommunityDashboard/${encodeURIComponent(text.toLowerCase().replace(/\s/g, '-'))}`;
   };
 
   return (
-    <div className="sticky">
+    <div className="sticky top-24 self-start">
       <div className="bg-white rounded-md mb-6">
         <h3 className="font-bold text-base mb-4 text-[#293044] text-left uppercase">Trending Concerns</h3>
         <ul className="space-y-2">
@@ -40,7 +40,7 @@ const SideBar: React.FC = () => {
       </div>
 
       <div className="bg-white rounded-md">
-        <h3 className="font-bold text-[#293044] mb-4text-[#293044] text-left uppercase mb-4">Popular Topics</h3>
+        <h3 className="font-bold text-[#293044] mb-4 text-left uppercase">Popular Topics</h3>
         <ul className="space-y-2">
           {popularTopics.map((topic, index) => (
             <li key={index}>

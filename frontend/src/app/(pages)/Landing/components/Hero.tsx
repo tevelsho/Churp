@@ -18,7 +18,7 @@ const Hero = () => {
 
             <div className="flex gap-4">
               <Link
-                href="/Concerns"
+                href="/CommunityDashboard"
                 className="inline-flex items-center gap-2 bg-[#4A61C0] hover:bg-[#3b4e9a] text-white px-4 py-3 rounded-sm font-medium transition-colors"
               >
                 See common issues

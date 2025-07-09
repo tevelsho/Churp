@@ -6,6 +6,7 @@ import OpenSource from "./(pages)/Landing/components/OpenSource";
 import HelpCenter from "./(pages)/Landing/components/HelpCentre";
 import Metrics from "./(pages)/Landing/components/Metrics";
 import GettingStarted from "./(pages)/Landing/components/GettingStarted";
+import Footer from "./components/Footer/Footer";
 
 export default function Home() {
   return (
@@ -41,6 +42,8 @@ export default function Home() {
       <section>
         <GettingStarted />
       </section>
+
+      <Footer />
     </>
   );
 }

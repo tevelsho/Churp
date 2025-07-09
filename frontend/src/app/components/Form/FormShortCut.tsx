@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { HiOutlineNewspaper } from 'react-icons/hi2';
+import { LuFilePen } from "react-icons/lu";
 import { useRouter } from 'next/navigation';
 
 const FormShortCut: React.FC = () => {
@@ -19,7 +19,7 @@ const FormShortCut: React.FC = () => {
                    w-12 h-12 p-2
                    flex items-center justify-center"
       >
-        <HiOutlineNewspaper className="text-3xl" />
+        <LuFilePen className="text-2xl" />
       </button>
     </>
   );

@@ -204,7 +204,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                         type="checkbox"
                         checked={formData.affectedGarden.includes(garden)}
                         onChange={() => handleCheckboxArrayChange("affectedGarden", garden)}
-                        className="form-checkbox h-4 w-4 rounded-sm appearance-none border border-gray-300 checked:bg-[#4A61C0] checked:border-transparent focus:outline-none"
+                        className="form-checkbox h-4 w-4 accent-[#4A61C0] border-gray-800 focus:ring-[#4A61C0"
                       />
                       <label htmlFor={`garden-${garden}`} className="text-sm text-[#445072]">
                         {garden}

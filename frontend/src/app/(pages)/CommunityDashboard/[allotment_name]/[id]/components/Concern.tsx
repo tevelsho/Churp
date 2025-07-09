@@ -115,7 +115,7 @@ function RedditPost({
             onClick={handleUpvote}
             className="flex items-center space-x-2 px-3 py-1 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200 transition-colors duration-200"
           >
-            <IoMdThumbsUp className={`h-4 w-4 ${upvoted ? 'text-[#4A61C0]' : 'text-gray-400'}`} />
+            <IoMdThumbsUp className={`h-4 w-4 ${upvoted ? 'text-[#4A61C0]' : 'text-gray-600'}`} />
             <span className="text-sm font-semibold text-gray-800">{upvotes}</span>
           </button>
 
@@ -123,26 +123,18 @@ function RedditPost({
             onClick={handleDownvote}
             className="flex items-center space-x-2 px-3 py-1 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200 transition-colors duration-200"
           >
-            <IoMdThumbsDown className={`h-4 w-4 ${downvoted ? 'text-[#4A61C0]' : 'text-gray-400'}`} />
+            <IoMdThumbsDown className={`h-4 w-4 ${downvoted ? 'text-[#4A61C0]' : 'text-gray-600'}`} />
             <span className="text-sm font-semibold text-gray-800">{downvotes}</span>
           </button>
 
           <button className="flex items-center space-x-2 text-gray-700 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200 transition-colors duration-200">
-            <FaCommentAlt className="h-4 w-4 text-gray-400" />
+            <FaCommentAlt className="h-4 w-4 text-gray-600" />
             <span className="text-sm font-semibold">{comments}</span>
           </button>
 
-          {/* <button
-            onClick={handleSaveToggle}
-            className="flex items-center space-x-2 text-gray-700 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200 transition-colors duration-200"
-          >
-            <FaBookmark className={`h-4 w-4 ${isSaved ? 'text-[#4A61C0]' : 'text-gray-400'}`} />
-            <span className="text-sm font-semibold">Save</span>
-          </button> */}
-
           <button className="flex items-center space-x-2 text-gray-700 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200 transition-colors duration-200" 
           onClick={handleCopy}>
-            <FaShareAlt className="h-4 w-4 text-gray-400" />
+            <FaShareAlt className="h-4 w-4 text-gray-600" />
             <span className="text-sm font-semibold"> {copied ? 'Copied!' : 'Share'}</span>
           </button>
         </div>
