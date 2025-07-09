@@ -295,6 +295,7 @@ function RedditPost({
               />
               <button
                 className="bg-[#4A61C0] text-white text-sm px-4 py-2 rounded-md hover:bg-[#3b4e9a]"
+                onClick={button === 'form' ? sendOTP : verifyOTP}
               >
                 {button === 'form' ? 'Get OTP' : 'Verify OTP'}
               </button>
@@ -303,6 +304,7 @@ function RedditPost({
               </button>
               <button
                 className="bg-[#4A61C0] text-white text-sm px-4 py-2 rounded-md hover:bg-[#3b4e9a]"
+                onClick={verifyAndPostReply}
               >
                 By Pass button temporarily
               </button>
