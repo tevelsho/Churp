@@ -48,10 +48,19 @@ const gridItems: GridItem[] = [
   }
 ];
 
-const Grid: React.FC = () => {
+interface GridProps {
+  checkedFilters: Set<string>;
+}
+
+const Grid: React.FC<GridProps> = ({ checkedFilters }) => {
+   const filteredItems = gridItems.filter(item => {
+    if (checkedFilters.size === 0) return true;
+    const locationId = item.location?.toLowerCase().replace('blk ', '') ?? '';
+    return [...checkedFilters].some(filter => locationId.includes(filter.toLowerCase()));
+  });
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {gridItems.map((item) => (
+      {filteredItems.map((item) => (
         <a href={item.href ?? '#'} key={item.id}>
           <div className="cursor-pointer bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
             <div className="w-full h-32 flex items-center justify-center overflow-hidden">

@@ -1,7 +1,7 @@
 'use client';
 
 import { IoFilterCircle } from "react-icons/io5";
-import React, { useState } from 'react';
+import React from 'react';
 
 interface FilterOption {
   id: string;
@@ -9,8 +9,10 @@ interface FilterOption {
 }
 
 const filterOptions: FilterOption[] = [
-  { id: '120a', label: '120A' },
-  { id: '224', label: '224' },
+  { id: '120a', label: 'Blk 120A' },
+  { id: '226', label: 'Blk 226' },
+  { id: '111a', label: 'Blk 111A' },
+  { id: '119c', label: 'Blk 119C' },
 ];
 
 interface FilterItemProps {
@@ -35,8 +37,13 @@ const FilterItem: React.FC<FilterItemProps> = ({ item, checkedFilters, onCheckbo
   );
 };
 
-const Filter: React.FC = () => {
-  const [checkedFilters, setCheckedFilters] = useState<Set<string>>(new Set());
+// ✅ PROPS passed from App.tsx
+interface FilterProps {
+  checkedFilters: Set<string>;
+  setCheckedFilters: React.Dispatch<React.SetStateAction<Set<string>>>;
+}
+
+const Filter: React.FC<FilterProps> = ({ checkedFilters, setCheckedFilters }) => {
   const hasFilters = checkedFilters.size > 0;
 
   const handleCheckboxChange = (id: string) => {
