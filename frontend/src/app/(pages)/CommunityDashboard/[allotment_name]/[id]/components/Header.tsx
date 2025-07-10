@@ -7,12 +7,16 @@ const Header: React.FC = () => {
   const params = useParams();
   const { allotment_name, id } = params as { allotment_name: string; id: string };
   const [title, setPostTitle] = useState<string>('');
+  const [ackStatus, setAckStatus] = useState<string>('');
   const [isMobile, setIsMobile] = useState(false);
 
+  const [showEyeHoverBox, setShowEyeHoverBox] = useState(false);
+  const [showResolveHoverBox, setShowResolveHoverBox] = useState(false);
+  const [showToolsHoverBox, setShowToolsHoverBox] = useState(false);
+
   useEffect(() => {
-    // Detect mobile screen on mount and on resize
     const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 640); // Tailwind's sm breakpoint is 640px
+      setIsMobile(window.innerWidth <= 640);
     };
 
     checkMobile();
@@ -32,65 +36,99 @@ const Header: React.FC = () => {
     fetch(`/backend/concern?allotmentName=${decodeURIComponent(allotment_name)}&id=${id}`)
       .then((res) => res.json())
       .then((post) => {
-        if (post?.title) {
-          setPostTitle(post.title);
-        }
+        if (post?.title) setPostTitle(post.title);
+        if (post?.ack_status) setAckStatus(post.ack_status);
       })
       .catch((err) => {
         console.error('Error fetching title:', err);
       });
   }, [allotment_name, id]);
 
-  const status = 'Solved';
-  const dateLabel = 'Required';
-  const concernInfo = 'Community Garden Maintenance';
-  const badges = [
-    { icon: '👀', bgColor: '#4A61C0' },
-    { icon: '🌳', bgColor: '#2E6C3A' },
-  ];
+  const renderBadge = () => {
+    if (ackStatus === 'looking into it') {
+      return (
+        <div
+          className="relative inline-flex items-center mt-[2px]"
+          onMouseEnter={() => setShowEyeHoverBox(true)}
+          onMouseLeave={() => setShowEyeHoverBox(false)}
+        >
+          <div className="px-1.5 py-0.5 rounded-lg bg-[#4A61C0]/70 text-base sm:text-lg text-white select-none">
+            👀
+          </div>
+          {showEyeHoverBox && (
+            <div className={`absolute bottom-full mb-2 z-50 ${isMobile ? 'left-0 ml-2' : 'left-1/2 -translate-x-1/2'}`}>
+              <div className="bg-[#4A61C0]/90 px-3 py-2 rounded-xl shadow-lg text-sm text-white text-center whitespace-nowrap max-w-[90vw]">
+                <p className="font-bold">Residential Network is looking into it</p>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    if (ackStatus === 'resolved') {
+      return (
+        <div
+          className="relative inline-flex items-center mt-[2px]"
+          onMouseEnter={() => setShowResolveHoverBox(true)}
+          onMouseLeave={() => setShowResolveHoverBox(false)}
+        >
+          <div className="px-1.5 py-0.5 rounded-lg bg-[#4A61C0]/70 text-base sm:text-lg text-white select-none">
+            ✅
+          </div>
+          {showResolveHoverBox && (
+            <div className={`absolute bottom-full mb-2 z-50 ${isMobile ? 'left-0 ml-2' : 'left-1/2 -translate-x-1/2'}`}>
+              <div className="bg-[#4A61C0]/90 px-3 py-2 rounded-xl shadow-lg text-sm text-white text-center whitespace-nowrap max-w-[90vw]">
+                <p className="font-bold">Resolved by Residential Network</p>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    if (ackStatus === 'working on it') {
+      return (
+        <div
+          className="relative inline-flex items-center mt-[2px]"
+          onMouseEnter={() => setShowToolsHoverBox(true)}
+          onMouseLeave={() => setShowToolsHoverBox(false)}
+        >
+          <div className="px-1.5 py-0.5 rounded-lg bg-[#4A61C0]/70 text-base sm:text-lg text-white select-none">
+            🛠️
+          </div>
+          {showToolsHoverBox && (
+            <div className={`absolute bottom-full mb-2 z-50 ${isMobile ? 'left-0 ml-2' : 'left-1/2 -translate-x-1/2'}`}>
+              <div className="bg-[#4A61C0]/90 px-3 py-2 rounded-xl shadow-lg text-sm text-white text-center whitespace-nowrap max-w-[90vw]">
+                <p className="font-bold">Residential Network is working on it</p>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    return null;
+  };
 
   return (
     <div className="mb-12 flex flex-col gap-y-3">
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-y-2 sm:gap-y-0">
-        <div className="flex flex-col items-start flex-1">
+       <div className="flex flex-col items-start flex-1">
+          {/* Title with badge */}
           {isMobile ? (
-            <h2 className="text-lg font-bold text-gray-900 flex flex-wrap items-center gap-x-4 overflow-hidden">
-              <span className="truncate max-w-full">{title}</span>
-              <span className="px-3 py-1 rounded-lg bg-green-100 text-green-800 text-sm font-medium whitespace-nowrap">
-                {status}
-              </span>
-            </h2>
+            <>
+              <h2 className="text-lg font-bold text-gray-900 truncate">{title}</h2>
+              <div className="mt-2">{renderBadge()}</div> {/* badge now under title */}
+            </>
           ) : (
-            <h1 className="text-xl sm:text-3xl font-bold text-gray-900 flex flex-wrap items-center gap-x-4 overflow-hidden">
-              <span className="truncate max-w-full">{title}</span>
-              <span className="px-3 py-1 rounded-lg bg-green-100 text-green-800 text-sm font-medium whitespace-nowrap">
-                {status}
-              </span>
-            </h1>
+            <div className="flex items-center gap-2">
+              <h1 className="text-xl sm:text-3xl font-bold text-gray-900 truncate">{title}</h1>
+              {renderBadge()}
+            </div>
           )}
-
-          <p className="text-gray-600 text-sm flex flex-wrap items-center mt-2">
-            {dateLabel} {currentDate}
-            <span className="ml-2 px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 text-xs font-medium mt-1 sm:mt-0">
-              {concernInfo}
-            </span>
-          </p>
         </div>
       </div>
-
-      {badges.length > 0 && (
-        <div className="flex flex-wrap items-center gap-2">
-          {badges.map((badge, i) => (
-            <div
-              key={i}
-              className="px-2 py-1 opacity-70 rounded-lg text-md text-white select-none"
-              style={{ backgroundColor: badge.bgColor }}
-            >
-              {badge.icon}
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 };
