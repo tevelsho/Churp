@@ -7,6 +7,7 @@ import { supabase } from '../../../../backend/lib/supabaseClient';
 
 interface ConcernsProps {
   allotmentName: string;
+  searchTerm: string;
 }
 
 interface RedditPostProps {
@@ -45,10 +46,28 @@ function RedditPost({
   const [showResolveHoverBox, setShowResolveHoverBox] = useState(false);
   const [showToolsHoverBox, setShowToolsHoverBox] = useState(false);
   //Copy link variables
+  const [copied, setCopied] = useState(false);
   const pathname = usePathname();
   const origin = typeof window !== 'undefined' && window.location.origin;
   const fullUrl = origin + pathname  + "/" + id
-  const [copied, setCopied] = useState(false);
+  const anonymousUsername = React.useMemo(() => {
+    const adjectives = ['cool', 'brave', 'witty', 'fast', 'silent'];
+    const nouns = ['panda', 'eagle', 'tiger', 'otter', 'fox'];
+
+    let hash = 0;
+    for (let i = 0; i < id.length; i++) {
+      hash = (hash << 5) - hash + id.charCodeAt(i);
+      hash |= 0;
+    }
+    hash = Math.abs(hash);
+
+    const adj = adjectives[hash % adjectives.length];
+    const noun = nouns[(hash >> 3) % nouns.length];
+    const num = 1000 + (hash % 9000);
+
+    return `${adj}-${noun}-${num}`;
+  }, [id]);
+  
   
   const handleCopy = () => {
       navigator.clipboard.writeText(fullUrl);
@@ -57,22 +76,7 @@ function RedditPost({
       // Reset back to "Share" after 2 seconds
       setTimeout(() => setCopied(false), 2000);
     };
-
-  // const handleUpvote = (e: React.MouseEvent) => {
-  //   e.stopPropagation();
-  //   if (upvoted) {
-  //     setUpvotes(prev => prev - 1);
-  //     setUpvoted(false);
-  //   } else {
-  //     setUpvotes(prev => prev + 1);
-  //     setUpvoted(true);
-  //     if (downvoted) {
-  //       setDownvotes(prev => prev - 1);
-  //       setDownvoted(false);
-  //     }
-  //   }
-  // };
-
+    
   const handleUpvote = async (e: React.MouseEvent) => {
   e.stopPropagation();
 
@@ -278,97 +282,101 @@ function RedditPost({
 
 
 
-export default function Concerns({ allotmentName }: ConcernsProps) {
+export default function Concerns({ allotmentName, searchTerm }: ConcernsProps) {
   const [posts, setPosts] = useState<RedditPostProps[]>([]);
-  const adjectives = ['cool', 'brave', 'witty', 'fast', 'silent'];
-  const nouns = ['panda', 'eagle', 'tiger', 'otter', 'fox'];
+  
+  useEffect(() => {
+    const adjectives = ['cool', 'brave', 'witty', 'fast', 'silent'];
+    const nouns = ['panda', 'eagle', 'tiger', 'otter', 'fox'];
 
-  const randomAdj = adjectives[Math.floor(Math.random() * adjectives.length)];
-  const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
-  const randomNum = Math.floor(1000 + Math.random() * 9000); // 4-digit number
-  const anonymousUsername = `${randomAdj}-${randomNoun}-${randomNum}`
+    const generateRandomUsername = () => {
+      const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+      const noun = nouns[Math.floor(Math.random() * nouns.length)];
+      const num = 1000 + Math.floor(Math.random() * 9000);
+      return `${adj}-${noun}-${num}`;
+    };
 
- useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const res = await fetch(`/backend/concerns?allotmentName=${allotmentName}`);
-      const data = await res.json();
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`/backend/concerns?allotmentName=${allotmentName}`);
+        const data = await res.json();
 
-      if (Array.isArray(data)) {
-        const mapped = await Promise.all(
-          data.map(async (post: any) => {
-            let cleanedUrl = '';
+        if (Array.isArray(data)) {
+          const mapped = await Promise.all(
+            data.map(async (post: any) => {
+              let cleanedUrl = '';
 
-            // Decode image URL
-            try {
-              if (post.imageurl) {
-                const decoded = decodeURIComponent(post.imageurl);
-                const parsed = JSON.parse(decoded);
-                if (Array.isArray(parsed) && typeof parsed[0] === 'string') {
-                  cleanedUrl = parsed[0];
+              try {
+                if (post.imageurl) {
+                  const decoded = decodeURIComponent(post.imageurl);
+                  const parsed = JSON.parse(decoded);
+                  if (Array.isArray(parsed) && typeof parsed[0] === 'string') {
+                    cleanedUrl = parsed[0];
+                  }
                 }
+              } catch (e) {
+                console.warn('Invalid image_url:', post.imageurl);
               }
-            } catch (e) {
-              console.warn('Invalid image_url:', post.imageurl);
-            }
 
-            // Format time
-            const formattedTime = new Date(post.publishedat).toLocaleString('en-SG', {
-              timeZone: 'Asia/Singapore',
-              year: 'numeric',
-              month: 'short',
-              day: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit',
-              hour12: true
-            });
+              const formattedTime = new Date(post.publishedat).toLocaleString('en-SG', {
+                timeZone: 'Asia/Singapore',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+              });
 
-            // Count responses from Supabase
-            let responseCount = 0;
-            const { count, error } = await supabase
-              .from('response')
-              .select('*', { count: 'exact', head: true })
-              .eq('submission_id', post.id);
+              let responseCount = 0;
+              const { count, error } = await supabase
+                .from('response')
+                .select('*', { count: 'exact', head: true })
+                .eq('submission_id', post.id);
 
-            if (error) {
-              console.error('Error counting responses:', error.message);
-            } else {
-              responseCount = count ?? 0;
-            }
+              if (error) {
+                console.error('Error counting responses:', error.message);
+              } else {
+                responseCount = count ?? 0;
+              }
 
-            return {
-              randomUserName: '',
-              postTime: formattedTime,
-              title: post.title,
-              content: post.content,
-              initialUpvotes: post.likes ?? 0,
-              initialDownvotes: post.dislikes ?? 0,
-              comments: responseCount,
-              id: post.id,
-              imageUrl: cleanedUrl,
-              ack_status: post.ack_status
-            };
-          })
-        );
+              return {
+                randomUserName: generateRandomUsername(), // random username assigned once per post
+                postTime: formattedTime,
+                title: post.title,
+                content: post.content,
+                initialUpvotes: post.likes ?? 0,
+                initialDownvotes: post.dislikes ?? 0,
+                comments: responseCount,
+                id: post.id,
+                imageUrl: cleanedUrl,
+                ack_status: post.ack_status
+              };
+            })
+          );
 
-        setPosts(mapped);
+          setPosts(mapped);
+        }
+      } catch (err) {
+        console.error('Fetch or processing error:', err);
       }
-    } catch (err) {
-      console.error('Fetch or processing error:', err);
-    }
-  };
+    };
 
-  fetchData(); // Call the async function
-}, [allotmentName]);
+    fetchData();
+  }, [allotmentName]);
 
+  const filteredPosts = posts.filter(post =>
+    post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    post.content.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="w-full font-inter">
-      {posts.map((post, index) => (
+      {filteredPosts.map((post, index) => (
         <RedditPost
           key={index}
           id={post.id}
-          randomUserName={anonymousUsername}
+          randomUserName={post.randomUserName}
           postTime={post.postTime}
           title={post.title}
           content={post.content}
