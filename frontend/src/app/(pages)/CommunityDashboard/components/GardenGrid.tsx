@@ -1,6 +1,6 @@
 'use client';
-
-import React from 'react';
+import { supabase } from '../../../backend/lib/supabaseClient';
+import React, {useEffect, useState} from 'react';
 import { FaLocationDot } from "react-icons/fa6";
 
 interface GridItem {
@@ -13,13 +13,12 @@ interface GridItem {
   concernsCount?: number;
 }
 
-const gridItems: GridItem[] = [
+const initialGridItems: GridItem[] = [
   {
     id: 1,
     image: '/GardeningBro.svg',
     name: 'Plantation Grove',
     location: 'Blk 120A',
-    concernsCount: 10,
     href: 'CommunityDashboard/Plantation Grove',
   },
   {
@@ -27,7 +26,6 @@ const gridItems: GridItem[] = [
     image: '/Seeding.svg',
     name: 'Tengah Community Club',
     location: 'Blk 119C',
-    concernsCount: 8,
     href: 'CommunityDashboard/Tengah%20Community Club',
   },
   {
@@ -35,7 +33,6 @@ const gridItems: GridItem[] = [
     image: '/Gardening.svg',
     name: 'Garden Vale',
     location: 'Blk 226',
-    concernsCount: 10,
     href: 'CommunityDashboard/Garden Vale',
   },
   {
@@ -43,7 +40,6 @@ const gridItems: GridItem[] = [
     image: '/Blooming.svg',
     name: 'Plantation Acres',
     location: 'Blk 111A',
-    concernsCount: 8,
     href: 'CommunityDashboard/Plantation Acres',
   }
 ];
@@ -53,6 +49,37 @@ interface GridProps {
 }
 
 const Grid: React.FC<GridProps> = ({ checkedFilters }) => {
+  const [gridItems, setGridItems] = useState<GridItem[]>(initialGridItems);
+  useEffect(() => {
+  const fetchCounts = async () => {
+    const { data, error } = await supabase
+      .from('submission')
+      .select('location');
+
+    if (error) {
+      console.error('Error fetching concerns from Supabase:', error.message);
+      return;
+    }
+
+    const countMap: Record<string, number> = {};
+    data?.forEach((item: { location: string }) => {
+      const key = item.location?.trim();
+      if (key) {
+        countMap[key] = (countMap[key] || 0) + 1;
+      }
+    });
+
+    const updatedItems = initialGridItems.map(item => ({
+      ...item,
+      concernsCount: countMap[item.name] || 0, // ✅ match name instead of location
+    }));
+
+    setGridItems(updatedItems);
+  };
+
+  fetchCounts();
+}, []);
+
    const filteredItems = gridItems.filter(item => {
     if (checkedFilters.size === 0) return true;
     const locationId = item.location?.toLowerCase().replace('blk ', '') ?? '';
