@@ -58,44 +58,66 @@ function RedditPost({
     };
   };
 
+
+  //This function verifies the phone number before sending otp to post author phone number
   const sendOTP = async () => {
-    setMessage('');
-    const { data, error } = await supabase
-      .from('submission')
-      .select(`id, user (mobilenumber)`)
-      .eq('id', id)
-      .single<SubmissionWithUser>();
+  setMessage('');
 
-    let phone = data?.user?.mobilenumber?.replace(/\D/g, '');
+  // Get user input phone number (already set in state)
+  const userInput = phone.replace(/\D/g, ''); // strip non-digits
 
-    if (!phone || phone.length !== 8) {
-      setMessage('Invalid Singapore mobile number.');
-      return;
+  if (userInput.length !== 8) {
+    setMessage('Please enter a valid 8-digit SG phone number.');
+    return;
+  }
+
+  // Step 1: Fetch phone number from Supabase
+  const { data, error } = await supabase
+    .from('submission')
+    .select(`id, user (mobilenumber)`)
+    .eq('id', id)
+    .single<SubmissionWithUser>();
+
+  if (error || !data?.user?.mobilenumber) {
+    setMessage('Unable to verify phone number from database.');
+    return;
+  }
+
+  const dbPhone = data.user.mobilenumber.replace(/\D/g, '');
+
+  // Step 2: Compare entered vs stored
+  if (userInput !== dbPhone) {
+    setMessage('Entered phone number does not match our records.');
+    return;
+  }
+
+  const fullPhone = `+65${dbPhone}`;
+  setPhone(fullPhone);
+
+  // Step 3: Send OTP
+  try {
+    const res = await fetch('/api/send-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone: fullPhone }),
+    });
+
+    const responseData = await res.json().catch(() => ({}));
+
+    if (res.ok) {
+      setStep('code');
+      changeButton('code');
+      setMessage('OTP sent!');
+    } else {
+      setMessage(responseData.message || 'Failed to send OTP');
     }
-    phone = `+65${phone}`;
-    setPhone(phone);
+  } catch (err) {
+    setMessage('Network error. Please try again.');
+  }
+};
 
-    try {
-      const res = await fetch('/api/send-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone }),
-      });
 
-      const responseData = await res.json().catch(() => ({}));
-
-      if (res.ok) {
-        setStep('code');
-        changeButton('code');
-        setMessage('OTP sent!');
-      } else {
-        setMessage(responseData.message || 'Failed to send OTP');
-      }
-    } catch (err) {
-      setMessage('Network error. Please try again.');
-    }
-  };
-
+  //This function verifies 6 digit phone number sent to author
   const verifyOTP = async () => {
     setMessage('');
     try {
@@ -123,6 +145,7 @@ function RedditPost({
     }
   };
 
+  //makes a comnment post when phone number is verified
   const postReply = async (user_id: string) => {
     const res = await fetch('/backend/responses', {
       method: 'POST',
@@ -139,52 +162,61 @@ function RedditPost({
     if (!res.ok) {
       console.error('Error posting reply:', data.error);
     } else {
+      if (onButtonClick) onButtonClick();
+      changeButton("form")
+      setCode("")
+      setPhone("")
+      setReplyText("")
       console.log('Reply posted successfully:', data);
     }
   };
 
-  const verifyAndPostReply = async () => {
-    setMessage('');
-    try {
-      const { data: userData, error } = await supabase
-        .from('submission')
-        .select('user_id')
-        .eq('id', id)
-        .single();
 
-      if (error || !userData?.user_id) {
-        setMessage('Failed to get user info.');
-        return;
-      }
+  
 
-      const postRes = await fetch('/backend/responses', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          submission_id: id,
-          admin_id: userData.user_id,
-          replyText: replyText,
-        }),
-      });
 
-      const postResult = await postRes.json();
+  // const verifyAndPostReply = async () => {
+  //   setMessage('');
+  //   try {
+  //     const { data: userData, error } = await supabase
+  //       .from('submission')
+  //       .select('user_id')
+  //       .eq('id', id)
+  //       .single();
 
-      if (!postRes.ok) {
-        setMessage('Failed to post reply.');
-        return;
-      }
+  //     if (error || !userData?.user_id) {
+  //       setMessage('Failed to get user info.');
+  //       return;
+  //     }
 
-      setMessage('Reply submitted successfully!');
-      setReplyText('');
-      setCode('');
-      setStep('phone');
-      changeButton('form');
-      if (onButtonClick) onButtonClick();
+  //     const postRes = await fetch('/backend/responses', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({
+  //         submission_id: id,
+  //         admin_id: userData.user_id,
+  //         replyText: replyText,
+  //       }),
+  //     });
 
-    } catch (err) {
-      setMessage('Network error. Please try again.');
-    }
-  };
+  //     const postResult = await postRes.json();
+
+  //     if (!postRes.ok) {
+  //       setMessage('Failed to post reply.');
+  //       return;
+  //     }
+
+  //     setMessage('Reply submitted successfully!');
+  //     setReplyText('');
+  //     setCode('');
+  //     setStep('phone');
+  //     changeButton('form');
+  //     if (onButtonClick) onButtonClick();
+
+  //   } catch (err) {
+  //     setMessage('Network error. Please try again.');
+  //   }
+  // };
 
   const handleCopy = () => {
     navigator.clipboard.writeText(fullUrl);
@@ -286,28 +318,44 @@ function RedditPost({
               onChange={(e) => setReplyText(e.target.value)}
             />
             <div className="flex items-center space-x-2 mt-3 flex-wrap md:flex-nowrap">
+            {button === 'form' ? (
               <input
                 type="text"
-                placeholder="Enter OTP"
-                className="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#4A61C0] focus:border-[#4A61C0] text-sm max-w-[120px]"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
+                placeholder="Enter phone number"
+                className="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#4A61C0] focus:border-[#4A61C0] text-sm max-w-[160px]"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
               />
+              ) : (
+                <input
+                  type="text"
+                  placeholder="Enter OTP"
+                  className="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#4A61C0] focus:border-[#4A61C0] text-sm max-w-[120px]"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                />
+              )}
               <button
                 className="bg-[#4A61C0] text-white text-sm px-4 py-2 rounded-md hover:bg-[#3b4e9a]"
-                onClick={button === 'form' ? sendOTP : verifyOTP}
+               onClick={button === 'form' ? sendOTP : verifyOTP}
               >
-                {button === 'form' ? 'Get OTP' : 'Verify OTP'}
+                {button === 'form' ? 'Get OTP' : 'Comment'}
               </button>
-              <button className="p-2 rounded-full bg-gray-100 hover:bg-gray-200">
+              {/* Message display below OTP/Phone button */}
+                {message && (
+                  <div className="text-sm text-red-600 mt-2 px-1">
+                    {message}
+                  </div>
+                )}
+              {/* <button className="p-2 rounded-full bg-gray-100 hover:bg-gray-200">
                 <IoReload className="text-[#4A61C0] h-4 w-4" />
-              </button>
-              <button
+              </button> */}
+              {/* <button
                 className="bg-[#4A61C0] text-white text-sm px-4 py-2 rounded-md hover:bg-[#3b4e9a]"
                 onClick={verifyAndPostReply}
               >
                 By Pass button temporarily
-              </button>
+              </button> */}
             </div>
           </div>
         )}
