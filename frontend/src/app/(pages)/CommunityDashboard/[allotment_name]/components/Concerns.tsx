@@ -15,10 +15,10 @@ interface RedditPostProps {
   content: string;
   initialUpvotes: number;
   comments: number;
-  initialSaved: boolean;
   id: string;
   allotmentName?: string;
   imageUrl?: string;
+  ack_status: string;
 }
 
 function RedditPost({
@@ -28,19 +28,20 @@ function RedditPost({
   content,
   initialUpvotes,
   comments,
-  initialSaved,
+  ack_status,
   id,
   allotmentName,
   imageUrl
 }: RedditPostProps) {
   const [upvotes, setUpvotes] = useState(initialUpvotes);
   const [downvotes, setDownvotes] = useState(0);
-  const [isSaved, setIsSaved] = useState(initialSaved);
   const [upvoted, setUpvoted] = useState(false);
   const [downvoted, setDownvoted] = useState(false);
   // Separate states for each hover box
   const [showEyeHoverBox, setShowEyeHoverBox] = useState(false);
-  const [showTreeHoverBox, setShowTreeHoverBox] = useState(false);
+  const [showResolveHoverBox, setShowResolveHoverBox] = useState(false);
+  const [showToolsHoverBox, setShowToolsHoverBox] = useState(false);
+  //Copy link variables
   const pathname = usePathname();
   const origin = typeof window !== 'undefined' && window.location.origin;
   const fullUrl = origin + pathname  + "/" + id
@@ -84,11 +85,6 @@ function RedditPost({
     }
   };
 
-  const handleSaveToggle = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsSaved(prev => !prev);
-  };
-
   const handlePostClick = () => {
     window.location.href = `/CommunityDashboard/${allotmentName}/${id}`;
   };
@@ -96,45 +92,25 @@ function RedditPost({
   return (
     <div className="relative">
       {showEyeHoverBox && (
-      <div className="absolute -top-42 right-13 z-50 transition-all duration-300">
+      <div className="absolute -top-10 right-13 z-50 transition-all duration-300">
         <div className="bg-[#4A61C0]/70 px-3 py-2 rounded-xl shadow-lg text-sm text-white">
           <p className="font-bold mb-1">Viewed by Residential Network</p>
-          <div className="flex flex-col space-y-1">
-            <div className="flex items-center space-x-2 w-40">
-              <span className="px-2 py-1 rounded-md bg-[#4A61C0] text-lg">👦🏻</span>
-              <span className="text-white font-semibold">Alex</span>
-            </div>
-            <div className="flex items-center space-x-2 w-40">
-              <span className="px-2 py-1 rounded-md bg-[#4A61C0] text-lg">👧🏽</span>
-              <span className="text-white font-semibold">Maria</span>
-            </div>
-            <div className="flex items-center space-x-2 w-40">
-              <span className="px-2 py-1 rounded-md bg-[#4A61C0] text-lg">👨🏿</span>
-              <span className="text-white font-semibold">David</span>
-            </div>
-          </div>
         </div>
       </div>
     )}
 
-      {showTreeHoverBox && (
-        <div className="absolute -top-42 right-3 z-50 transition-all duration-300">
-          <div className="bg-[#2E6C3A]/70 px-3 py-2 rounded-xl shadow-lg text-sm text-white"> 
-            <p className="font-bold mb-1">Viewed by NParks Team</p>
-            <div className="flex flex-col space-y-1">
-              <div className="flex items-center space-x-2 w-40">
-                <span className="px-2 py-1 rounded-md bg-[#2E6C3A] text-lg">👨🏼‍🦰</span>
-                <span className="text-white font-semibold">Jonas</span>
-              </div>
-              <div className="flex items-center space-x-2 w-40">
-                <span className="px-2 py-1 rounded-md bg-[#2E6C3A] text-lg">👩🏻‍🦰</span>
-                <span className="text-white font-semibold">Lucy</span>
-              </div>
-              <div className="flex items-center space-x-2 w-40">
-                <span className="px-2 py-1 rounded-md bg-[#2E6C3A] text-lg">👨🏽‍🦲</span> 
-                <span className="text-white font-semibold">James</span>
-              </div>
-            </div>
+      {showResolveHoverBox && (
+        <div className="absolute -top-10 right-3 z-50 transition-all duration-300">
+          <div className="bg-[#4A61C0]/70 px-3 py-2 rounded-xl shadow-lg text-sm text-white"> 
+            <p className="font-bold mb-1">Resolved by Residential Network</p>
+          </div>
+        </div>
+      )}
+
+      {showToolsHoverBox && (
+        <div className="absolute -top-10 right-3 z-50 transition-all duration-300">
+          <div className="bg-[#4A61C0]/70 px-3 py-2 rounded-xl shadow-lg text-sm text-white"> 
+            <p className="font-bold mb-1">Work in Progress by Residential Network</p>
           </div>
         </div>
       )}
@@ -149,20 +125,33 @@ function RedditPost({
             <span className="text-xs text-gray-500">• {postTime}</span>
           </div>
           <div className="flex space-x-2">
-            <div
-              className="px-2 py-1 rounded-lg bg-[#4A61C0]/70 text-lg select-none relative"
-              onMouseEnter={() => setShowEyeHoverBox(true)}
-              onMouseLeave={() => setShowEyeHoverBox(false)}
-            >
-              👀
-            </div>
-            <div
-              className="px-2 py-1 rounded-lg bg-[#2E6C3A]/70 text-lg select-none relative"
-              onMouseEnter={() => setShowTreeHoverBox(true)}
-              onMouseLeave={() => setShowTreeHoverBox(false)}
-            >
-              🌳
-            </div>
+           {ack_status === 'looking into it' && (
+                <div
+                  className="px-2 py-1 rounded-lg bg-[#4A61C0]/70 text-lg select-none relative"
+                  onMouseEnter={() => setShowEyeHoverBox(true)}
+                  onMouseLeave={() => setShowEyeHoverBox(false)}
+                >
+                  👀
+                </div>
+              )}
+              {ack_status === 'resolved' && (
+                <div
+                  className="px-2 py-1 rounded-lg bg-[#4A61C0]/70 text-lg select-none relative"
+                  onMouseEnter={() => setShowResolveHoverBox(true)}
+                  onMouseLeave={() => setShowResolveHoverBox(false)}
+                >
+                  ✅
+                </div>
+              )}
+              {ack_status === 'working on it' && (
+                <div
+                  className="px-2 py-1 rounded-lg bg-[#4A61C0]/70 text-lg select-none relative"
+                  onMouseEnter={() => setShowToolsHoverBox(true)}
+                  onMouseLeave={() => setShowToolsHoverBox(false)}
+                >
+                  🛠️
+                </div>
+              )}
           </div>
         </div>
 
@@ -205,14 +194,6 @@ function RedditPost({
             <FaCommentAlt className="h-4 w-4 text-gray-600" />
             <span className="text-sm font-semibold">{comments}</span>
           </button>
-
-          {/* <button
-            onClick={handleSaveToggle}
-            className="flex items-center space-x-2 text-gray-700 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200 transition-colors duration-200"
-          >
-            <FaBookmark className={`h-4 w-4 ${isSaved ? 'text-[#4A61C0]' : 'text-gray-600'}`} />
-            <span className="text-sm font-semibold">Save</span>
-          </button> */}
 
           <button className="flex items-center space-x-2 text-gray-700 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200 transition-colors duration-200" onClick={handleCopy}>
             <FaShareAlt className="h-4 w-4 text-gray-600" />
@@ -267,9 +248,9 @@ export default function Concerns({ allotmentName }: ConcernsProps) {
             content: post.content,
             initialUpvotes: post.likes ?? 0,
             comments: post.comments_count ?? 0,
-            initialSaved: post.saved ?? false,
             id: post.id,
             imageUrl: cleanedUrl,
+            ack_status: post.ack_status
           };
         });
 
@@ -291,9 +272,9 @@ export default function Concerns({ allotmentName }: ConcernsProps) {
           content={post.content}
           initialUpvotes={post.initialUpvotes}
           comments={post.comments}
-          initialSaved={post.initialSaved}
           allotmentName={allotmentName}
           imageUrl={post.imageUrl}
+          ack_status={post.ack_status}
         />
       ))}
     </div>
