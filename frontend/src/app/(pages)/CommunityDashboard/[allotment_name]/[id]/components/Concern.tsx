@@ -221,35 +221,88 @@ function RedditPost({
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleUpvote = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (upvoted) {
-      setUpvotes(prev => prev - 1);
-      setUpvoted(false);
-    } else {
-      setUpvotes(prev => prev + 1);
-      setUpvoted(true);
-      if (downvoted) {
-        setDownvotes(prev => prev - 1);
-        setDownvoted(false);
-      }
-    }
-  };
+const handleUpvote = async (e: React.MouseEvent) => {
+  e.stopPropagation();
 
-  const handleDownvote = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  if (upvoted) {
+    setUpvotes(prev => prev - 1);
+    setUpvoted(false);
+
+    const { error } = await supabase
+      .from('submission')
+      .update({ likes: upvotes - 1 })
+      .eq('id', id);
+
+    if (error) console.error('Failed to update upvotes:', error.message);
+
+  } else {
+    setUpvotes(prev => prev + 1);
+    setUpvoted(true);
+
+    let newUpvotes = upvotes + 1;
+    let newDownvotes = downvotes;
+
     if (downvoted) {
       setDownvotes(prev => prev - 1);
       setDownvoted(false);
-    } else {
-      setDownvotes(prev => prev + 1);
-      setDownvoted(true);
-      if (upvoted) {
-        setUpvotes(prev => prev - 1);
-        setUpvoted(false);
-      }
+      newDownvotes = downvotes - 1;
     }
-  };
+
+    const { error } = await supabase
+      .from('submission')
+      .update({
+        likes: newUpvotes,
+        dislikes: newDownvotes,
+      })
+      .eq('id', id);
+
+    if (error) console.error('Failed to update upvotes/dislikes:', error.message);
+  }
+};
+
+  const handleDownvote = async (e: React.MouseEvent) => {
+  e.stopPropagation();
+
+  let newDownvotes = downvotes;
+  let newUpvotes = upvotes;
+
+  if (downvoted) {
+    // Undo downvote
+    setDownvotes(prev => prev - 1);
+    setDownvoted(false);
+    newDownvotes = downvotes - 1;
+
+    const { error } = await supabase
+      .from('submission')
+      .update({ dislikes: newDownvotes })
+      .eq('id', id);
+
+    if (error) console.error('Failed to update dislikes:', error.message);
+
+  } else {
+    // Add downvote
+    setDownvotes(prev => prev + 1);
+    setDownvoted(true);
+    newDownvotes = downvotes + 1;
+
+    if (upvoted) {
+      setUpvotes(prev => prev - 1);
+      setUpvoted(false);
+      newUpvotes = upvotes - 1;
+    }
+
+    const { error } = await supabase
+      .from('submission')
+      .update({
+        dislikes: newDownvotes,
+        likes: newUpvotes,
+      })
+      .eq('id', id);
+
+    if (error) console.error('Failed to update dislikes/upvotes:', error.message);
+  }
+};
+
 
   return (
     <div className="relative">

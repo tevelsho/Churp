@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { IoMdThumbsUp, IoMdThumbsDown } from 'react-icons/io';
 import { FaShareAlt } from 'react-icons/fa';
 import { usePathname, useParams } from 'next/navigation';
-import { IoReload } from "react-icons/io5";
 import { supabase } from '../../../../../backend/lib/supabaseClient';
 
 interface ReplyData {
@@ -38,8 +37,6 @@ function ReplyCard({
   const [downvotes, setDownvotes] = useState(dislikes);
   const [upvoted, setUpvoted] = useState(false);
   const [downvoted, setDownvoted] = useState(false);
-  const [showReplyBox, setShowReplyBox] = useState(false); 
-  const [replyText, setReplyText] = useState(''); 
 
 
   //Share button
@@ -48,122 +45,93 @@ function ReplyCard({
   const fullUrl = origin + pathname;
   const [copied, setCopied] = useState(false);
 
-  //twilio
-  const [phone, setPhone] = useState('');
-  const [code, setCode] = useState('');
-  const [step, setStep] = useState<'phone' | 'code'>('phone');
-  const [message, setMessage] = useState('');
-  type SubmissionWithUser = {
-    id: number;
-    user: {
-      mobilenumber: string;
-    };
-  };
-
-  //button change
-  const [button, changeButton] = useState<'form' | 'code'>('form');
-
-  const sendOTP = async () => {
-    setMessage('');
-    // console.log(submission_id)
-    // Step 1: Fetch mobilenumber using submissionId
-    const { data, error } = await supabase
-    .from('submission')
-    .select(`id, user (mobilenumber)`)
-    .eq('id', submission_id)
-    .single<SubmissionWithUser>(); 
-    let phone = data?.user?.mobilenumber?.replace(/\D/g, ''); // remove all non-digit characters
-
-    if (!phone || phone.length !== 8) {
-      setMessage('Invalid Singapore mobile number.');
-      return;
-    }
-    phone = `+65${phone}`;
-    // console.log(phone)
-    setPhone(phone)
-
-    // Step 2: Send OTP
-    try {
-      const res = await fetch('/api/send-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone }),
-      });
-
-      const responseData = await res.json().catch(() => ({})); // handle no JSON
-
-      if (res.ok) {
-        setStep('code');
-        changeButton('code');
-        setMessage('OTP sent!');
-      } else {
-        setMessage(responseData.message || 'Failed to send OTP');
-      }
-    } catch (err) {
-      setMessage('Network error. Please try again.');
-    }
-  };
-
-
-  const verifyOTP = async () => {
-    setMessage('');
-    try {
-      const res = await fetch('/api/verify-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone, code }),
-      });
-
-      const data = await res.json().catch(() => ({}));
-
-      if (res.ok && data.verified) {
-        setMessage('Phone verified successfully!');
-      } else {
-        setMessage(data.message || 'Verification failed.');
-      }
-    } catch (error) {
-      setMessage('Network error. Please try again.');
-    }
-  };
-
   const handleCopy = () => {
     navigator.clipboard.writeText(fullUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const toggleCollapse = () => setCollapsed(prev => !prev);
-
-  const handleUpvote = (e: React.MouseEvent) => {
+  const handleUpvote = async (e: React.MouseEvent) => {
     e.stopPropagation();
+  
     if (upvoted) {
       setUpvotes(prev => prev - 1);
       setUpvoted(false);
+  
+      const { error } = await supabase
+        .from('response')
+        .update({ likes: upvotes - 1 })
+        .eq('id', id);
+  
+      if (error) console.error('Failed to update upvotes:', error.message);
+  
     } else {
       setUpvotes(prev => prev + 1);
       setUpvoted(true);
+  
+      let newUpvotes = upvotes + 1;
+      let newDownvotes = downvotes;
+  
       if (downvoted) {
         setDownvotes(prev => prev - 1);
         setDownvoted(false);
+        newDownvotes = downvotes - 1;
       }
+  
+      const { error } = await supabase
+        .from('response')
+        .update({
+          likes: newUpvotes,
+          dislikes: newDownvotes,
+        })
+        .eq('id', id);
+  
+      if (error) console.error('Failed to update upvotes/dislikes:', error.message);
     }
   };
-
-  const handleDownvote = (e: React.MouseEvent) => {
+  
+    const handleDownvote = async (e: React.MouseEvent) => {
     e.stopPropagation();
+  
+    let newDownvotes = downvotes;
+    let newUpvotes = upvotes;
+  
     if (downvoted) {
+      // Undo downvote
       setDownvotes(prev => prev - 1);
       setDownvoted(false);
+      newDownvotes = downvotes - 1;
+  
+      const { error } = await supabase
+        .from('response')
+        .update({ dislikes: newDownvotes })
+        .eq('id', id);
+  
+      if (error) console.error('Failed to update dislikes:', error.message);
+  
     } else {
+      // Add downvote
       setDownvotes(prev => prev + 1);
       setDownvoted(true);
+      newDownvotes = downvotes + 1;
+  
       if (upvoted) {
         setUpvotes(prev => prev - 1);
         setUpvoted(false);
+        newUpvotes = upvotes - 1;
       }
+  
+      const { error } = await supabase
+        .from('response')
+        .update({
+          dislikes: newDownvotes,
+          likes: newUpvotes,
+        })
+        .eq('id', id);
+  
+      if (error) console.error('Failed to update dislikes/upvotes:', error.message);
     }
   };
-
   return (
     <div className="mb-6">
       <div className="flex items-center mb-1 pl-1">
@@ -203,46 +171,7 @@ function ReplyCard({
               <FaShareAlt className="h-4 w-4 text-gray-600" />
               <span className="text-sm font-semibold">{copied ? 'Copied!' : 'Share'}</span>
             </button>
-
-            {/* <button
-              onClick={() => setShowReplyBox(prev => !prev)}
-              className="flex items-center space-x-2 text-white bg-[#4A61C0] rounded-md px-4 py-2 hover:bg-[#3b4e9a]"
-            >
-              <span className="text-sm font-semibold">Reply</span>
-            </button> */}
           </div>
-
-          {/* {showReplyBox && (
-            <div className="pl-1 mt-4" style={{ marginLeft: '28px' }}>
-              <textarea
-                rows={3}
-                className="w-full p-2 border text-sm border-gray-300 rounded-md focus:outline-none focus:ring-[#4A61C0] focus:border-[#4A61C0]"
-                placeholder="Write your reply here..."
-                value={replyText}
-                onChange={(e) => setReplyText(e.target.value)}
-              />
-              <div className="flex items-center space-x-2 mt-3 max-w-screen-xs">
-                <input
-                  type="text"
-                  placeholder="Enter OTP"
-                  className="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#4A61C0] focus:border-[#4A61C0] text-sm max-w-[120px]"
-                  value={code}
-                  onChange={(e) => setCode(e.target.value)}
-                />
-                <button
-                    className="bg-[#4A61C0] text-white text-sm px-4 py-2 rounded-md hover:bg-[#3b4e9a]"
-                    onClick={button === 'form' ? sendOTP : verifyOTP}
-                  >
-                    {button === 'form' ? 'Get OTP' : 'Verify OTP'}
-                  </button>
-                <button
-                  className="p-2 rounded-full bg-gray-100 hover:bg-gray-200"
-                >
-                  <IoReload className="text-[#4A61C0] h-4 w-4" />
-                </button>
-              </div>
-            </div>
-          )} */}
         </>
       )}
     </div>
