@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { IoMdThumbsUp, IoMdThumbsDown } from 'react-icons/io';
 import { FaCommentAlt, FaShareAlt, FaBookmark } from 'react-icons/fa';
 import { usePathname } from 'next/navigation';
+import { supabase } from '../../../../backend/lib/supabaseClient';
 
 interface ConcernsProps {
   allotmentName: string;
@@ -14,6 +15,7 @@ interface RedditPostProps {
   title: string;
   content: string;
   initialUpvotes: number;
+  initialDownvotes: number;
   comments: number;
   id: string;
   allotmentName?: string;
@@ -27,6 +29,7 @@ function RedditPost({
   title,
   content,
   initialUpvotes,
+  initialDownvotes,
   comments,
   ack_status,
   id,
@@ -34,7 +37,7 @@ function RedditPost({
   imageUrl
 }: RedditPostProps) {
   const [upvotes, setUpvotes] = useState(initialUpvotes);
-  const [downvotes, setDownvotes] = useState(0);
+  const [downvotes, setDownvotes] = useState(initialDownvotes);
   const [upvoted, setUpvoted] = useState(false);
   const [downvoted, setDownvoted] = useState(false);
   // Separate states for each hover box
@@ -94,7 +97,7 @@ function RedditPost({
       {showEyeHoverBox && (
       <div className="absolute -top-10 right-13 z-50 transition-all duration-300">
         <div className="bg-[#4A61C0]/70 px-3 py-2 rounded-xl shadow-lg text-sm text-white">
-          <p className="font-bold mb-1">Viewed by Residential Network</p>
+          <p className="font-bold mb-1">Residential Network is looking into it</p>
         </div>
       </div>
     )}
@@ -110,7 +113,7 @@ function RedditPost({
       {showToolsHoverBox && (
         <div className="absolute -top-10 right-3 z-50 transition-all duration-300">
           <div className="bg-[#4A61C0]/70 px-3 py-2 rounded-xl shadow-lg text-sm text-white"> 
-            <p className="font-bold mb-1">Work in Progress by Residential Network</p>
+            <p className="font-bold mb-1">Residential Network is working on it</p>
           </div>
         </div>
       )}
@@ -217,46 +220,77 @@ export default function Concerns({ allotmentName }: ConcernsProps) {
   const randomNum = Math.floor(1000 + Math.random() * 9000); // 4-digit number
   const anonymousUsername = `${randomAdj}-${randomNoun}-${randomNum}`
 
-  useEffect(() => {
-  fetch(`/backend/concerns?allotmentName=${allotmentName}`)
-    .then((res) => res.json())
-    .then((data) => {
+ useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const res = await fetch(`/backend/concerns?allotmentName=${allotmentName}`);
+      const data = await res.json();
+
       if (Array.isArray(data)) {
-        const mapped = data.map((post: any) => {
-          // Default fallback 
-          let cleanedUrl = '';
-          
+        const mapped = await Promise.all(
+          data.map(async (post: any) => {
+            let cleanedUrl = '';
 
-          //decoding the image_url from supabase to load image on frontend
-          try {
-            if (post.imageurl) {
-              const decoded = decodeURIComponent(post.imageurl);
-              const parsed = JSON.parse(decoded);
-              if (Array.isArray(parsed) && typeof parsed[0] === 'string') {
-                cleanedUrl = parsed[0];
+            // Decode image URL
+            try {
+              if (post.imageurl) {
+                const decoded = decodeURIComponent(post.imageurl);
+                const parsed = JSON.parse(decoded);
+                if (Array.isArray(parsed) && typeof parsed[0] === 'string') {
+                  cleanedUrl = parsed[0];
+                }
               }
+            } catch (e) {
+              console.warn('Invalid image_url:', post.imageurl);
             }
-          } catch (e) {
-            console.warn('Invalid image_url:', post.imageurl);
-          }
 
-          //mapping from supabase to each post
-          return {
-            randomUserName: "",
-            postTime: post.publishedat,
-            title: post.title,
-            content: post.content,
-            initialUpvotes: post.likes ?? 0,
-            comments: post.comments_count ?? 0,
-            id: post.id,
-            imageUrl: cleanedUrl,
-            ack_status: post.ack_status
-          };
-        });
+            // Format time
+            const formattedTime = new Date(post.publishedat).toLocaleString('en-SG', {
+              timeZone: 'Asia/Singapore',
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: true
+            });
+
+            // Count responses from Supabase
+            let responseCount = 0;
+            const { count, error } = await supabase
+              .from('response')
+              .select('*', { count: 'exact', head: true })
+              .eq('submission_id', post.id);
+
+            if (error) {
+              console.error('Error counting responses:', error.message);
+            } else {
+              responseCount = count ?? 0;
+            }
+
+            return {
+              randomUserName: '',
+              postTime: formattedTime,
+              title: post.title,
+              content: post.content,
+              initialUpvotes: post.likes ?? 0,
+              initialDownvotes: post.dislikes ?? 0,
+              comments: responseCount,
+              id: post.id,
+              imageUrl: cleanedUrl,
+              ack_status: post.ack_status
+            };
+          })
+        );
 
         setPosts(mapped);
       }
-    });
+    } catch (err) {
+      console.error('Fetch or processing error:', err);
+    }
+  };
+
+  fetchData(); // Call the async function
 }, [allotmentName]);
 
 
@@ -271,6 +305,7 @@ export default function Concerns({ allotmentName }: ConcernsProps) {
           title={post.title}
           content={post.content}
           initialUpvotes={post.initialUpvotes}
+          initialDownvotes={post.initialDownvotes}
           comments={post.comments}
           allotmentName={allotmentName}
           imageUrl={post.imageUrl}

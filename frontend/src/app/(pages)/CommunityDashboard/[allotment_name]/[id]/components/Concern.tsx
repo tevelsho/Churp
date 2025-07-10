@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { IoMdThumbsUp, IoMdThumbsDown } from 'react-icons/io';
 import { FaCommentAlt, FaShareAlt } from 'react-icons/fa';
-import { IoReload } from "react-icons/io5";
 import { usePathname, useParams } from 'next/navigation';
 import { supabase } from '../../../../../backend/lib/supabaseClient';
 
