@@ -46,45 +46,61 @@ const initialGridItems: GridItem[] = [
 
 interface GridProps {
   checkedFilters: Set<string>;
+  searchTerm: string;
 }
 
-const Grid: React.FC<GridProps> = ({ checkedFilters }) => {
+const Grid: React.FC<GridProps> = ({ checkedFilters, searchTerm }) => {
   const [gridItems, setGridItems] = useState<GridItem[]>(initialGridItems);
-  useEffect(() => {
-  const fetchCounts = async () => {
-    const { data, error } = await supabase
-      .from('submission')
-      .select('location');
+   useEffect(() => {
+    const fetchCounts = async () => {
+      const { data, error } = await supabase
+        .from('submission')
+        .select('location');
 
-    if (error) {
-      console.error('Error fetching concerns from Supabase:', error.message);
-      return;
-    }
-
-    const countMap: Record<string, number> = {};
-    data?.forEach((item: { location: string }) => {
-      const key = item.location?.trim();
-      if (key) {
-        countMap[key] = (countMap[key] || 0) + 1;
+      if (error) {
+        console.error('Error fetching concerns from Supabase:', error.message);
+        return;
       }
-    });
 
-    const updatedItems = initialGridItems.map(item => ({
-      ...item,
-      concernsCount: countMap[item.name] || 0, // ✅ match name instead of location
-    }));
+      const countMap: Record<string, number> = {};
+      data?.forEach((item: { location: string }) => {
+        const key = item.location?.trim();
+        if (key) {
+          countMap[key] = (countMap[key] || 0) + 1;
+        }
+      });
 
-    setGridItems(updatedItems);
-  };
+      const updatedItems = initialGridItems.map(item => ({
+        ...item,
+        concernsCount: countMap[item.name] || 0,
+      }));
 
-  fetchCounts();
-}, []);
+      setGridItems(updatedItems);
+    };
 
-   const filteredItems = gridItems.filter(item => {
-    if (checkedFilters.size === 0) return true;
-    const locationId = item.location?.toLowerCase().replace('blk ', '') ?? '';
-    return [...checkedFilters].some(filter => locationId.includes(filter.toLowerCase()));
+    fetchCounts();
+  }, []);
+
+  const filteredItems = gridItems.filter(item => {
+    const matchesFilter = (() => {
+      if (checkedFilters.size === 0) return true;
+      const locationId = item.location?.toLowerCase().replace('blk ', '') ?? '';
+      return [...checkedFilters].some(filter => locationId.includes(filter.toLowerCase()));
+    })();
+
+    const matchesSearch = (() => {
+      if (!searchTerm) return true;
+      const term = searchTerm.toLowerCase();
+      return (
+        item.name.toLowerCase().includes(term) ||
+        item.location?.toLowerCase().includes(term)
+      );
+    })();
+
+    return matchesFilter && matchesSearch;
   });
+
+  
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {filteredItems.map((item) => (
