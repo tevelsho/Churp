@@ -4,9 +4,9 @@ import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 
 const steps = [
-  "Go to 'Report' section",
+  "Go to 'Report a Concern' section",
   "Share a concern by filling up the form",
-  "View and interact with their own and other gardeners’ concerns under the “Concerns” section",
+  "View and interact with their own and other gardeners’ concerns under the “Community Dashboard” section",
   'Get status updates from the Residents’ Network on their concerns.',
   'Follow up with the Residents’ Network on their concerns to ensure proper resolution.'
 ];

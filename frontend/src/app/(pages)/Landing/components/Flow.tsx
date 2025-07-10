@@ -22,7 +22,7 @@ const ConcernsEducation = () => {
             </div>
             <h3 className="text-xl font-bold text-[#2C2E34] mb-4">Share Your Concerns</h3>
             <p className="text-[#454953] mb-4">
-              Submit updates, concerns, or ideas about your garden via a simple form in the “Reports” section. Your input helps improve the neighbourhood.
+              Submit updates, concerns, or ideas about your garden via a simple form in the “Report a Concern” section. Your input helps improve the neighbourhood.
             </p>
           </div>
 
