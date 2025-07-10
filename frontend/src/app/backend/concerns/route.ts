@@ -26,6 +26,7 @@ export async function GET(request: NextRequest) {
       category
     `)
     .eq('location', allotmentName)
+    .eq('status','published')
     .order('publishedat', { ascending: false });
   
   // console.log(data)
@@ -106,7 +107,9 @@ export async function POST(request: Request) {
         title: title,
         content: description,
         imageurl: imageUrls.length > 0 ? imageUrls : null,
-        location: garden
+        location: garden,
+        ack_status: null,
+        status: "pending"
       })
       .select()
       .single();
