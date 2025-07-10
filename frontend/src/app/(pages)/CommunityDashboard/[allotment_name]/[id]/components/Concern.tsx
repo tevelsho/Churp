@@ -11,8 +11,8 @@ interface RedditPostProps {
   title: string;
   content: string;
   initialUpvotes: number;
+  initialDownvotes: number;
   comments: number;
-  initialSaved: boolean;
   id: string;
   allotmentName?: string;
   imageUrl?: string;
@@ -22,19 +22,17 @@ interface RedditPostProps {
 function RedditPost({
   randomUserName,
   postTime,
-  title,
   content,
   initialUpvotes,
+  initialDownvotes,
   comments,
-  initialSaved,
   id,
   allotmentName,
   imageUrl,
   onButtonClick
 }: RedditPostProps) {
   const [upvotes, setUpvotes] = useState(initialUpvotes);
-  const [downvotes, setDownvotes] = useState(0);
-  const [isSaved, setIsSaved] = useState(initialSaved);
+  const [downvotes, setDownvotes] = useState(initialDownvotes);
   const [upvoted, setUpvoted] = useState(false);
   const [downvoted, setDownvoted] = useState(false);
   const pathname = usePathname();
@@ -289,7 +287,8 @@ function RedditPost({
             <span className="text-sm font-semibold text-gray-800">{downvotes}</span>
           </button>
 
-          <button className="flex items-center space-x-2 text-gray-700 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200">
+          <button className="flex items-center space-x-2 text-gray-700 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200" 
+          onClick={() => setShowReplyBox(prev => !prev)}>
             <FaCommentAlt className="h-4 w-4 text-gray-600" />
             <span className="text-sm font-semibold">{comments}</span>
           </button>
@@ -297,13 +296,6 @@ function RedditPost({
           <button onClick={handleCopy} className="flex items-center space-x-2 text-gray-700 bg-gray-100 rounded-full px-4 py-2 hover:bg-gray-200">
             <FaShareAlt className="h-4 w-4 text-gray-600" />
             <span className="text-sm font-semibold">{copied ? 'Copied!' : 'Share'}</span>
-          </button>
-
-          <button
-            onClick={() => setShowReplyBox(prev => !prev)}
-            className="flex items-center space-x-2 text-white bg-[#4A61C0] rounded-md px-4 py-2 hover:bg-[#3b4e9a] mt-2 md:mt-0"
-          >
-            <span className="text-sm font-semibold">Reply</span>
           </button>
         </div>
 
@@ -375,42 +367,73 @@ export default function Concerns({ onButtonClick }: { onButtonClick: () => void 
   const anonymousUsername = `${randomAdj}-${randomNoun}-${randomNum}`;
 
   useEffect(() => {
-    fetch(`/backend/concern?allotmentName=${decodeURIComponent(allotment_name)}&id=${id}`)
-      .then((res) => res.json())
-      .then((post) => {
-        if (post) {
-          let cleanedUrl = '';
-          try {
-            if (post.imageurl) {
-              const decoded = decodeURIComponent(post.imageurl);
-              const parsed = JSON.parse(decoded);
-              if (Array.isArray(parsed) && typeof parsed[0] === 'string') {
-                cleanedUrl = parsed[0];
-              }
+  const fetchPost = async () => {
+    try {
+      const res = await fetch(`/backend/concern?allotmentName=${decodeURIComponent(allotment_name)}&id=${id}`);
+      const post = await res.json();
+
+      if (post) {
+        // Clean image URL
+        let cleanedUrl = '';
+        try {
+          if (post.imageurl) {
+            const decoded = decodeURIComponent(post.imageurl);
+            const parsed = JSON.parse(decoded);
+            if (Array.isArray(parsed) && typeof parsed[0] === 'string') {
+              cleanedUrl = parsed[0];
             }
-          } catch (e) {
-            console.warn('Invalid image_url:', post.imageurl);
           }
-
-          const mappedPost = {
-            randomUserName: "",
-            postTime: post.publishedat,
-            title: post.title,
-            content: post.content,
-            initialUpvotes: post.likes ?? 0,
-            comments: post.comments_count ?? 0,
-            initialSaved: post.saved ?? false,
-            id: post.id,
-            imageUrl: cleanedUrl,
-          };
-
-          setPost(mappedPost);
+        } catch (e) {
+          console.warn('Invalid image_url:', post.imageurl);
         }
-      })
-      .catch((err) => {
-        console.error('Error fetching post:', err);
-      });
-  }, [allotment_name, id]);
+
+        // Format date
+        const formattedTime = new Date(post.publishedat).toLocaleString('en-SG', {
+          timeZone: 'Asia/Singapore',
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true
+        });
+
+        // Count responses from Supabase
+        let responseCount = 0;
+        const { count, error } = await supabase
+          .from('response')
+          .select('*', { count: 'exact', head: true })
+          .eq('submission_id', post.id);
+
+        if (error) {
+          console.error('Error counting responses:', error.message);
+        } else {
+          responseCount = count ?? 0;
+        }
+
+        const mappedPost = {
+          randomUserName: "",
+          postTime: formattedTime,
+          title: post.title,
+          content: post.content,
+          initialUpvotes: post.likes ?? 0,
+          initialDownvotes: post.dislikes ?? 0,
+          comments: responseCount,
+          id: post.id,
+          imageUrl: cleanedUrl,
+          ack_status: post.ack_status,
+        };
+
+        setPost(mappedPost);
+      }
+    } catch (err) {
+      console.error('Error fetching post:', err);
+    }
+  };
+
+  fetchPost();
+}, [allotment_name, id]);
+
 
   return (
     <div className="w-full font-inter">
@@ -422,8 +445,8 @@ export default function Concerns({ onButtonClick }: { onButtonClick: () => void 
           title={newPost.title}
           content={newPost.content}
           initialUpvotes={newPost.initialUpvotes}
+          initialDownvotes={newPost.initialDownvotes}
           comments={newPost.comments}
-          initialSaved={newPost.initialSaved}
           imageUrl={newPost.imageUrl}
           onButtonClick={onButtonClick}
         />

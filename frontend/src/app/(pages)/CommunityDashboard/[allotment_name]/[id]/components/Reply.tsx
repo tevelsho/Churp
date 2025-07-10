@@ -171,9 +171,6 @@ function ReplyCard({
         <img src={authorIcon} alt="Author Icon" className="w-5 h-5 rounded-full mr-2" />
         <span className="text-sm font-semibold text-gray-800 mr-2">{admin_id}</span>
         <span className="text-xs text-gray-500 mr-3">{`• ${postTime}`}</span>
-        <span className="px-2 py-0.5 rounded-md text-xs font-semibold whitespace-nowrap bg-red-100 text-red-700">
-          {ack_status || 'No title'}
-        </span>
       </div>
 
       {!collapsed && (
@@ -275,13 +272,22 @@ export default function Reply({ trigger }: { trigger: boolean }) {
             } catch (e) {
               console.warn('Invalid image_url:', response.image_urls);
             }
+            const formattedTime = new Date(response.created_at).toLocaleString('en-SG', {
+                timeZone: 'Asia/Singapore',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+              });
 
             return {
               authorIcon: "https://placehold.co/20x20/808080/fff?text=U",
               id: response.id,
               submission_id: response.submission_id,
               admin_id: response.user?.username,
-              postTime: response.created_at,
+              postTime: formattedTime,
               content: response.message,
               imageUrl: response.image_urls,
               likes: response.likes,
