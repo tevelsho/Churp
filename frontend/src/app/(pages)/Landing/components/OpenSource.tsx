@@ -14,7 +14,7 @@ const OpenSource = () => {
             Our code is open source, meaning anyone can help improve it and build on it, even you.
           </p>
           <Link
-            href="https://github.com/"
+            href="https://github.com/tevelsho/Churp"
             target="_blank"
             rel="noopener noreferrer"
             className="text-[#4A61C0] font-medium hover:underline inline-flex items-center gap-2"

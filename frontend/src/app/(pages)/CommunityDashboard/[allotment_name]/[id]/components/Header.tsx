@@ -118,12 +118,12 @@ const Header: React.FC = () => {
           {/* Title with badge */}
           {isMobile ? (
             <>
-              <h2 className="text-lg font-bold text-gray-900 truncate">{title}</h2>
+              <h2 className="text-2xl font-bold text-gray-900 sm:truncate break-words">{title}</h2>
               <div className="mt-2">{renderBadge()}</div> {/* badge now under title */}
             </>
           ) : (
             <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-3xl font-bold text-gray-900 truncate">{title}</h1>
+              <h1 className="text-xl sm:text-3xl font-bold text-gray-900 sm:truncate break-words">{title}</h1>
               {renderBadge()}
             </div>
           )}

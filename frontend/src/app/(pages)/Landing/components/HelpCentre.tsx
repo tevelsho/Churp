@@ -90,7 +90,7 @@ const HelpCenter = () => {
                         {faq.answer}
                       </p>
                       <Link
-                        href="#"
+                        href="/"
                         className="text-[#4A61C0] text-sm inline-flex items-center gap-2 font-medium hover:underline transition-colors duration-200"
                       >
                         Read more <FaExternalLinkAlt className="text-xs" />
@@ -103,7 +103,7 @@ const HelpCenter = () => {
           </div>
 
           <Link
-            href="https://yourhelpcenter.url"
+            href="/"
             target="_blank"
             rel="noopener noreferrer"
             className="text-[#4A61C0] font-medium hover:underline flex items-center mt-6 transition-colors duration-200"
