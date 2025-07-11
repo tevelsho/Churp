@@ -11,6 +11,7 @@ interface ConcernsProps {
 }
 
 interface RedditPostProps {
+  authorIcon: string,
   randomUserName: string;
   postTime: string;
   title: string;
@@ -25,6 +26,7 @@ interface RedditPostProps {
 }
 
 function RedditPost({
+  authorIcon,
   randomUserName,
   postTime,
   title,
@@ -193,9 +195,9 @@ function RedditPost({
       <div className="rounded-lg overflow-hidden border border-gray-200 mb-6 hover:cursor-pointer" onClick={handlePostClick}>
         <div className="max-w-screen-xl flex items-center pl-4 p-2 border-b border-gray-200 relative">
           <div className="flex items-center space-x-2 flex-grow">
-            {/* {communityIcon && (
-              <img src={communityIcon} alt="Community Icon" className="w-5 h-5 rounded-full" />
-            )} */}
+            {authorIcon && (
+              <img src={authorIcon} alt="Community Icon" className="w-5 h-5 rounded-full" />
+            )}
             <span className="text-sm font-semibold text-gray-800">{randomUserName}</span>
             <span className="text-xs text-gray-500">• {postTime}</span>
           </div>
@@ -296,6 +298,24 @@ export default function Concerns({ allotmentName, searchTerm }: ConcernsProps) {
       return `${adj}-${noun}-${num}`;
     };
 
+    function generateRandomAnimalIcon(): string {
+    const animalIcons = [
+    'https://cdn-icons-png.flaticon.com/512/616/616408.png', // Lion
+    'https://cdn-icons-png.flaticon.com/512/616/616430.png', // Dog
+    'https://cdn-icons-png.flaticon.com/512/616/616421.png', // Cat
+    'https://cdn-icons-png.flaticon.com/512/616/616423.png', // Panda
+    'https://cdn-icons-png.flaticon.com/512/616/616420.png', // Fox
+    'https://cdn-icons-png.flaticon.com/512/616/616427.png', // Elephant
+    'https://cdn-icons-png.flaticon.com/512/616/616428.png', // Koala
+    'https://cdn-icons-png.flaticon.com/512/616/616429.png', // Bear
+    'https://cdn-icons-png.flaticon.com/512/616/616431.png', // Owl
+    'https://cdn-icons-png.flaticon.com/512/616/616426.png', // Tiger
+  ];
+
+  const randomIndex = Math.floor(Math.random() * animalIcons.length);
+  return animalIcons[randomIndex];
+}
+
     const fetchData = async () => {
       try {
         const res = await fetch(`/backend/concerns?allotmentName=${allotmentName}`);
@@ -341,6 +361,7 @@ export default function Concerns({ allotmentName, searchTerm }: ConcernsProps) {
               }
 
               return {
+                authorIcon: generateRandomAnimalIcon(),
                 randomUserName: generateRandomUsername(), // random username assigned once per post
                 postTime: formattedTime,
                 title: post.title,
@@ -374,6 +395,7 @@ export default function Concerns({ allotmentName, searchTerm }: ConcernsProps) {
     <div className="w-full font-inter">
       {filteredPosts.map((post, index) => (
         <RedditPost
+          authorIcon={post.authorIcon}
           key={index}
           id={post.id}
           randomUserName={post.randomUserName}

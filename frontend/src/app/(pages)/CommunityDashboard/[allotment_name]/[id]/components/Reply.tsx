@@ -9,7 +9,7 @@ interface ReplyData {
   authorIcon: string,
   id: string;
   submission_id: string;
-  admin_id: string;
+  randomUserName: string;
   postTime: string;
   content: string;
   imageUrl: string;
@@ -23,7 +23,7 @@ function ReplyCard({
   authorIcon,
   id,
   submission_id,
-  admin_id,
+  randomUserName,
   postTime,
   content,
   imageUrl,
@@ -137,7 +137,7 @@ function ReplyCard({
       <div className="flex items-center mb-1 pl-1">
         <div className="w-5 h-5 mr-2"></div>
         <img src={authorIcon} alt="Author Icon" className="w-5 h-5 rounded-full mr-2" />
-        <span className="text-sm font-semibold text-gray-800 mr-2">{admin_id}</span>
+        <span className="text-sm font-semibold text-gray-800 mr-2">{randomUserName}</span>
         <span className="text-xs text-gray-500 mr-3">{`• ${postTime}`}</span>
       </div>
 
@@ -184,6 +184,7 @@ export default function Reply({ trigger }: { trigger: boolean }) {
   const [responses, setResponse] = useState<ReplyData[]>([]);
 
   useEffect(() => {
+    
     fetch(`/backend/responses?id=${id}`)
       .then((res) => res.json())
       .then((data) => {
@@ -201,6 +202,36 @@ export default function Reply({ trigger }: { trigger: boolean }) {
             } catch (e) {
               console.warn('Invalid image_url:', response.image_urls);
             }
+
+            const adjectives = ['cool', 'brave', 'witty', 'fast', 'silent'];
+            const nouns = ['panda', 'eagle', 'tiger', 'otter', 'fox'];
+
+            const generateRandomUsername = () => {
+              const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+              const noun = nouns[Math.floor(Math.random() * nouns.length)];
+              const num = 1000 + Math.floor(Math.random() * 9000);
+              return `${adj}-${noun}-${num}`;
+            };
+
+             function generateRandomAnimalIcon(): string {
+                const animalIcons = [
+                'https://cdn-icons-png.flaticon.com/512/616/616408.png', // Lion
+                'https://cdn-icons-png.flaticon.com/512/616/616430.png', // Dog
+                'https://cdn-icons-png.flaticon.com/512/616/616421.png', // Cat
+                'https://cdn-icons-png.flaticon.com/512/616/616423.png', // Panda
+                'https://cdn-icons-png.flaticon.com/512/616/616420.png', // Fox
+                'https://cdn-icons-png.flaticon.com/512/616/616427.png', // Elephant
+                'https://cdn-icons-png.flaticon.com/512/616/616428.png', // Koala
+                'https://cdn-icons-png.flaticon.com/512/616/616429.png', // Bear
+                'https://cdn-icons-png.flaticon.com/512/616/616431.png', // Owl
+                'https://cdn-icons-png.flaticon.com/512/616/616426.png', // Tiger
+              ];
+
+              const randomIndex = Math.floor(Math.random() * animalIcons.length);
+              return animalIcons[randomIndex];
+            }
+
+
             const formattedTime = new Date(response.created_at).toLocaleString('en-SG', {
                 timeZone: 'Asia/Singapore',
                 year: 'numeric',
@@ -212,10 +243,10 @@ export default function Reply({ trigger }: { trigger: boolean }) {
               });
 
             return {
-              authorIcon: "https://placehold.co/20x20/808080/fff?text=U",
+              authorIcon: generateRandomAnimalIcon(),
               id: response.id,
               submission_id: response.submission_id,
-              admin_id: response.user?.username,
+              randomUserName: generateRandomUsername(),
               postTime: formattedTime,
               content: response.message,
               imageUrl: response.image_urls,

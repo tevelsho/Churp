@@ -6,6 +6,7 @@ import { usePathname, useParams } from 'next/navigation';
 import { supabase } from '../../../../../backend/lib/supabaseClient';
 
 interface RedditPostProps {
+  authorIcon: string;
   randomUserName: string;
   postTime: string;
   title: string;
@@ -20,6 +21,7 @@ interface RedditPostProps {
 }
 
 function RedditPost({
+  authorIcon,
   randomUserName,
   postTime,
   content,
@@ -168,53 +170,6 @@ function RedditPost({
     }
   };
 
-
-  
-
-
-  // const verifyAndPostReply = async () => {
-  //   setMessage('');
-  //   try {
-  //     const { data: userData, error } = await supabase
-  //       .from('submission')
-  //       .select('user_id')
-  //       .eq('id', id)
-  //       .single();
-
-  //     if (error || !userData?.user_id) {
-  //       setMessage('Failed to get user info.');
-  //       return;
-  //     }
-
-  //     const postRes = await fetch('/backend/responses', {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({
-  //         submission_id: id,
-  //         admin_id: userData.user_id,
-  //         replyText: replyText,
-  //       }),
-  //     });
-
-  //     const postResult = await postRes.json();
-
-  //     if (!postRes.ok) {
-  //       setMessage('Failed to post reply.');
-  //       return;
-  //     }
-
-  //     setMessage('Reply submitted successfully!');
-  //     setReplyText('');
-  //     setCode('');
-  //     setStep('phone');
-  //     changeButton('form');
-  //     if (onButtonClick) onButtonClick();
-
-  //   } catch (err) {
-  //     setMessage('Network error. Please try again.');
-  //   }
-  // };
-
   const handleCopy = () => {
     navigator.clipboard.writeText(fullUrl);
     setCopied(true);
@@ -309,6 +264,9 @@ const handleUpvote = async (e: React.MouseEvent) => {
       <div className="rounded-lg overflow-hidden mb-6">
         <div className="max-w-screen-xl flex items-center relative">
           <div className="flex items-center mb-4 space-x-2 flex-grow">
+             {authorIcon && (
+              <img src={authorIcon} alt="Community Icon" className="w-5 h-5 rounded-full" />
+            )}
             <span className="text-sm font-semibold text-gray-800">{randomUserName}</span>
             <span className="text-xs text-gray-500">• {postTime}</span>
           </div>
@@ -391,15 +349,7 @@ const handleUpvote = async (e: React.MouseEvent) => {
                     {message}
                   </div>
                 )}
-              {/* <button className="p-2 rounded-full bg-gray-100 hover:bg-gray-200">
-                <IoReload className="text-[#4A61C0] h-4 w-4" />
-              </button> */}
-              {/* <button
-                className="bg-[#4A61C0] text-white text-sm px-4 py-2 rounded-md hover:bg-[#3b4e9a]"
-                onClick={verifyAndPostReply}
-              >
-                By Pass button temporarily
-              </button> */}
+          
             </div>
           </div>
         )}
@@ -414,10 +364,31 @@ export default function Concerns({ onButtonClick }: { onButtonClick: () => void 
   const [newPost, setPost] = useState<RedditPostProps | null>(null);
   const adjectives = ['cool', 'brave', 'witty', 'fast', 'silent'];
   const nouns = ['panda', 'eagle', 'tiger', 'otter', 'fox'];
-  const randomAdj = adjectives[Math.floor(Math.random() * adjectives.length)];
-  const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
-  const randomNum = Math.floor(1000 + Math.random() * 9000);
-  const anonymousUsername = `${randomAdj}-${randomNoun}-${randomNum}`;
+
+  const generateRandomUsername = () => {
+      const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+      const noun = nouns[Math.floor(Math.random() * nouns.length)];
+      const num = 1000 + Math.floor(Math.random() * 9000);
+      return `${adj}-${noun}-${num}`;
+    };
+
+  function generateRandomAnimalIcon(): string {
+  const animalIcons = [
+    'https://cdn-icons-png.flaticon.com/512/616/616408.png', // Lion
+    'https://cdn-icons-png.flaticon.com/512/616/616430.png', // Dog
+    'https://cdn-icons-png.flaticon.com/512/616/616421.png', // Cat
+    'https://cdn-icons-png.flaticon.com/512/616/616423.png', // Panda
+    'https://cdn-icons-png.flaticon.com/512/616/616420.png', // Fox
+    'https://cdn-icons-png.flaticon.com/512/616/616427.png', // Elephant
+    'https://cdn-icons-png.flaticon.com/512/616/616428.png', // Koala
+    'https://cdn-icons-png.flaticon.com/512/616/616429.png', // Bear
+    'https://cdn-icons-png.flaticon.com/512/616/616431.png', // Owl
+    'https://cdn-icons-png.flaticon.com/512/616/616426.png', // Tiger
+  ];
+
+  const randomIndex = Math.floor(Math.random() * animalIcons.length);
+  return animalIcons[randomIndex]; // ✅ add this return
+}
 
   useEffect(() => {
   const fetchPost = async () => {
@@ -465,7 +436,8 @@ export default function Concerns({ onButtonClick }: { onButtonClick: () => void 
         }
 
         const mappedPost = {
-          randomUserName: "",
+          authorIcon: generateRandomAnimalIcon(),
+          randomUserName: generateRandomUsername(),
           postTime: formattedTime,
           title: post.title,
           content: post.content,
@@ -493,7 +465,8 @@ export default function Concerns({ onButtonClick }: { onButtonClick: () => void 
       {newPost && (
         <RedditPost
           id={newPost.id}
-          randomUserName={anonymousUsername}
+          authorIcon={newPost.authorIcon}
+          randomUserName={newPost.randomUserName}
           postTime={newPost.postTime}
           title={newPost.title}
           content={newPost.content}
