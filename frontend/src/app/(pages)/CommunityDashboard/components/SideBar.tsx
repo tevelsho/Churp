@@ -1,54 +1,87 @@
-import React from 'react';
+'use client';
+import React, { useEffect, useState } from 'react';
+import { supabase } from '../../../backend/lib/supabaseClient';
+
+interface ConcernItem {
+  id: number;
+  title: string;
+  location: string;
+}
 
 const SideBar: React.FC = () => {
-  const trendingConcerns = [
-    'Pests are out of control!',
-    'Why do some people get to grow more crops than others?',
-    'Why does he get a bigger plot?',
-    'Someone stole my crops!',
-    'Unfriendly Gardener in the community garden',
-  ];
+  const [latestConcerns, setLatestConcerns] = useState<ConcernItem[]>([]);
+  const [topLikedConcerns, setTopLikedConcerns] = useState<ConcernItem[]>([]);
 
-  const popularTopics = [
-    'Urban Farming Initiatives',
-    'Sustainable Gardening Practices',
-    'Community Engagement in Green Spaces',
-    'HDB Rooftop Gardens',
-    'NParks Community Garden Grants',
-  ];
+  useEffect(() => {
+    const fetchLatestConcerns = async () => {
+      const { data, error } = await supabase
+        .from('submission')
+        .select('id, title, location')
+        .eq('status', 'published')
+        .order('submittedat', { ascending: false })
+        .limit(5);
 
-  const generateSlug = (text: string) => {
-    return `/CommunityDashboard/${encodeURIComponent(text.toLowerCase().replace(/\s/g, '-'))}`;
+      if (error) {
+        console.error('Error fetching latest concerns:', error);
+      } else {
+        setLatestConcerns(data || []);
+      }
+    };
+
+    const fetchTopLikedConcerns = async () => {
+      const { data, error } = await supabase
+        .from('submission')
+        .select('id, title, location')
+        .eq('status', 'published')
+        .order('likes', { ascending: false })
+        .limit(5);
+
+      if (error) {
+        console.error('Error fetching top liked concerns:', error);
+      } else {
+        setTopLikedConcerns(data || []);
+      }
+    };
+
+    fetchLatestConcerns();
+    fetchTopLikedConcerns();
+  }, []);
+
+  const generateSlug = (id: number, location: string) => {
+    const encodedLocation = encodeURIComponent(location);
+    return `/CommunityDashboard/${encodedLocation}/${id}`;
   };
 
   return (
     <div className="sticky top-24 self-start">
+      {/* Latest Concerns */}
       <div className="bg-white rounded-md mb-6">
-        <h3 className="font-bold text-base mb-4 text-[#293044] text-left uppercase">Trending Concerns</h3>
+        <h3 className="font-bold text-base mb-4 text-[#293044] text-left uppercase">Latest Concerns</h3>
         <ul className="space-y-2">
-          {trendingConcerns.map((concern, index) => (
-            <li key={index}>
+          {latestConcerns.map((concern, index) => (
+            <li key={concern.id}>
               <a
-                href={generateSlug(concern)}
+                href={generateSlug(concern.id, concern.location)}
                 className="block text-[#293044] text-sm text-left py-1 px-2 rounded-md hover:bg-gray-100 cursor-pointer transition-colors duration-200"
               >
-                {index + 1}. {concern}
+                {index + 1}. {concern.title}
               </a>
             </li>
           ))}
         </ul>
       </div>
 
+      {/* Top Liked Concerns */}
       <div className="bg-white rounded-md">
-        <h3 className="font-bold text-[#293044] mb-4 text-left uppercase">Popular Topics</h3>
+        <h3 className="font-bold text-base mb-4 text-[#293044] text-left uppercase">Top Liked Concerns</h3>
         <ul className="space-y-2">
-          {popularTopics.map((topic, index) => (
-            <li key={index}>
+          {topLikedConcerns.map((concern, index) => (
+            <li key={concern.id}>
               <a
-                href={generateSlug(topic)}
-                className="block text-gray-700 text-sm text-left py-1 px-2 rounded-md hover:bg-gray-100 cursor-pointer transition-colors duration-200"
+                href={generateSlug(concern.id, concern.location)}
+                className="block text-[#293044] text-sm text-left py-1 px-2 rounded-md hover:bg-gray-100 cursor-pointer transition-colors duration-200"
               >
-                {index + 1}. {topic}
+                {index + 1}. {concern.title}
               </a>
             </li>
           ))}
