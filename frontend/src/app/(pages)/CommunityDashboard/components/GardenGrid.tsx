@@ -26,7 +26,7 @@ const initialGridItems: GridItem[] = [
     image: '/Seeding.svg',
     name: 'Tengah Community Club',
     location: 'Blk 119C',
-    href: 'CommunityDashboard/Tengah%20Community Club',
+    href: 'CommunityDashboard/Tengah Community Club',
   },
   {
     id: 3,
@@ -99,7 +99,6 @@ const Grid: React.FC<GridProps> = ({ checkedFilters, searchTerm }) => {
 
     return matchesFilter && matchesSearch;
   });
-
   
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

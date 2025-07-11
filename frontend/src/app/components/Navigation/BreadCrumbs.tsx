@@ -4,11 +4,11 @@ import Link from 'next/link';
 import { IoIosArrowForward } from 'react-icons/io';
 import React from 'react';
 
-// Label overrides
 const labelMap: Record<string, string> = {
   Search: 'All Gardens',
   Discover: 'Discover',
   CommunityGardens: 'Community Gardens',
+  CommunityDashboard: 'Community Dashboard',
   General: 'General',
   '1': 'Tengah',
 };
@@ -31,9 +31,12 @@ const Breadcrumbs = () => {
 
         const label =
           labelMap[segment] ||
-          segment
+          decodeURIComponent(segment)
             .replace(/-/g, ' ')
             .replace(/\b\w/g, (char) => char.toUpperCase());
+
+
+
 
         return (
           <React.Fragment key={href}>

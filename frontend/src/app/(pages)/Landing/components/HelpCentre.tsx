@@ -40,7 +40,7 @@ const HelpCenter = () => {
   };
 
   return (
-    <div className="max-w-screen-2xl mx-auto px-16 py-24">
+    <div className="max-w-screen-2xl mx-auto px-6 sm:px-8 lg:px-16 py-24">
       <div className="flex flex-col lg:flex-row items-center justify-between">
         <div className="lg:w-1/2 lg:pr-12 mb-10 lg:mb-0">
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-6 leading-tight">

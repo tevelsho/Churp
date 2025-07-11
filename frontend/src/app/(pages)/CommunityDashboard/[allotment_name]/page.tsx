@@ -29,7 +29,7 @@ export default function TestConcern() {
           <div className="w-full md:w-3/4 lg:w-4/5 md:pl-16">
             <Concerns allotmentName={allotment_name} searchTerm={searchTerm} />
           </div>
-          <div className="w-full md:w-1/4 lg:w-1/5">
+          <div className="hidden md:block w-full md:w-1/4 lg:w-1/5">
             <SideBar />
           </div>
         </div>

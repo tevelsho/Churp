@@ -16,7 +16,7 @@ const GettingStarted = () => {
         </div>
       </div>
 
-      <h2 className="text-white text-4xl font-bold mb-8">
+      <h2 className="text-white text-2xl font-bold mb-8 lg:text-4xl">
         Start sending your garden concerns now.
       </h2>
 

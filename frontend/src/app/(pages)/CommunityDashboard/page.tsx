@@ -9,7 +9,7 @@ export default function App() {
   const [checkedFilters, setCheckedFilters] = useState<Set<string>>(new Set());
   const [searchTerm, setSearchTerm] = useState(''); 
   return (
-    <div className="max-w-screen-2xl px-16 mx-auto flex flex-col gap-6 mb-24">
+    <div className="max-w-screen-2xl px-6 sm:px-16 mx-auto flex flex-col gap-6 mb-24">
       <Header onSearch={setSearchTerm}/>
       <div className="flex flex-col md:flex-row justify-between items-start gap-12">
         <div className="w-full md:w-1/4 lg:w-1/5">
@@ -22,7 +22,7 @@ export default function App() {
           <Grid checkedFilters={checkedFilters}  
           searchTerm={searchTerm}/>
         </div>
-        <div className="w-full md:w-1/4 lg:w-1/5">
+        <div className="hidden md:block w-full md:w-1/4 lg:w-1/5">
           <SideBar />
         </div>
       </div>

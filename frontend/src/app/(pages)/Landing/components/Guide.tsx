@@ -17,7 +17,6 @@ const steps2 = [
   "Update the platform to inform gardeners whether a concern is being reviewed, in progress, or resolved.",
   "Engage in further discussion or clarification if a gardener follows up on their submission.",
   "Mark concerns as resolved and share what actions were taken to address the issue, ensuring transparency"
-
 ]
 
 const Guide = () => {
@@ -40,8 +39,9 @@ const Guide = () => {
 
   return (
     <div className="w-full bg-[#f8f9fd] py-24">
-      <div className="max-w-screen-2xl mx-auto px-6 lg:px-16 flex flex-col lg:flex-row items-start gap-12">
-        <div className="flex-1">
+      <div className="max-w-screen-2xl mx-auto w-full px-6 sm:px-8 lg:px-16 flex flex-col lg:flex-row items-start gap-12">
+        {/* Left Content */}
+        <div className="flex-1 max-w-full lg:max-w-3xl">
           <h2 className="text-3xl lg:text-4xl font-bold text-[#293044] mb-8">
             How it works
           </h2>
@@ -69,25 +69,16 @@ const Guide = () => {
             </button>
           </div>
 
-          <div
-            className="relative transition-all duration-300 ease-in-out"
-            style={{ minHeight: maxHeight > 0 ? maxHeight : 'auto' }}
-          >
-            {/* STORAGE MODE */}
-            <div
-              ref={contentRef1}
-              className={`absolute top-0 left-0 w-full transition-opacity duration-300 ${
-                activeTab === 'storage' ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-              }`}
-            >
-              <p className="text-base text-[#445072] mb-6 leading-relaxed max-w-3xl">
-               Community and allotment gardeners can submit concerns, updates, or ideas about their garden through a simple form. They can also view others’ posts, track issue progress, and connect with fellow gardeners on the Community Dashboard—with support from Residents’ Networks and official channels.
+          {/* No absolute positioning here; normal flow */}
+          {activeTab === 'storage' && (
+            <div ref={contentRef1}>
+              <p className="text-base text-[#445072] mb-6 leading-relaxed">
+                Community and allotment gardeners can submit concerns, updates, or ideas about their garden through a simple form. They can also view others’ posts, track issue progress, and connect with fellow gardeners on the Community Dashboard—with support from Residents’ Networks and official channels.
               </p>
 
               <div className="space-y-4">
                 {steps.map((step, index) => (
-                  <div key={index} className="flex items-center gap-4">
-                    {/* Added flex-shrink-0 here */}
+                  <div key={index} className="flex items-start gap-4">
                     <div className="w-8 h-8 bg-[#4A61C0] text-white rounded-md flex items-center justify-center font-bold text-sm flex-shrink-0">
                       {index + 1}
                     </div>
@@ -96,23 +87,18 @@ const Guide = () => {
                 ))}
               </div>
             </div>
+          )}
 
-            {/* MULTI-RESPONDENT MODE */}
-            <div
-              ref={contentRef2}
-              className={`absolute top-0 left-0 w-full transition-opacity duration-300 ${
-                activeTab === 'multi' ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-              }`}
-            >
-              <p className="text-base text-[#445072] mb-6 leading-relaxed max-w-3xl">
-               The Residents’ Network reviews and responds to community concerns,
-               provides status updates on issues, and supports follow-ups to ensure proper resolution and meaningful action.
+          {activeTab === 'multi' && (
+            <div ref={contentRef2}>
+              <p className="text-base text-[#445072] mb-6 leading-relaxed">
+                The Residents’ Network reviews and responds to community concerns,
+                provides status updates on issues, and supports follow-ups to ensure proper resolution and meaningful action.
               </p>
 
               <div className="space-y-4">
                 {steps2.map((step, index) => (
-                  <div key={index} className="flex items-center gap-4">
-                    {/* Added flex-shrink-0 here */}
+                  <div key={index} className="flex items-start gap-4">
                     <div className="w-8 h-8 bg-[#4A61C0] text-white rounded-md flex items-center justify-center font-bold text-sm flex-shrink-0">
                       {index + 1}
                     </div>
@@ -121,10 +107,11 @@ const Guide = () => {
                 ))}
               </div>
             </div>
-          </div>
+          )}
         </div>
 
-        <div className="flex-1 flex justify-center items-start">
+        {/* Right Image */}
+        <div className="flex-1 flex justify-center items-start mt-8 lg:mt-0">
           <Image
             src="/Online.svg"
             alt="How it works"

@@ -23,7 +23,7 @@ const stats = [
 
 const Metrics = () => {
   return (
-    <section className="w-full py-32 px-16">
+    <section className="w-full px-6 sm:px-8 lg:px-16 py-32">
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center ">
         <h2 className="text-3xl lg:text-4xl font-bold text-[#293044] mb-16">
           Used by most Gardeners

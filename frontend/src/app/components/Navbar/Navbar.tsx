@@ -73,43 +73,19 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* 📱 MOBILE VIEW: Standalone rendering for screen < 640px */}
       <div className="sm:hidden w-full py-3 px-4 flex items-center justify-between">
-        {/* 📱 MOBILE: Logo */}
         <a href="/">
-          <img src="/churp_w_text.svg" alt="HearUs Logo" width={80} height={80} />
+          <img src="/churp_w_text.svg" alt="HearUs Logo" width={96} height={96} />
         </a>
-
-        {/* 📱 MOBILE: Search + Hamburger */}
-        <div className="flex items-center gap-2">
-          <div className="w-[120px] relative">
-            <HiMiniMagnifyingGlass className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
-            <input
-              ref={searchInputRef}
-              type="text"
-              placeholder="Search..."
-              className="w-full border border-gray-300 rounded-md py-2 pl-12 pr-4 text-sm focus:outline-none focus:ring-[#4A61C0] focus:border-[#4A61C0]"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  console.log('Search for:', (e.target as HTMLInputElement).value);
-                }
-              }}
-            />
-          </div>
-
-          {/* 📱 MOBILE: Hamburger toggle */}
-          <button
-            className="text-3xl text-[#2a56c5]"
-            onClick={() => setMenuOpen(!menuOpen)}
-          >
-            <Menu className="w-7 h-7" />
-          </button>
-        </div>
+        <button
+          className="text-3xl text-[#2a56c5]"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          <Menu className="w-7 h-7" />
+        </button>
       </div>
-
-      {/* 📱 MOBILE: Dropdown menu when hamburger is toggled */}
       {menuOpen && (
-        <div className="sm:hidden px-4 pt-2 pb-4 space-y-2">
+        <div className="sm:hidden pt-2 pb-4 space-y-2 max-w-full">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
