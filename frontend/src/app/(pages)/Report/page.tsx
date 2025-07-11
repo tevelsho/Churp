@@ -8,7 +8,7 @@ interface FormData {
   name: string;
   mobileNumber: string;
   concernTitle: string;
-  affectedGarden: string[];
+  affectedGarden: string;
   description: string;
   confirmFollowUp: boolean;
   acknowledgeResponsePolicy: boolean;
@@ -22,7 +22,7 @@ export default function Form() {
     name: '',
     mobileNumber: '',
     concernTitle: '',
-    affectedGarden: [],
+    affectedGarden: '',
     description: '',
     confirmFollowUp: false,
     acknowledgeResponsePolicy: false,
@@ -47,12 +47,12 @@ export default function Form() {
     }));
   };
 
-  const handleCheckboxArrayChange = (field: 'affectedGarden', value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: toggleArrayItem(prev[field], value),
-    }));
-  };
+const handleRadioChange = (field: 'affectedGarden', value: string) => {
+  setFormData(prev => ({
+    ...prev,
+    [field]: value,
+  }));
+};
 
   const handleChooseFileClick = () => {
     fileInputRef.current?.click();
@@ -79,15 +79,8 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       dataToSubmit.append('mobileNumber', formData.mobileNumber);
       dataToSubmit.append('concernTitle', formData.concernTitle);
       dataToSubmit.append('description', formData.description);
-      
-      // Since it's a single string now, you just append it directly.
-      // dataToSubmit.append('affectedGarden', formData.affectedGarden);
-      
-      //not too sure affected garden should be multiple values
-      formData.affectedGarden.forEach(garden => {
-        dataToSubmit.append('affectedGarden', garden);
-      });
-
+      dataToSubmit.append('affectedGarden', formData.affectedGarden);
+    
       if (formData.attachedFile) {
         dataToSubmit.append('photos', formData.attachedFile);
       }
@@ -109,7 +102,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
             name: '',
             mobileNumber: '',
             concernTitle: '',
-            affectedGarden: [], // Reset to empty string
+            affectedGarden: '', // Reset to empty string
             description: '',
             confirmFollowUp: false,
             acknowledgeResponsePolicy: false,
@@ -142,11 +135,36 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
             </div>
 
             <form className="space-y-8" onSubmit={handleSubmit}>
+               {/* Affected Garden */}
+              <div className="space-y-4">
+                <label className="block text-sm font-medium text-[#445072]">
+                  1. Affected Garden <span className="text-red-500">*</span>
+                </label>
+                <div className="space-y-3">
+                  {gardens.map(garden => (
+                    <div key={garden} className="flex items-center space-x-3">
+                      <input
+                        id={`garden-${garden}`}
+                        type="radio"
+                        name="affectedGarden"
+                        value={garden}
+                        checked={formData.affectedGarden === garden}
+                        onChange={() => handleRadioChange("affectedGarden", garden)}
+                        className="form-radio h-4 w-4 accent-[#4A61C0] border-gray-800 focus:ring-[#4A61C0]"
+                        required
+                      />
+                      <label htmlFor={`garden-${garden}`} className="text-sm text-[#445072]">
+                        {garden}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
               {/* Name */}
               <div className="space-y-2">
                 <label htmlFor="name" className="block text-sm font-medium text-[#445072]">
-                  1. Name <span className="text-red-500">*</span>
+                  2. Name <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="name"
@@ -162,7 +180,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
               {/* Mobile No. */}
               <div className="space-y-2">
                 <label htmlFor="mobileNumber" className="block text-sm font-medium text-[#445072]">
-                  2. Mobile No. <span className="text-red-500">*</span>
+                  3. Mobile No. <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="mobileNumber"
@@ -178,7 +196,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
               {/* Concern Title */}
               <div className="space-y-2">
                 <label htmlFor="concernTitle" className="block text-sm font-medium text-[#445072]">
-                  3. Concern Title <span className="text-red-500">*</span>
+                  4. Concern Title <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="concernTitle"
@@ -189,29 +207,6 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                   className="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#4A61C0] focus:border-[#4A61C0] bg-white"
                   required
                 />
-              </div>
-
-              {/* Affected Garden */}
-              <div className="space-y-4">
-                <label className="block text-sm font-medium text-[#445072]">
-                  4. Affected Garden <span className="text-red-500">*</span>
-                </label>
-                <div className="space-y-3">
-                  {gardens.map(garden => (
-                    <div key={garden} className="flex items-center space-x-3">
-                      <input
-                        id={`garden-${garden}`}
-                        type="checkbox"
-                        checked={formData.affectedGarden.includes(garden)}
-                        onChange={() => handleCheckboxArrayChange("affectedGarden", garden)}
-                        className="form-checkbox h-4 w-4 accent-[#4A61C0] border-gray-800 focus:ring-[#4A61C0"
-                      />
-                      <label htmlFor={`garden-${garden}`} className="text-sm text-[#445072]">
-                        {garden}
-                      </label>
-                    </div>
-                  ))}
-                </div>
               </div>
 
               {/* Description */}
@@ -273,7 +268,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                       type="checkbox"
                       checked={formData.confirmFollowUp}
                       onChange={(e) => handleInputChange("confirmFollowUp", e.target.checked)}
-                      className="mt-1 w-4 h-4 form-checkbox h-4 w-4 rounded-sm appearance-none border border-gray-300 checked:bg-[#4A61C0] checked:border-transparent focus:outline-none"
+                      className="form-checkbox h-4 w-4 accent-[#4A61C0] border-gray-800 focus:ring-[#4A61C0"
                       required
                     />
                     <label htmlFor="confirmFollowUp" className="text-sm text-[#445072] leading-relaxed">
@@ -287,7 +282,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                       type="checkbox"
                       checked={formData.acknowledgeResponsePolicy}
                       onChange={(e) => handleInputChange("acknowledgeResponsePolicy", e.target.checked)}
-                      className="mt-1 w-4 h-4 form-checkbox h-4 w-4 rounded-sm appearance-none border border-gray-300 checked:bg-[#4A61C0] checked:border-transparent focus:outline-none"
+                      className="form-checkbox h-4 w-4 accent-[#4A61C0] border-gray-800 focus:ring-[#4A61C0"
                       required
                     />
                     <label htmlFor="acknowledgeResponsePolicy" className="text-sm text-[#445072] leading-relaxed">
